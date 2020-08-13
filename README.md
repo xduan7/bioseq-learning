@@ -12,25 +12,11 @@ This project contains deep learning experiments, mostly unsupervised learning, o
 
 
 ## Dependencies
-```text
-required:
-    python>=3.8
-    numpy>=1.18
-    pandas>=1.0
-    torch>=1.4
-    scikit-learn>=0.22
-
-optional:
-    poetry>=0.12
-    flake8>=3.7
-    pylint>=2.4
-    mypy>=0.76
-    pytest>=5.3
-    GPUtil>=1.4
-```
+Check 'pyproject.toml' for dependencies generated with [Poetry](https://python-poetry.org/)
 
 
 ## Getting Started
+<!-- TODO -->
 
 
 ## Template Layout
