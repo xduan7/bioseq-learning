@@ -1,3 +1,3 @@
 !.gitignore
-!/conserved_domain_search_examples/rpsblast_result_protein.csv
-!/conserved_domain_search_examples/rpsblast_result_protein.xml
+/conserved_domain_search_examples/rpsblast_result_protein.csv
+/conserved_domain_search_examples/rpsblast_result_protein.xml
