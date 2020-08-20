@@ -1,24 +1,28 @@
-# Deep Learning pn Biological Sequences
-This project contains deep learning experiments, mostly unsupervised learning, on biological sequences (protein sequences and gene sequences). 
+# Biological Sequence Learning with Conserved Domain
+This project contains deep learning experiments on biological sequences (amino acid or nucleotide sequences) using conserved domain information. 
+Please refer to the [DESCRIPTION](DESCRIPTION.md) file for more technical details.
 
 
 ## Table of Contents  
-- [Dependencies](#dependencies)
-- [Getting Started](#getting-started)
-- [Template Layout](#template-layout)
-- [Future Tasks](#future-tasks)
-- [Authors](#authors)
-- [License](#license)
+-   [Dependencies](#dependencies)
+-   [Getting Started](#getting-started)
+-   [Template Layout](#template-layout)
+-   [Future Tasks](#future-tasks)
+-   [Authors](#authors)
+-   [License](#license)
 
 
+---
 ## Dependencies
 Check 'pyproject.toml' for dependencies generated with [Poetry](https://python-poetry.org/)
 
 
+---
 ## Getting Started
 <!-- TODO -->
 
 
+---
 ## Template Layout
 The project layout with the usage for each folder is shown below:
 ```text
@@ -53,17 +57,18 @@ dl-project-template
 └── models              # saved models with optimizer states
 ```
 
+
+---
 ## Future Tasks
-- [ ] ML/DL projects process flowchart 
-    - [ ] definition of several major steps
-    - [ ] clarify motivation and deliverables
-- [ ] small example for demonstration (omniglot?)
+<!-- TODO -->
 
 
+---
 ## Authors
 * Xiaotian Duan (Email: xduan7 at uchicago.edu)
 
 
+---
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for more details.
+This project is licensed under the MIT License - check the [LICENSE](LICENSE.md) file for more details.
 

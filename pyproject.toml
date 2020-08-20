@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "dl-bio-seqs"
+name = "bioseq-learning"
 version = "0.1.0"
-description = "deep learning experiments on biological sequences"
+description = "biological sequence learning with conserved domain"
 authors = ["Xiaotian Duan <xduan7 at uchicago.edu>"]
 license = "MIT"
 
