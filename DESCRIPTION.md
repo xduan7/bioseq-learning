@@ -61,12 +61,19 @@
 
 -  [ ] choose between the following predictive targets for training
 
-* predict the start/center/end of CDs
-* predict the belonged CDs(s) for each and every word (N-to-N)
+* predict the start/center/end of CDs - translation
+* predict the belonged CDs(s) for each and every monomer (N-to-N) probably onluy suitable for small number of PSSMs ... and short sequence
     * training as a multi-label task, then demonstrating the distribution of the latent space of CDs, showing that some of the similar CDs are much closer
     * training as a multi-label task, but the errors are weighted with similarities between the predicted CDs and the true ones
     * training with hierarchical information of CDs (only viable for NCBI curated CDs)
-* predict the belonged CD(s) for a specific word
+* predict the belonged CD(s) for a specific word (which CD it's in and where it's at relatively)
+* CD as input and only predict word and the CD it's in
+* predict the whole masked CD with given genome context (or the next CD)
+
+
+Input choice: gene or genome
+Output choice: masked monomer, masked CD, masked segment, or CD sequence
+
 
 
 ---
