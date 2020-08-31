@@ -61,12 +61,22 @@
 
 -  [ ] choose between the following predictive targets for training
 
-* predict the start/center/end of CDs
-* predict the belonged CDs(s) for each and every word (N-to-N)
-    * training as a multi-label task, then demonstrating the distribution of the latent space of CDs, showing that some of the similar CDs are much closer
-    * training as a multi-label task, but the errors are weighted with similarities between the predicted CDs and the true ones
-    * training with hierarchical information of CDs (only viable for NCBI curated CDs)
-* predict the belonged CD(s) for a specific word
+- position-based predictions
+    - what are the masked base(s)? *how many percentages of bases are masked? and are they weighted in some way?*
+    - does a given base belongs to any protein-encoding region?
+    - does a given base belongs to any motif/conserved domain? *binary or multi-class (which conserved domain) prediction?*
+- sequence-based predictions
+    - where are the protein-encoding regions in the given genome segment
+    - what are the motif/conserved domains in the given genome segment
+
+
+There are multiple advantages of the position-based learning tasks. 
+First of all, they could be easily combined into a single task. Secondly, the output space is small and already well-defined.
+
+For sequence-based learning tasks, we have to define the output in a way that (1) it's manageable in size, and (2) easy enough for learning models. 
+If we are going for the sequence-based learning tasks, it's better that we start off with something simple, 
+like predicting all the CDs in order (like a translation task), 
+then move on to something like the start and end of each and every CD.
 
 
 ---
