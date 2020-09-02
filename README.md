@@ -45,7 +45,7 @@ dl-project-template
 │── src    
 │   │── ...             # top-level scripts for training, testing and downloading
 │   ├── configs         # configuration files for deep learning experiments
-│   ├── data_processes  # data processing functions and classes (cleaning, validation, imputation etc.)
+│   ├── datasets        # data processing functions and classes (cleaning, validation, imputation, etc.)
 │   ├── modules         # activations, layers, modules, and networks (subclass of torch.nn.Module)
 │   ├── optimization    # deep learning optimizers and schedulers
 │   └── utilities       # other useful functions and classes
