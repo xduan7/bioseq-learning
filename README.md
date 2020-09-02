@@ -4,7 +4,6 @@ Please refer to the [DESCRIPTION](DESCRIPTION.md) file for more technical detail
 
 
 ## Table of Contents  
--   [Dependencies](#dependencies)
 -   [Getting Started](#getting-started)
 -   [Template Layout](#template-layout)
 -   [Future Tasks](#future-tasks)
@@ -13,13 +12,13 @@ Please refer to the [DESCRIPTION](DESCRIPTION.md) file for more technical detail
 
 
 ---
-## Dependencies
-Check 'pyproject.toml' for dependencies generated with [Poetry](https://python-poetry.org/)
-
-
----
 ## Getting Started
-<!-- TODO -->
+This project uses [Poetry](https://python-poetry.org/) for dependency management. 
+Check 'pyproject.toml' for auto-generated dependencies. 
+```commandline
+pip install poetry
+poetry install
+```
 
 
 ---
