@@ -30,6 +30,7 @@ dl-project-template
 |
 ├── LICENSE.md
 ├── README.md
+├── DESCRIPTION.md      # project and experiment description
 ├── makefile            # makefile for various commands (install, train, pytest, mypy, lint, etc.) 
 ├── mypy.ini            # MyPy type checking configurations
 ├── pylint.rc           # Pylint code quality checking configurations
