@@ -15,7 +15,7 @@ from Bio.Blast.Applications import NcbirpsblastCommandline
 
 
 # path to CDD (conserved domain database) and related info
-CDD_PATH = '../data/interim/CDD/cdd'
+CDD_PATH = os.path.abspath('../data/interim/CDD/Cdd')
 RPSBLAST_KWARGS = {
     'db': CDD_PATH,
     'seg': 'no',
@@ -27,10 +27,9 @@ RPSBLAST_KWARGS = {
 # path to all the genomes (downloaded from PATRIC directly)
 GENOME_PARENT_PATH = './genome_parsing_examples'
 
-
 # get all the genome names (PATRIC ID)
 genome_names = next(os.walk(GENOME_PARENT_PATH))[1]
-
+print(f'Parsing the following genomes ... {genome_names}', flush=True)
 
 # loop over all the genomes on parent path and perform parsing ...
 for _genome_name in genome_names:
@@ -45,13 +44,13 @@ for _genome_name in genome_names:
 
     print(f'Genome {_genome_name} contains '
           f'{len(_cntg_records)} contig(s) and '
-          f'{len(_feat_records)} features (genes, RNAs, etc.)')
+          f'{len(_feat_records)} features (genes, RNAs, etc.)', flush=True)
 
     # perform CD search for the contigs with measured time
     _start_time = time.time()
     _cntg_rpsblast_cmd = NcbirpsblastCommandline(query=_cntg_path, **RPSBLAST_KWARGS)
     _cntg_rpsblast_xml_result, _cntg_rpsblast_cmd_error_msg = _cntg_rpsblast_cmd()
-    print(time.time() - _start_time)
+    print(time.time() - _start_time, flush=True)
     with open(os.path.join(GENOME_PARENT_PATH, 'rpsblast_contig_' + _genome_name + '.xml'), 'w+') as f:
         f.write(_cntg_rpsblast_xml_result)
 
@@ -59,7 +58,7 @@ for _genome_name in genome_names:
     _start_time = time.time()
     _feat_rpsblast_cmd = NcbirpsblastCommandline(query=_feat_path, **RPSBLAST_KWARGS)
     _feat_rpsblast_xml_result, _feat_rpsblast_cmd_error_msg = _feat_rpsblast_cmd()
-    print(time.time() - _start_time)
+    print(time.time() - _start_time, flush=True)
     with open(os.path.join(GENOME_PARENT_PATH, 'rpsblast_feature_' + _genome_name + '.xml'), 'w+') as f:
         f.write(_feat_rpsblast_xml_result)
 
