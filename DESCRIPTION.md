@@ -61,6 +61,7 @@
 
 -  [ ] choose between the following predictive targets for training
 
+
 - position-based predictions
     - what are the masked base(s)? *how many percentages of bases are masked? and are they weighted in some way?*
     - does a given base belongs to any protein-encoding region?
