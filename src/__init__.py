@@ -24,7 +24,7 @@ import logging
 #     'configs',
 #     'modules',
 #     'optimization',
-#     'data_processes',
+#     'datasets',
 #     'utilities',
 # ]
 # note that this naming scheme might be misleading as the generic names like

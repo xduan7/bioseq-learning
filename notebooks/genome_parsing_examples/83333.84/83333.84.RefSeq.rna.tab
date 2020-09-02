@@ -1,0 +1,175 @@
+genome_id	genome_name	accession	annotation	feature_type	seed_id	refseq_locus_tag	alt_locus_tag	uniprotkb_accession	start	end	strand	na_length	gene	product
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4638			16952	17006	+	55	sokC	sRNA antisense regulator blocking mokC, and hence hokC, translation
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4674			77367	77593	+	227	sgrS	sRNA antisense regulator destabilzes ptsG mRNA, Hfq-dependent; regulated by sgrR
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4639			191048	191183	+	136	tff	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_204			225107	226648	+	1542	rrsH	16S ribosomal RNA of rrnH operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_205			226717	226793	+	77	ileV	tRNA-Ile
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_206			226836	226911	+	76	alaV	tRNA-Ala
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_208			227095	229998	+	2904	rrlH	23S ribosomal RNA of rrnH operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_209			230092	230211	+	120	rrfH	5S ribosomal RNA of rrnH operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_210			230264	230340	+	77	aspU	tRNA-Asp
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_220			238267	238343	+	77	aspV	tRNA-Asp
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_248			263431	263506	+	76	thrW	tRNA-Thr
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4687			273140	273214	+	75	eyeA	novel sRNA, function unknown, CP4-6 propahge
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_288			297766	297814	+	49	ptwF	tRNA-OTHER
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4630			475902	476015	+	114	ffs	4.5S sRNA component of Signal Recognition Particle (SRP)
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4675			506658	506741	+	84	chiX	sRNA antisense regulator of OM chitoporin ChiP(YbfM), Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_546			564177	564253	+	77	argU	tRNA-Arg
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4684			582890	582934	+	45	pauD	tRNA-OTHER
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4691			604567	604625	+	59	sokE	sRNA at remnant mokE/hokE locus
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_679			693263	693337	-	75	glnX	tRNA-Gln
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_680			693375	693449	-	75	glnV	tRNA-Gln
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_681			693497	693573	-	77	metU	tRNA-Met
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_682			693589	693663	-	75	glnW	tRNA-Gln
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_683			693698	693772	-	75	glnU	tRNA-Gln
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_684			693796	693880	-	85	leuW	tRNA-Leu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_685			693890	693966	-	77	metT	tRNA-Met
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_759			777387	777462	+	76	lysT	tRNA-Lys
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_760			777598	777673	+	76	valT	tRNA-Val
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_761			777676	777751	+	76	lysW	tRNA-Lys
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_762			777901	777976	+	76	valZ	tRNA-Val
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_763			777980	778055	+	76	lysY	tRNA-Lys
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_764			778202	778277	+	76	lysZ	tRNA-Lys
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_765			778410	778485	+	76	lysQ	tRNA-Lys
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4640			884808	884886	-	79	rybB	sRNA antisense regulator of ompC and ompW mRNA instability, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_902			922716	922803	-	88	serW	tRNA-Ser
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_994			1028457	1028544	-	88	serT	tRNA-Ser
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_1055			1094578	1094665	-	88	serX	tRNA-Ser
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4641			1143602	1143770	+	169	psrD	novel Novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4642			1251132	1251198	+	67	rdlA	sRNA antisense regulator affects LdrA translation; proposed addiction module in LDR-A repeat, with toxic peptide LdrA
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4643			1251667	1251732	+	66	rdlB	sRNA antisense regulator affects LdrB translation; proposed addiction module in LDR-B repeat, with toxic peptide LdrB
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4644			1252202	1252269	+	68	rdlC	sRNA antisense regulator affects LdrC translation; proposed addiction module in LDR-C repeat, with toxic peptide LdrC
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4645			1268697	1268867	-	171	rttR	rtT sRNA, processed from tyrT transcript
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_1246			1268875	1268959	-	85	tyrV	tRNA-Tyr
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_1247			1269169	1269253	-	85	tyrT	tRNA-Tyr
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4646			1386087	1386182	-	96	mcaS	motility and biofilm regulator sRNA
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4690			1389560	1389681	+	122	fnrS	FNR-activated anaerobic sRNA antisense regulator down regulates cydDC, metE, sodA, sodB, Hfq-dependent; mediates negative FNR regulation
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4647			1417551	1417659	+	109	micC	sRNA antisense regulator of OmpC translation, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4676			1471873	1471936	-	64	rydC	sRNA antisense regulator of yejABEF, Hfq-dependent; over-expression causes a thermosensitive growth phenotype on minimal glycerol, maltose, or ribose media
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4648			1472549	1472604	+	56	sokB	sRNA antisense regulator blocking mokB, and hence hokB, translation
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4689			1603246	1603343	-	98	mgrR	sRNA antisense regulator down regulates YgdQ and EptB, PhoPQ-regulated, Hfq-dependent; affects sensitivity to antimicrobial peptides
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4631			1631149	1631201	+	53	dicF	sRNA antisense regulator, inhibits ftsZ, Hfq-dependent; Qin prophage
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_1706			1728202	1728278	+	77	valV	tRNA-Val
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_1707			1728283	1728359	+	77	valW	tRNA-Val
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4649			1746480	1746547	-	68	rydB	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4650			1752139	1752244	+	106	rprA	sRNA antisense activator for RpoS translation, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4651			1904832	1905080	+	249	ryeA	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4652			1904930	1905050	-	121	ryeB	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_1962			1972805	1972891	-	87	leuZ	tRNA-Leu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_1963			1972904	1972977	-	74	cysT	tRNA-Cys
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_1964			1973032	1973107	-	76	glyW	tRNA-Gly
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4632			2006217	2006303	-	87	dsrA	sRNA antisense regulator enhances translation of RpoS, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4677			2014639	2014729	+	91	rseX	sRNA antisense regulator of ompA and ompC translation, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2038			2033614	2033703	-	90	serU	tRNA-Ser
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2040			2034695	2034770	+	76	asnT	tRNA-Asn
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2046			2048173	2048248	-	76	asnW	tRNA-Asn
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2048			2049997	2050072	+	76	asnU	tRNA-Asn
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2051			2052406	2052481	+	76	asnV	tRNA-Asn
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4653			2061461	2061664	+	204	isrC	novel sRNA, CP4-44; putative prophage remnant
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4654			2143418	2143560	+	143	sibA	sRNA antisense regulator of toxic IbsA protein
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4655			2143753	2143888	+	136	sibB	sRNA antisense regulator of toxic IbsB protein
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4656			2157223	2157309	+	87	cyaR	sRNA antisense regulator of ompX mRNA instability, Hfq-dependent, cAMP-induced
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2261			2277095	2277171	+	77	proL	tRNA-Pro
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4657			2303968	2304060	+	93	micF	sRNA antisense regulator affecting ompF expression, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2428			2457192	2457266	+	75	argW	tRNA-Arg
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4685			2467468	2467482	+	15	pawZ	tRNA-OTHER
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2477			2508925	2509000	-	76	alaX	tRNA-Ala
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2478			2509040	2509115	-	76	alaW	tRNA-Ala
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2483			2511815	2511890	+	76	valU	tRNA-Val
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2484			2511935	2512010	+	76	valX	tRNA-Val
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2485			2512057	2512132	+	76	valY	tRNA-Val
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2486			2512137	2512212	+	76	lysV	tRNA-Lys
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4658			2637949	2638252	+	304	ryfA	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4659			2675251	2675434	-	184	glmY	sRNA activator of glmS mRNA, glmZ processing antagonist
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4678			2684614	2684690	+	77	ohsC	sRNA antisense regulator of shoB toxin
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_2670			2710163	2710282	-	120	rrfG	5S ribosomal RNA of rrnG operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_2671			2710375	2713278	-	2904	rrlG	23S ribosomal RNA of rrnG operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2673			2713463	2713538	-	76	gltW	tRNA-Glu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_2674			2713710	2715251	-	1542	rrsG	16S ribosomal RNA of rrnG operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4679			2718247	2718389	-	143	ryfD	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tmRNA		ER3413_4633			2739687	2740049	+	363	ssrA	tmRNA, 10Sa RNA
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tmRNA		ER3413_4686			2762066	2762079	+	14	psaA	
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2729			2769856	2769931	-	76	ileY	tRNA-Ile
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4660			2798895	2798972	+	78	micA	sRNA antisense regulator of ompA, lamB, ompX, and phoP; Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2767			2801877	2801953	-	77	argQ	tRNA-Arg
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2768			2802152	2802228	-	77	argZ	tRNA-Arg
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2769			2802291	2802367	-	77	argY	tRNA-Arg
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2770			2802566	2802642	-	77	argV	tRNA-Arg
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2771			2802646	2802738	-	93	serV	tRNA-Ser
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4692			2871447	2871502	+	56	sokX	sok-related sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4637			2908249	2908617	-	369	csrB	CsrA-binding sRNA, antagonizing CsrA regulation
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4661			2926789	2926994	+	206	gcvB	sRNA antisense regulator represses oppA, dppA, gltI and livJ expression, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2901			2931480	2931556	+	77	metZ	tRNA-Met
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2902			2931590	2931666	+	77	metW	tRNA-Met
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2903			2931700	2931776	+	77	metV	tRNA-Met
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4662			2960195	2960282	-	88	omrA	sRNA antisense regulator downregulates OM proteins and curli; positively regulated by OmpR/EnvZ, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4663			2960397	2960478	-	82	omrB	sRNA antisense regulator downregulates OM proteins and curli; positively regulated by OmpR/EnvZ, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_2949			2983077	2983150	-	74	glyU	tRNA-Gly
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4634			3040076	3040258	+	183	ssrS	6S RNA inhibits RNA polymerase promoter binding
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4664			3040942	3041081	+	140	sibC	sRNA antisense regulator of toxic IbsC protein
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3056			3094459	3094534	+	76	pheV	tRNA-Phe
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4665			3178816	3178958	-	143	sibD	sRNA antisense regulator of toxic IbsD protein
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4680			3179192	3179333	-	142	sibE	sRNA antisense regulator of toxic IbsE protein
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3160			3199690	3199765	+	76	ileX	tRNA-Ile
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4635			3255507	3255883	-	377	rnpB	RNase P, M1 RNA component
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4666			3296516	3296689	+	174	psrO	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3264			3303504	3303580	-	77	metY	tRNA-Met
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3268			3307362	3307448	-	87	leuU	tRNA-Leu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3358			3392367	3392486	-	120	rrfF	5S ribosomal RNA of rrnD operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3359			3392524	3392599	-	76	thrV	tRNA-Thr
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3360			3392612	3392731	-	120	rrfD	5S ribosomal RNA of rrnD operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3361			3392824	3395727	-	2904	rrlD	23S ribosomal RNA of rrnD operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3363			3395902	3395977	-	76	alaU	tRNA-Ala
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3364			3396020	3396096	-	77	ileU	tRNA-Ile
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3365			3396165	3397706	-	1542	rrsD	16S ribosomal RNA of rrnD operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4667			3550606	3550695	-	90	ryhB	sRNA antisense regulator mediating positive Fur regulon response, Hfq-dependent; global iron regulator
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4693			3627665	3627733	-	69	arrS	antisense sRNA ArrS, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4668			3634543	3634647	+	105	gadY	sRNA antisense regulator of gadAB transcriptional activator GadX mRNA, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4669			3671014	3671079	+	66	rdlD	sRNA antisense regulator affects LdrD translation; proposed addiction module in LDR-D repeat, with toxic peptide LdrD
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3648			3679494	3679570	-	77	proK	tRNA-Pro
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4681			3692954	3692983	+	30	sokA	
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3769			3807876	3807970	+	95	selC	tRNA-Sec
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4682			3824772	3824911	-	140	istR	sRNA antisense regulators IstR-1 and IstR-2, affectr tisB, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3869			3913462	3915003	+	1542	rrsC	16S ribosomal RNA of rrnC operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3870			3915089	3915164	+	76	gltU	tRNA-Glu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3872			3915358	3918261	+	2904	rrlC	23S ribosomal RNA of rrnC operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3873			3918354	3918473	+	120	rrfC	5S ribosomal RNA of rrnC operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3874			3918526	3918602	+	77	aspT	tRNA-Asp
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3875			3918611	3918686	+	76	trpT	tRNA-Trp
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3908			3954029	3954105	+	77	argX	tRNA-Arg
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3909			3954163	3954239	+	77	hisR	tRNA-His
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3910			3954260	3954346	+	87	leuT	tRNA-Leu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3911			3954389	3954465	+	77	proM	tRNA-Pro
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4670			3958086	3958292	+	207	glmZ	sRNA antisense activator of glmS mRNA, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4694			3991632	3991883	+	252	esrE	essential sRNA of unknown function
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3962			4007185	4008726	+	1542	rrsA	16S ribosomal RNA of rrnA operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3963			4008795	4008871	+	77	ileT	tRNA-Ile
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_3964			4008914	4008989	+	76	alaT	tRNA-Ala
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3967			4009173	4012077	+	2905	rrlA	23S ribosomal RNA of rrnA operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_3968			4012171	4012290	+	120	rrfA	5S ribosomal RNA of rrnA operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4636			4021553	4021661	+	109	spf	Spot 42 sRNA antisense regulator of galK translation, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4671			4022690	4022934	+	245	csrC	CsrC sRNA sequesters CsrA, a carbon flux regulator
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4672			4129937	4130046	-	110	oxyS	sRNA antisense regulator activates genes that detoxify oxidative damage, Hfq-dependent
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_4091			4138311	4139852	+	1542	rrsB	16S ribosomal RNA of rrnB operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4092			4139938	4140013	+	76	gltT	tRNA-Glu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_4094			4140207	4143108	+	2902	rrlB	23S ribosomal RNA of rrnB operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_4095			4143201	4143320	+	120	rrfB	5S ribosomal RNA of rrnB operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4100			4146952	4147027	+	76	thrU	tRNA-Thr
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4101			4147036	4147120	+	85	tyrU	tRNA-Tyr
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4102			4147237	4147311	+	75	glyT	tRNA-Gly
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4103			4147318	4147393	+	76	thrT	tRNA-Thr
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4688			4161891	4162051	-	161	sroH	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_4134			4179711	4181252	+	1542	rrsE	16S ribosomal RNA of rrnE operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4135			4181338	4181413	+	76	gltV	tRNA-Glu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_4138			4181607	4184510	+	2904	rrlE	23S ribosomal RNA of rrnE operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	rRNA		ER3413_4139			4184604	4184723	+	120	rrfE	5S ribosomal RNA of rrnE operon
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4673			4250268	4250407	-	140	ryjA	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4278			4334781	4334856	-	76	pheU	tRNA-Phe
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4309			4364590	4364665	+	76	glyV	tRNA-Gly
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4310			4364702	4364777	+	76	glyX	tRNA-Gly
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4311			4364813	4364888	+	76	glyY	tRNA-Gly
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4414			4468635	4468719	+	85	leuX	tRNA-Leu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	ncRNA		ER3413_4683			4500207	4500296	+	90	ryjB	novel sRNA, function unknown
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4476			4523087	4523173	-	87	leuV	tRNA-Leu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4477			4523208	4523294	-	87	leuP	tRNA-Leu
+83333.84	Escherichia coli K-12 ER3413	CP009789	RefSeq	tRNA		ER3413_4478			4523323	4523409	-	87	leuQ	tRNA-Leu
