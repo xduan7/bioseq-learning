@@ -1,3 +1,6 @@
 !.gitignore
 /conserved_domain_search_examples/rpsblast_result_protein.csv
 /conserved_domain_search_examples/rpsblast_result_protein.xml
+/genome_parsing_examples/*/contigs/
+/genome_parsing_examples/*/features/
+/genome_parsing_examples/*/info.json

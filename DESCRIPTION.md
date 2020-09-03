@@ -34,7 +34,10 @@
 
 
 ### Nucleotide or Protein Sequences as Input 
--   [ ] advantages and disadvantages of input choices
+I'm sticking with nucleotide sequences for the following reasons:
+- there are potentially more information, since the translation from nucleotide to protein is one-directional
+- non-protein-encoding nucleotide sequences are still sometimes useful (RNA, missed encoding parts, etc.)
+- might help us find something new in the genome that are not currently marked as gene
 
 
 ### Type and Scale of Sequences for Training
@@ -92,6 +95,15 @@ then move on to something like the start and end of each and every CD.
 
 ---
 ## Experiment Design
+
+
+---
+## Evaluation Target
+-   [ ] tSNE visualization of genetic codes
+-   [ ] faster conserved domain search (BLAST score)
+-   [ ] protein family/function classification
+-   [ ] protein structural similarity (TM alignment score) prediction 
+-   [ ] gene regulatory network prediction inference
 
 
 ---
