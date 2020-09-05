@@ -72,6 +72,7 @@ I'm sticking with nucleotide sequences for the following reasons:
 - sequence-based predictions
     - where are the protein-encoding regions in the given genome segment
     - what are the motif/conserved domains in the given genome segment
+- contrastive learning?
 
 
 There are multiple advantages of the position-based learning tasks. 
@@ -96,6 +97,15 @@ then move on to something like the start and end of each and every CD.
 ---
 ## Experiment Design
 
+parameters to tune:
+-   [ ] input length 
+-   [ ] masked percentage (continuous)
+-   [ ] transformer layer/dimension/structure
+-   [ ] contrastive learning target 
+
+metric: check for NLP metric ... 
+tested on hold-out e coli and perhaps salmonella (evolutionary distance)
+
 
 ---
 ## Evaluation Target
@@ -103,6 +113,7 @@ then move on to something like the start and end of each and every CD.
 -   [ ] faster conserved domain search (BLAST score)
 -   [ ] protein family/function classification
 -   [ ] protein structural similarity (TM alignment score) prediction 
+-   [ ] mutation effect?
 -   [ ] gene regulatory network prediction inference
 
 
