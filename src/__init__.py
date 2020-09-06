@@ -38,6 +38,10 @@ LOG_DIR_PATH = os.path.abspath('../logs')
 MODEL_DIR_PATH = os.path.abspath('../models')
 
 
+CDD_DIR_PATH = os.path.abspath(os.path.join(INTERIM_DATA_DIR_PATH, 'CDD/Cdd'))
+
+
+
 logging.basicConfig(
     # filename=... (could use config['experiment_name'])
     # format=...
