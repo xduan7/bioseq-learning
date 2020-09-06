@@ -51,10 +51,10 @@ def process_genome(
     # get the genome ID if not given
     genome_dir_path: str = os.path.join(genome_dir_path, '')
     genome_id: str = genome_id if genome_id else \
-        os.path.basename(genome_dir_path[-1])
+        os.path.basename(genome_dir_path[:-1])
 
     # get the genome and feature paths
-    genome_seq_path: str = os.path.join(genome_dir_path, f'{genome_id}.fna')
+    contig_seq_path: str = os.path.join(genome_dir_path, f'{genome_id}.fna')
     feature_path: str = \
         os.path.join(genome_dir_path,  f'{genome_id}.PATRIC.features.tab')
 
@@ -72,7 +72,7 @@ def process_genome(
 
     # read the entire genome into list of contig sequences
     contig_seq_record_iter: Iterator[SeqRecord] = \
-        SeqIO.parse(genome_seq_path, 'fasta')
+        SeqIO.parse(contig_seq_path, 'fasta')
 
     # split genome contigs and write into files named with their PATRIC IDs
     contig_info_dict: dict = {}
