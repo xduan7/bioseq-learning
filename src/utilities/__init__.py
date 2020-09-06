@@ -31,4 +31,6 @@ __all__ = [
     'is_subclass',
     # src.utilities.set_random_seed
     'set_random_seed',
+
+    'create_directory',
 ]
