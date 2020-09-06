@@ -5,7 +5,7 @@ Project:            bioseq-learning
 File Description:
 
     This file implements a helper function for c a directory if not
-    exist
+    exist.
 
 """
 import os
