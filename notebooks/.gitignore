@@ -3,4 +3,6 @@
 /conserved_domain_search_examples/rpsblast_result_protein.xml
 /genome_processing_examples/*/contigs/
 /genome_processing_examples/*/features/
+/genome_processing_examples/*/conserved_domains/
 /genome_processing_examples/*/info.json
+
