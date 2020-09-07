@@ -11,7 +11,7 @@ File Description:
     $python create_genome_example.py \
         -i ./562.2283 \
         -s 128 -e 131 \
-        -o ../../tests/test_process_genomes
+        -o ../../tests/examples/genomes
 
 """
 import os

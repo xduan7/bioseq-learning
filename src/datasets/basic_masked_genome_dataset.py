@@ -1,5 +1,5 @@
 """
-File Name:          genome_dataset.py
+File Name:          basic_masked_genome_dataset.py
 Project:            bioseq-learning-cd
 
 File Description:
@@ -9,7 +9,7 @@ from typing import Union
 from torch.utils.data import Dataset
 
 
-class BasicGenomeMLMDataset(Dataset):
+class BasicMaskedGenomeDataset(Dataset):
     """
     Basic genome dataset for (dynamic) masked language model training
 
@@ -26,7 +26,7 @@ class BasicGenomeMLMDataset(Dataset):
     ):
         # TODO: search for standard NLP example for MLM
         # (1) walk through genome directory
-        # (2) get the total number of test_process_genomes
+        # (2) get the total number of genomes
         # (3) get the number of contigs and lengths for each genome
         # (4) calculate the total number of data sequences
         # (5) index the data sequences, but how?

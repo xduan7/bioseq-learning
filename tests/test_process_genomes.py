@@ -8,8 +8,9 @@ File Description:
 import unittest
 
 
-_GENOME_PARENT_DIR_PATH: str = './test_process_genomes/genomes/'
-_REFERENCE_RESULTS_DIR_PATH: str = './test_process_genomes/reference_results/'
+_GENOME_PARENT_DIR_PATH: str = 'examples/genomes/'
+_REFERENCE_RESULTS_DIR_PATH: str = \
+    'examples/genome_processing_reference_results/'
 
 
 class TestProcessGenomes(unittest.TestCase):

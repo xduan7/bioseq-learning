@@ -119,7 +119,7 @@ def process_genomes(
         genome_parent_dir_path: str,
         num_threads: int = 1,
 ):
-    """process PATRIC test_process_genomes in the given parent directory in parallel
+    """process PATRIC genomes in the given parent directory in parallel
 
     :param genome_parent_dir_path:
     :param num_threads:

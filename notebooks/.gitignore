@@ -1,8 +1,8 @@
 !.gitignore
-/conserved_domain_search_examples/rpsblast_result_protein.csv
-/conserved_domain_search_examples/rpsblast_result_protein.xml
-/genome_processing_examples/*/contigs/
-/genome_processing_examples/*/features/
-/genome_processing_examples/*/conserved_domains/
-/genome_processing_examples/*/info.json
+/examples/conserved_domain_search_examples/rpsblast_result_protein.csv
+/examples/conserved_domain_search_examples/rpsblast_result_protein.xml
+/examples/genome_processing_examples/*/contigs/
+/examples/genome_processing_examples/*/features/
+/examples/genome_processing_examples/*/conserved_domains/
+/examples/genome_processing_examples/*/info.json
 
