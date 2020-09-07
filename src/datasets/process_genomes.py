@@ -8,26 +8,14 @@ File Description:
 import os
 import json
 
-from typing import Optional, Iterator
+from typing import Optional, Iterator, List
 
 import pandas as pd
 from Bio import SeqIO, SeqRecord
+from joblib import Parallel, delayed, parallel_backend
 
-from src import CDD_DIR_PATH
 from src.utilities import create_directory
-
-
-# the following rpsblast/rpstblastn parameters are designed to replicate the
-# CDD search results on NCBI website, using the entire CDD database and the
-# XML output format for direct processing with Biopython
-# ref: https://www.ncbi.nlm.nih.gov/Structure/cdd/cdd_help.shtml#RPSBFtp
-RPSTBLASTN_KWARGS = {
-    'db': CDD_DIR_PATH,
-    'seg': 'no',
-    'outfmt': 5,
-    'evalue': 0.01,
-    'comp_based_stats': '1',
-}
+from src.datasets import conserved_domain_search
 
 
 def process_genome(
@@ -42,9 +30,11 @@ def process_genome(
     - search for conserved domains on all the contigs
     - create an info file
 
-    :param genome_dir_path: string path to PATRIC genome directory
-    :param genome_id: optional string for genome ID; using the genome
+    :param genome_dir_path: path to PATRIC genome directory
+    :type genome_dir_path: str
+    :param genome_id: optional ID for genome ID; using the genome
     directory name if not given
+    :type genome_id: str
     :return: None
     """
 
@@ -100,9 +90,16 @@ def process_genome(
         _feature_by_accession_df[~_source_mask].to_csv(
             _feature_by_accession_path, index=None, sep='\t')
 
-    # TODO: a helper function for conserved domain search and root tracing
-    # TODO: conserved domain search for all contigs
-    # TODO: include conserved domain information in contig_info_dict
+    # iterate through all the contigs again for conserved domain search
+    for _contig_id in contig_info_dict.keys():
+        _contig_seq_path: str = \
+            os.path.join(contig_dir_path, f'{_contig_id}.fna')
+        _contig_cd_xml_path: str = \
+            os.path.join(conserved_domain_dir_path, f'{_contig_id}.xml')
+        conserved_domain_search(
+            nucleotide_seq_path=_contig_seq_path,
+            cd_xml_path=_contig_cd_xml_path,
+        )
 
     # save the genome information in json format
     genome_info_path: str = os.path.join(genome_dir_path, 'info.json')
@@ -121,8 +118,23 @@ def process_genomes(
 ):
     """process PATRIC genomes in the given parent directory in parallel
 
-    :param genome_parent_dir_path:
-    :param num_threads:
-    :return
+    :param genome_parent_dir_path: path to the parent directory of all
+    the PATRIC genome directories to be processed
+    :type genome_parent_dir_path: str
+    :param num_threads: maximum number of threads for parallelization
+    :type num_threads: int
+    :return: None
     """
-    pass
+
+    # clamp the number of processes between range [1, number of CPU cores]
+    num_threads: int = max(1, min(num_threads, os.cpu_count()))
+
+    # get all the paths to genomes
+    genome_paths: List[str] = [
+        os.path.join(genome_parent_dir_path, _d)
+        for _d in os.listdir(genome_parent_dir_path) if os.path.isdir(_d)
+    ]
+
+    # embarrassingly process the genome processing functions with joblib
+    with parallel_backend('threading', n_jobs=num_threads):
+        Parallel()(delayed(process_genome)(_p) for _p in genome_paths)
