@@ -1,1 +1,5 @@
 !.gitignore
+/examples/genomes/*/contigs/
+/examples/genomes/*/features/
+/examples/genomes/*/conserved_domains/
+/examples/genomes/*/info.json

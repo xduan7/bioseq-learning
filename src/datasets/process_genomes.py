@@ -85,7 +85,7 @@ def process_genome(
     for _accession, _feature_by_accession_df \
             in feature_df.groupby('accession'):
         _feature_by_accession_path: str = \
-            os.path.join(feature_path, f'{_accession}.tsv')
+            os.path.join(feature_dir_path, f'{_accession}.tsv')
         _source_mask = (_feature_by_accession_df['feature_type'] == 'source')
         _feature_by_accession_df[~_source_mask].to_csv(
             _feature_by_accession_path, index=None, sep='\t')
@@ -132,7 +132,8 @@ def process_genomes(
     # get all the paths to genomes
     genome_paths: List[str] = [
         os.path.join(genome_parent_dir_path, _d)
-        for _d in os.listdir(genome_parent_dir_path) if os.path.isdir(_d)
+        for _d in os.listdir(genome_parent_dir_path)
+        if os.path.isdir(os.path.join(genome_parent_dir_path, _d))
     ]
 
     # embarrassingly process the genome processing functions with joblib

@@ -46,7 +46,8 @@ def conserved_domain_search(
 
     # return of the result XML already exists
     if os.path.exists(cd_xml_path):
-        return NCBIXML.read(cd_xml_path)
+        with open(cd_xml_path, 'r') as _fh:
+            return NCBIXML.read(_fh)
 
     rpstblastn_cmd = NcbirpstblastnCommandline(
         query=nucleotide_seq_path,
@@ -56,7 +57,7 @@ def conserved_domain_search(
 
     # write to result XML file if given
     if cd_xml_path:
-        with open(cd_xml_path, 'w+') as f:
-            f.write(cd_xml)
+        with open(cd_xml_path, 'w+') as _fh:
+            _fh.write(cd_xml)
 
     return NCBIXML.read(io.StringIO(cd_xml))
