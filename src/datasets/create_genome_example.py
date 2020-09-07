@@ -7,8 +7,11 @@ File Description:
     This file is a script to create genome examples, which are sliced
     contigs of PATRIC genome
 
-    example: python create_genome_example.py --genome_dir_path ./562.2283 \
-    --start 128 --end 131 --output_dir_path ../../tests/test_process_genomes
+    example:
+    $python create_genome_example.py \
+        -i ./562.2283 \
+        -s 128 -e 131 \
+        -o ../../tests/test_process_genomes
 
 """
 import os
@@ -21,19 +24,19 @@ from Bio import SeqIO
 parser = argparse.ArgumentParser(
     description='create a small example of PATRIC genomes for testing')
 parser.add_argument(
-    '--genome_dir_path', type=str,
+    '-i', '--genome_dir_path', type=str,
     help='directory path to a PATRIC genome',
 )
 parser.add_argument(
-    '--start', type=int,
+    '-s', '--start', type=int,
     help='first index for contigs (1-based numbering)',
 )
 parser.add_argument(
-    '--end', type=int,
-    help='last index for contigs (1-based numbering)',
+    '-e', '--end', type=int,
+    help='last index for contigs (1-based numbering, inclusive)',
 )
 parser.add_argument(
-    '--output_dir_path', type=str,
+    '-o', '--output_dir_path', type=str,
     help='directory path to a PATRIC genome',
 )
 args = parser.parse_args()
