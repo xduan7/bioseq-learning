@@ -8,7 +8,7 @@ File Description:
 import os
 import json
 
-from typing import Optional, Iterator, List
+from typing import Optional, Iterator, List, Tuple
 
 import pandas as pd
 from Bio import SeqIO, SeqRecord
@@ -20,6 +20,7 @@ from src.datasets import conserved_domain_search
 
 def process_genome(
         genome_dir_path: str,
+        output_dir_path: Optional[str] = None,
         genome_id: Optional[str] = None,
 ):
     """process a PATRIC genome
@@ -32,6 +33,9 @@ def process_genome(
 
     :param genome_dir_path: path to PATRIC genome directory
     :type genome_dir_path: str
+    :param output_dir_path: optional parent path to the processed genomes;
+    use the genome directory if not given
+    :type output_dir_path: str
     :param genome_id: optional ID for genome ID; using the genome
     directory name if not given
     :type genome_id: str
@@ -49,13 +53,17 @@ def process_genome(
         os.path.join(genome_dir_path,  f'{genome_id}.PATRIC.features.tab')
 
     # create the subdirectories if not exist
-    # - ./contigs: contig nucleotide sequences
-    # - ./features:  feature annotations for every contig
-    # - ./conserved_domains: conserved domain results for every contig
-    contig_dir_path: str = os.path.join(genome_dir_path, 'contigs')
-    feature_dir_path: str = os.path.join(genome_dir_path, 'features')
+    # - ./OUTPUT_DIR: output directory if given
+    # - ./OUTPUT_DIR/contigs: contig nucleotide sequences
+    # - ./OUTPUT_DIR/features:  feature annotations for every contig
+    # - ./OUTPUT_DIR/conserved_domains: conserved domains for every contig
+    output_dir_path: str = output_dir_path \
+        if output_dir_path else genome_dir_path
+    contig_dir_path: str = os.path.join(output_dir_path, 'contigs')
+    feature_dir_path: str = os.path.join(output_dir_path, 'features')
     conserved_domain_dir_path: str = \
-        os.path.join(genome_dir_path, 'conserved_domains')
+        os.path.join(output_dir_path, 'conserved_domains')
+    create_directory(output_dir_path)
     create_directory(contig_dir_path)
     create_directory(feature_dir_path)
     create_directory(conserved_domain_dir_path)
@@ -102,7 +110,7 @@ def process_genome(
         )
 
     # save the genome information in json format
-    genome_info_path: str = os.path.join(genome_dir_path, 'info.json')
+    genome_info_path: str = os.path.join(output_dir_path, 'info.json')
     genome_info: dict = {
         'genome_name': feature_df['genome_name'].unique()[0],
         'number_of_contigs': len(contig_info_dict),
@@ -114,6 +122,7 @@ def process_genome(
 
 def process_genomes(
         genome_parent_dir_path: str,
+        output_parent_dir_path: Optional[str] = None,
         num_threads: int = 1,
 ):
     """process PATRIC genomes in the given parent directory in parallel
@@ -121,6 +130,9 @@ def process_genomes(
     :param genome_parent_dir_path: path to the parent directory of all
     the PATRIC genome directories to be processed
     :type genome_parent_dir_path: str
+    :param output_parent_dir_path: optional path to the parent directory of
+    all the processed genomes
+    :type output_parent_dir_path: str
     :param num_threads: maximum number of threads for parallelization
     :type num_threads: int
     :return: None
@@ -129,13 +141,27 @@ def process_genomes(
     # clamp the number of processes between range [1, number of CPU cores]
     num_threads: int = max(1, min(num_threads, os.cpu_count()))
 
-    # get all the paths to genomes
-    genome_paths: List[str] = [
-        os.path.join(genome_parent_dir_path, _d)
-        for _d in os.listdir(genome_parent_dir_path)
-        if os.path.isdir(os.path.join(genome_parent_dir_path, _d))
-    ]
+    # get all the paths to genomes, and output paths if possible
+    process_genome_arguments: List[Tuple[str, Optional[str], str]] = []
+    for _genome_id in os.listdir(genome_parent_dir_path):
+        _genome_dir_path: str = \
+            os.path.join(genome_parent_dir_path, _genome_id)
+        if os.path.isdir(_genome_dir_path):
+            _output_dir_path: Optional[str] = \
+                os.path.join(output_parent_dir_path, _genome_id) \
+                if output_parent_dir_path else None
+            process_genome_arguments.append(
+                (_genome_dir_path, _output_dir_path, _genome_id))
 
     # embarrassingly process the genome processing functions with joblib
+    # TODO: progress bar and estimate time left with tqdm
     with parallel_backend('threading', n_jobs=num_threads):
-        Parallel()(delayed(process_genome)(_p) for _p in genome_paths)
+        Parallel()(
+            delayed(process_genome)(_in_dir, _out_dir, _id)
+            for _in_dir, _out_dir, _id in process_genome_arguments
+        )
+
+
+# TODO: Python script (executable) for genome processing
+if __name__ == '__main__':
+    pass
