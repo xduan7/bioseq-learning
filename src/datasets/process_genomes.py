@@ -7,10 +7,12 @@ File Description:
 """
 import os
 import json
+import argparse
 
 from typing import Optional, Iterator, List, Tuple
 
 import pandas as pd
+from tqdm import tqdm
 from Bio import SeqIO, SeqRecord
 from joblib import Parallel, delayed, parallel_backend
 
@@ -154,14 +156,41 @@ def process_genomes(
                 (_genome_dir_path, _output_dir_path, _genome_id))
 
     # embarrassingly process the genome processing functions with joblib
-    # TODO: progress bar and estimate time left with tqdm
     with parallel_backend('threading', n_jobs=num_threads):
         Parallel()(
             delayed(process_genome)(_in_dir, _out_dir, _id)
-            for _in_dir, _out_dir, _id in process_genome_arguments
+            for _in_dir, _out_dir, _id in tqdm(process_genome_arguments)
         )
 
 
 # TODO: Python script (executable) for genome processing
 if __name__ == '__main__':
-    pass
+
+    parser = argparse.ArgumentParser(
+        description='process PATRIC genomes in parallel')
+
+    parser.add_argument(
+        '-i', '--genome_parent_dir_path', type=str,
+        help='path to parent directory of all genomes)',
+    )
+    parser.add_argument(
+        '-o', '--output_parent_dir_path', type=str, default=None,
+        help='optional path to directory for processed genomes',
+    )
+    parser.add_argument(
+        '-t', '--num_threads', type=int, default=1,
+        help='number of threads for (awkward) parallelization',
+    )
+    args = parser.parse_args()
+
+    # usage example
+    # $export PYTHONPATH=<project dir>:$PYTHONPATH
+    # $python process_genomes.py \
+    #      -i ~/data/PATRIC/genomes \
+    #      -o ~/data/PATRIC/processed_genomes \
+    #      -t 80
+    process_genomes(
+        genome_parent_dir_path=args.genome_parent_dir_path,
+        output_parent_dir_path=args.output_parent_dir_path,
+        num_threads=args.num_threads,
+    )
