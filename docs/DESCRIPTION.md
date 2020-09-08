@@ -97,6 +97,12 @@ then move on to something like the start and end of each and every CD.
 ---
 ## Experiment Design
 
+some visualizations :
+-   [ ] genome contigs and genes length histogram (pangenome)
+-   [ ] conserved domain occurrence histogram
+-   [ ] conserved domain length histogram
+-   [ ] conserved domain length versus occurrence?
+
 parameters to tune:
 -   [ ] input length 
 -   [ ] masked percentage (continuous)
