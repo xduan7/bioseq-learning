@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<!DOCTYPE BlastOutput PUBLIC "-//NCBI//NCBI BlastOutput/EN" "http://www.ncbi.nlm.nih.gov/dtd/NCBI_BlastOutput.dtd">
+<BlastOutput>
+  <BlastOutput_program>rpstblastn</BlastOutput_program>
+  <BlastOutput_version>RPSTBLASTN 2.10.1+</BlastOutput_version>
+  <BlastOutput_reference>Stephen F. Altschul, Thomas L. Madden, Alejandro A. Sch&amp;auml;ffer, Jinghui Zhang, Zheng Zhang, Webb Miller, and David J. Lipman (1997), &quot;Gapped BLAST and PSI-BLAST: a new generation of protein database search programs&quot;, Nucleic Acids Res. 25:3389-3402.</BlastOutput_reference>
+  <BlastOutput_db>/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd</BlastOutput_db>
+  <BlastOutput_query-ID>Query_1</BlastOutput_query-ID>
+  <BlastOutput_query-def>AXOD01000128 Escherichia coli GSK2023 contig128, whole genome shotgun sequence. [Escherichia coli GSK2023 | 562.2283]</BlastOutput_query-def>
+  <BlastOutput_query-len>2114</BlastOutput_query-len>
+  <BlastOutput_param>
+    <Parameters>
+      <Parameters_matrix>BLOSUM62</Parameters_matrix>
+      <Parameters_expect>0.01</Parameters_expect>
+      <Parameters_gap-open>11</Parameters_gap-open>
+      <Parameters_gap-extend>1</Parameters_gap-extend>
+      <Parameters_filter>F</Parameters_filter>
+    </Parameters>
+  </BlastOutput_param>
+<BlastOutput_iterations>
+<Iteration>
+  <Iteration_iter-num>1</Iteration_iter-num>
+  <Iteration_query-ID>Query_1</Iteration_query-ID>
+  <Iteration_query-def>AXOD01000128 Escherichia coli GSK2023 contig128, whole genome shotgun sequence. [Escherichia coli GSK2023 | 562.2283]</Iteration_query-def>
+  <Iteration_query-len>2114</Iteration_query-len>
+<Iteration_hits>
+<Hit>
+  <Hit_num>1</Hit_num>
+  <Hit_id>gnl|CDD|319897</Hit_id>
+  <Hit_def>cd16363, Col_Im_like, inhibitory immunity (Im) protein of colicin (Col) deoxyribonuclease (DNase) and pyocins.  This family contains inhibitory immunity (Im) proteins that bind to colicin endonucleases (DNases) or pyocins with very high affinity and specificity; this is critical for the neutralization of endogenous DNase catalytic activity and for protection against exogenous DNase bacteriocins. The DNase colicin family (ColE2, ColE7, ColE8 and ColE9) in E. coli, and pyocin family (S1, S2, S3 and AP41) in P. aeruginosa, are potent bacteriocins where the immunity proteins (Ims) protect the colicin/pyocin producing (i.e. colicinogenic) bacteria by binding and inactivating colicin nucleases. The binding affinities between cognate and non-cognate nucleases by Im proteins can vary up to 10 orders of magnitude.</Hit_def>
+  <Hit_accession>319897</Hit_accession>
+  <Hit_len>81</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>122.235</Hsp_bit-score>
+      <Hsp_score>308</Hsp_score>
+      <Hsp_evalue>2.76438e-33</Hsp_evalue>
+      <Hsp_query-from>269</Hsp_query-from>
+      <Hsp_query-to>535</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>81</Hsp_hit-to>
+      <Hsp_query-frame>2</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>43</Hsp_identity>
+      <Hsp_positive>55</Hsp_positive>
+      <Hsp_gaps>8</Hsp_gaps>
+      <Hsp_align-len>89</Hsp_align-len>
+      <Hsp_qseq>KEKLQDYTEDEFLNFLGGLRSSMKDGKSLKGKELEMYWDSLVDHFIEITQHPSGSDLIFYPKSQGDDKPENILKIVKEWRRSQGLPLFK</Hsp_qseq>
+      <Hsp_hseq>KNKLSDYTESEFLELVEEIFNADY--------GSEEELDDLLDHFEKITEHPAGSDLIFYPEDGADDSPEGIVEEVKEWRAANGLPGFK</Hsp_hseq>
+      <Hsp_midline>K KL DYTE EFL  +  + ++            E   D L+DHF +IT+HP+GSDLIFYP+   DD PE I++ VKEWR + GLP FK</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>104.901</Hsp_bit-score>
+      <Hsp_score>263</Hsp_score>
+      <Hsp_evalue>3.48159e-27</Hsp_evalue>
+      <Hsp_query-from>964</Hsp_query-from>
+      <Hsp_query-to>1230</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>81</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>40</Hsp_identity>
+      <Hsp_positive>54</Hsp_positive>
+      <Hsp_gaps>8</Hsp_gaps>
+      <Hsp_align-len>89</Hsp_align-len>
+      <Hsp_qseq>KDEIEDYTEREFIELLGEFTNPTGDNAQLKGEELDKYWDDLEEHLTRITQHPLMSDLIYYPAKKGDDEPENILKIVKEWRRSQGLPLFK</Hsp_qseq>
+      <Hsp_hseq>KNKLSDYTESEFLELVEEIFNAD--------YGSEEELDDLLDHFEKITEHPAGSDLIFYPEDGADDSPEGIVEEVKEWRAANGLPGFK</Hsp_hseq>
+      <Hsp_midline>K+++ DYTE EF+EL+ E  N             ++  DDL +H  +IT+HP  SDLI+YP    DD PE I++ VKEWR + GLP FK</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>2</Hit_num>
+  <Hit_id>gnl|CDD|366573</Hit_id>
+  <Hit_def>pfam01320, Colicin_Pyocin, Colicin immunity protein / pyocin immunity protein.  </Hit_def>
+  <Hit_accession>366573</Hit_accession>
+  <Hit_len>82</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>103.926</Hsp_bit-score>
+      <Hsp_score>260</Hsp_score>
+      <Hsp_evalue>8.12981e-27</Hsp_evalue>
+      <Hsp_query-from>266</Hsp_query-from>
+      <Hsp_query-to>535</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>82</Hsp_hit-to>
+      <Hsp_query-frame>2</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>44</Hsp_identity>
+      <Hsp_positive>55</Hsp_positive>
+      <Hsp_gaps>8</Hsp_gaps>
+      <Hsp_align-len>90</Hsp_align-len>
+      <Hsp_qseq>FKEKLQDYTEDEFLNFLGGLRSSMKDGKSLKGKELEMYWDSLVDHFIEITQHPSGSDLIFYPKSQGDDKPENILKIVKEWRRSQGLPLFK</Hsp_qseq>
+      <Hsp_hseq>LKNKLEDYTESEFLAFIKKIFEANFG--------TEAEEDSLVLHFEKITEHPSGNDLIFYPEDGEEDSPEGILKEIKEWRAANGKPGFK</Hsp_hseq>
+      <Hsp_midline> K KL+DYTE EFL F+  +  +            E   DSLV HF +IT+HPSG+DLIFYP+   +D PE ILK +KEWR + G P FK</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>92.37</Hsp_bit-score>
+      <Hsp_score>230</Hsp_score>
+      <Hsp_evalue>1.04163e-22</Hsp_evalue>
+      <Hsp_query-from>961</Hsp_query-from>
+      <Hsp_query-to>1230</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>82</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>37</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>8</Hsp_gaps>
+      <Hsp_align-len>90</Hsp_align-len>
+      <Hsp_qseq>FKDEIEDYTEREFIELLGEFTNPTGDNAQLKGEELDKYWDDLEEHLTRITQHPLMSDLIYYPAKKGDDEPENILKIVKEWRRSQGLPLFK</Hsp_qseq>
+      <Hsp_hseq>LKNKLEDYTESEFLAFIKKIFE---ANFGTEAEE-----DSLVLHFEKITEHPSGNDLIFYPEDGEEDSPEGILKEIKEWRAANGKPGFK</Hsp_hseq>
+      <Hsp_midline> K+++EDYTE EF+  + +       N   + EE     D L  H  +IT+HP  +DLI+YP    +D PE ILK +KEWR + G P FK</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>3</Hit_num>
+  <Hit_id>gnl|CDD|222853</Hit_id>
+  <Hit_def>PHA02517, PHA02517, putative transposase OrfB; Reviewed.</Hit_def>
+  <Hit_accession>222853</Hit_accession>
+  <Hit_len>277</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>68.3528</Hsp_bit-score>
+      <Hsp_score>167</Hsp_score>
+      <Hsp_evalue>1.47253e-12</Hsp_evalue>
+      <Hsp_query-from>1999</Hsp_query-from>
+      <Hsp_query-to>2112</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>38</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>32</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>38</Hsp_align-len>
+      <Hsp_qseq>LHIAPSTYYHCQQQRHHPDKRSARAQRDDWLKREIQRV</Hsp_qseq>
+      <Hsp_hseq>LGIAPSTYYRCQQQRHHPDKRRARAQHDDWLKSEILRV</Hsp_hseq>
+      <Hsp_midline>L IAPSTYY CQQQRHHPDKR ARAQ DDWLK EI RV</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>4</Hit_num>
+  <Hit_id>gnl|CDD|225511</Hit_id>
+  <Hit_def>COG2963, COG2963, Transposase and inactivated derivatives [DNA replication, recombination, and repair].</Hit_def>
+  <Hit_accession>225511</Hit_accession>
+  <Hit_len>116</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>47.2245</Hsp_bit-score>
+      <Hsp_score>112</Hsp_score>
+      <Hsp_evalue>1.70455e-06</Hsp_evalue>
+      <Hsp_query-from>1619</Hsp_query-from>
+      <Hsp_query-to>1966</Hsp_query-to>
+      <Hsp_hit-from>3</Hsp_hit-from>
+      <Hsp_hit-to>114</Hsp_hit-to>
+      <Hsp_query-frame>2</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>25</Hsp_identity>
+      <Hsp_positive>45</Hsp_positive>
+      <Hsp_gaps>12</Hsp_gaps>
+      <Hsp_align-len>120</Hsp_align-len>
+      <Hsp_qseq>TKNTRFSPEVRQRAIRMVLESQGEYDSQWAAICSIAPKIGCT-PETLRVWVRQHERDTGGGDGGLTTA---ERQRLKELERENRELRRSNDILRQASAYFAKAEFDRLWKK*CHCWISCV</Hsp_qseq>
+      <Hsp_hseq>ERRKKYSPEFKLEAVALYLRGG-------DTVSEVAREFGIVSATQLYKWRIQLQKGGGLAFSGKGKTVSYDAEEILRLRK-LAELREESDILKKAAFYLANAGSLAFWLKGYEERGENL</Hsp_hseq>
+      <Hsp_midline> +  ++SPE +  A+ + L            +  +A + G      L  W  Q ++  G    G       + + +  L +   ELR  +DIL++A+ Y A A     W K        +</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>5</Hit_num>
+  <Hit_id>gnl|CDD|238038</Hit_id>
+  <Hit_def>cd00085, HNHc, HNH nucleases; HNH endonuclease signature which is found in viral, prokaryotic, and eukaryotic proteins. The alignment includes members of the large group of homing endonucleases, yeast intron 1 protein, MutS, as well as bacterial colicins, pyocins, and anaredoxins.</Hit_def>
+  <Hit_accession>238038</Hit_accession>
+  <Hit_len>57</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>42.844</Hsp_bit-score>
+      <Hsp_score>101</Hsp_score>
+      <Hsp_evalue>1.34203e-05</Hsp_evalue>
+      <Hsp_query-from>114</Hsp_query-from>
+      <Hsp_query-to>248</Hsp_query-to>
+      <Hsp_hit-from>14</Hsp_hit-from>
+      <Hsp_hit-to>57</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>11</Hsp_identity>
+      <Hsp_positive>22</Hsp_positive>
+      <Hsp_gaps>1</Hsp_gaps>
+      <Hsp_align-len>45</Hsp_align-len>
+      <Hsp_qseq>GWYYGPKEIVKKFQIHHRVAVEYGGSVYDIDNLRIVTPRLHDEIH</Hsp_qseq>
+      <Hsp_hseq>CPYCGKPGGTEGLEVDHIIPLSDGGN-NDLDNLVLLCRKCHRKKH</Hsp_hseq>
+      <Hsp_midline>  Y G     +  ++ H + +  GG+  D+DNL ++  + H + H</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>6</Hit_num>
+  <Hit_id>gnl|CDD|366690</Hit_id>
+  <Hit_def>pfam01527, HTH_Tnp_1, Transposase.  Transposase proteins are necessary for efficient DNA transposition. This family consists of various E. coli insertion elements and other bacterial transposases some of which are members of the IS3 family.</Hit_def>
+  <Hit_accession>366690</Hit_accession>
+  <Hit_len>74</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>41.9532</Hsp_bit-score>
+      <Hsp_score>99</Hsp_score>
+      <Hsp_evalue>4.73522e-05</Hsp_evalue>
+      <Hsp_query-from>1616</Hsp_query-from>
+      <Hsp_query-to>1876</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>73</Hsp_hit-to>
+      <Hsp_query-frame>2</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>28</Hsp_identity>
+      <Hsp_positive>43</Hsp_positive>
+      <Hsp_gaps>14</Hsp_gaps>
+      <Hsp_align-len>87</Hsp_align-len>
+      <Hsp_qseq>MTKNTRFSPEVRQRAIRMVLESQGEYDSQWAAICSIAPKIGCTPETLRVWVRQHERDTGGGDGGLTTAERQRLKELERENRELRRSN</Hsp_qseq>
+      <Hsp_hseq>MRKRRRFSDEFKARAVKESLEPG-------RSVSEVARRLGVSPSTLYRWRRQYR-------GGMGVSPARRLTALEEENRRLKKEL</Hsp_hseq>
+      <Hsp_midline>M K  RFS E + RA++  LE          ++  +A ++G +P TL  W RQ+        GG+  +  +RL  LE ENR L++  </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+</Iteration_hits>
+  <Iteration_stat>
+    <Statistics>
+      <Statistics_db-num>55570</Statistics_db-num>
+      <Statistics_db-len>12873547</Statistics_db-len>
+      <Statistics_hsp-len>104</Statistics_hsp-len>
+      <Statistics_eff-space>4256560200</Statistics_eff-space>
+      <Statistics_kappa>0.070879884</Statistics_kappa>
+      <Statistics_lambda>0.267</Statistics_lambda>
+      <Statistics_entropy>0.14</Statistics_entropy>
+    </Statistics>
+  </Iteration_stat>
+</Iteration>
+</BlastOutput_iterations>
+</BlastOutput>
+

@@ -1,0 +1,5 @@
+genome_id	genome_name	accession	annotation	feature_type	patric_id	refseq_locus_tag	alt_locus_tag	uniprotkb_accession	start	end	strand	na_length	gene	product	figfam_id	plfam_id	pgfam_id	go	ec	pathway
+562.2284	Escherichia coli GSK2024	AXOE01000129	PATRIC	CDS	fig|562.2284.peg.4135		VBIEscCol313224_4135		42	260	+	219		T6SS component Hcp / alpha/beta hydrolase domain	FIG00008307	PLF_561_00008651	PGF_10443983			
+562.2284	Escherichia coli GSK2024	AXOE01000129	PATRIC	CDS	fig|562.2284.peg.4136		VBIEscCol313224_4136		540	662	-	123		hypothetical protein		PLF_561_00006736	PGF_01650369			
+562.2284	Escherichia coli GSK2024	AXOE01000129	PATRIC	CDS	fig|562.2284.peg.4137		VBIEscCol313224_4137		952	1242	+	291		hypothetical protein		PLF_561_00005677	PGF_08225224			
+562.2284	Escherichia coli GSK2024	AXOE01000129	PATRIC	CDS	fig|562.2284.peg.4138		VBIEscCol313224_4138		1667	1942	+	276		Insertion element IS401 (Burkholderia multivorans) transposase	FIG01306568	PLF_561_00060242	PGF_00061644			

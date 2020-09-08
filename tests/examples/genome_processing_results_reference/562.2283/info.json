@@ -1,0 +1,18 @@
+{
+    "genome_name": "Escherichia coli GSK2023",
+    "number_of_contigs": 4,
+    "contigs": {
+        "AXOD01000128": {
+            "length": 2114
+        },
+        "AXOD01000129": {
+            "length": 1894
+        },
+        "AXOD01000130": {
+            "length": 1873
+        },
+        "AXOD01000131": {
+            "length": 1684
+        }
+    }
+}

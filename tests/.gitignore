@@ -3,3 +3,4 @@
 /examples/genomes/*/features/
 /examples/genomes/*/conserved_domains/
 /examples/genomes/*/info.json
+/examples/genome_processing_results/

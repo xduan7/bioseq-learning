@@ -1,0 +1,18 @@
+{
+    "genome_name": "Escherichia coli GSK202B",
+    "number_of_contigs": 4,
+    "contigs": {
+        "AXOA01000128": {
+            "length": 2540
+        },
+        "AXOA01000129": {
+            "length": 2346
+        },
+        "AXOA01000130": {
+            "length": 2260
+        },
+        "AXOA01000131": {
+            "length": 2251
+        }
+    }
+}

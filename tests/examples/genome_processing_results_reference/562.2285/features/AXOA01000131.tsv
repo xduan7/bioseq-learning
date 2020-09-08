@@ -1,0 +1,5 @@
+genome_id	genome_name	accession	annotation	feature_type	patric_id	refseq_locus_tag	alt_locus_tag	uniprotkb_accession	start	end	strand	na_length	gene	product	figfam_id	plfam_id	pgfam_id	go	ec	pathway
+562.2285	Escherichia coli GSK202B	AXOA01000131	PATRIC	CDS	fig|562.2285.peg.4134		VBIEscCol307008_4134		119	874	-	756		Outer-membrane-phospholipid-binding lipoprotein MlaA	FIG00638782	PLF_561_00001873	PGF_00028486			
+562.2285	Escherichia coli GSK202B	AXOA01000131	PATRIC	CDS	fig|562.2285.peg.4135		VBIEscCol307008_4135		900	1013	-	114		hypothetical protein	FIG01578817	PLF_561_00003516	PGF_00262768			
+562.2285	Escherichia coli GSK202B	AXOA01000131	PATRIC	CDS	fig|562.2285.peg.4136		VBIEscCol307008_4136		1168	2100	+	933		Inner membrane protein YfdC	FIG00905537	PLF_561_00001527	PGF_03376029			
+562.2285	Escherichia coli GSK202B	AXOA01000131	PATRIC	tRNA	fig|562.2285.rna.95		VBIEscCol307008_r095		2176	2247	+	72		tRNA-Arg-CCT						

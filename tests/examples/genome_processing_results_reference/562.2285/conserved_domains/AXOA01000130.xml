@@ -1,0 +1,1154 @@
+<?xml version="1.0"?>
+<!DOCTYPE BlastOutput PUBLIC "-//NCBI//NCBI BlastOutput/EN" "http://www.ncbi.nlm.nih.gov/dtd/NCBI_BlastOutput.dtd">
+<BlastOutput>
+  <BlastOutput_program>rpstblastn</BlastOutput_program>
+  <BlastOutput_version>RPSTBLASTN 2.10.1+</BlastOutput_version>
+  <BlastOutput_reference>Stephen F. Altschul, Thomas L. Madden, Alejandro A. Sch&amp;auml;ffer, Jinghui Zhang, Zheng Zhang, Webb Miller, and David J. Lipman (1997), &quot;Gapped BLAST and PSI-BLAST: a new generation of protein database search programs&quot;, Nucleic Acids Res. 25:3389-3402.</BlastOutput_reference>
+  <BlastOutput_db>/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd</BlastOutput_db>
+  <BlastOutput_query-ID>Query_1</BlastOutput_query-ID>
+  <BlastOutput_query-def>AXOA01000130 Escherichia coli GSK202B contig130, whole genome shotgun sequence. [Escherichia coli GSK202B | 562.2285]</BlastOutput_query-def>
+  <BlastOutput_query-len>2260</BlastOutput_query-len>
+  <BlastOutput_param>
+    <Parameters>
+      <Parameters_matrix>BLOSUM62</Parameters_matrix>
+      <Parameters_expect>0.01</Parameters_expect>
+      <Parameters_gap-open>11</Parameters_gap-open>
+      <Parameters_gap-extend>1</Parameters_gap-extend>
+      <Parameters_filter>F</Parameters_filter>
+    </Parameters>
+  </BlastOutput_param>
+<BlastOutput_iterations>
+<Iteration>
+  <Iteration_iter-num>1</Iteration_iter-num>
+  <Iteration_query-ID>Query_1</Iteration_query-ID>
+  <Iteration_query-def>AXOA01000130 Escherichia coli GSK202B contig130, whole genome shotgun sequence. [Escherichia coli GSK202B | 562.2285]</Iteration_query-def>
+  <Iteration_query-len>2260</Iteration_query-len>
+<Iteration_hits>
+<Hit>
+  <Hit_num>1</Hit_num>
+  <Hit_id>gnl|CDD|183194</Hit_id>
+  <Hit_def>PRK11556, PRK11556, MdtA/MuxA family multidrug efflux RND transporter periplasmic adaptor subunit.  </Hit_def>
+  <Hit_accession>183194</Hit_accession>
+  <Hit_len>415</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>798.231</Hsp_bit-score>
+      <Hsp_score>2062</Hsp_score>
+      <Hsp_evalue>0</Hsp_evalue>
+      <Hsp_query-from>277</Hsp_query-from>
+      <Hsp_query-to>1521</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>415</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>392</Hsp_identity>
+      <Hsp_positive>401</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>415</Hsp_align-len>
+      <Hsp_qseq>MKGSYKSRWVIVIVVVIAAIAAFWFWQGRNDSQSAAPGATKQAQQSPAGGRRGMRADPLAPVQAATAVEQAVPRYLTGLGTITAANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIKVKARFNNQDDALFPNQFVNARMLVDTEQNAVVIPTAALQMGNEGHFVWVLNSENKVSKHLVTPGIQDSQKVVIRAGISAGDRVVTDGIDRLTEGAKVEVVEAQSATAPEEKATSREYAKKGARS</Hsp_qseq>
+      <Hsp_hseq>MKGSRKSRWVIVIVVVIAAIAAFWFWQGRSTSSSAAPGAAKQAQQSPAGGRRGMRSGPLAPVQAATATEQAVPRYLTGLGTVTAANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPRPFKVALAQAQGQLAKDQATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDYSRITAPISGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLVFTLPESDIATVVQAQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIKLKARFNNQDDALFPNQFVNARMLVDTLQNAVVIPTAALQMGNEGHFVWVLNDENKVSKHLVTPGIQDSQKVVISAGLSAGDRVVTDGIDRLTEGAKVEVVEPQSATTPEEKATSREYAKKGARS</Hsp_hseq>
+      <Hsp_midline>MKGS KSRWVIVIVVVIAAIAAFWFWQGR+ S SAAPGA KQAQQSPAGGRRGMR+ PLAPVQAATA EQAVPRYLTGLGT+TAANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDP  FKVALAQAQGQLAKD+ATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLD+SRITAP+ GRVGLKQVDVGNQISSGDTTGIVVITQTHPIDL+FTLPESDIATVVQAQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIK+KARFNNQDDALFPNQFVNARMLVDT QNAVVIPTAALQMGNEGHFVWVLN ENKVSKHLVTPGIQDSQKVVI AG+SAGDRVVTDGIDRLTEGAKVEVVE QSAT PEEKATSREYAKKGARS</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>2</Hit_num>
+  <Hit_id>gnl|CDD|182501</Hit_id>
+  <Hit_def>PRK10503, PRK10503, MdtB/MuxB family multidrug efflux RND transporter permease subunit.  </Hit_def>
+  <Hit_accession>182501</Hit_accession>
+  <Hit_len>1040</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>504.264</Hsp_bit-score>
+      <Hsp_score>1299</Hsp_score>
+      <Hsp_evalue>2.38116e-165</Hsp_evalue>
+      <Hsp_query-from>1524</Hsp_query-from>
+      <Hsp_query-to>2258</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>245</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>241</Hsp_identity>
+      <Hsp_positive>245</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>245</Hsp_align-len>
+      <Hsp_qseq>MQVLPPSSTGGPSRLFIMRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTSTAMPMTQVEDMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDGPSRAITLSANDQMQ</Hsp_qseq>
+      <Hsp_hseq>MQVLPPSSTGGPSRLFILRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTSTAMPMTQVEDMVETRVAQKISQVSGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDGPTRAVTLSANDQMQ</Hsp_hseq>
+      <Hsp_midline>MQVLPPSSTGGPSRLFI+RPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTSTAMPMTQVEDMVETRVAQKISQ+SGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDGP+RA+TLSANDQMQ</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>3</Hit_num>
+  <Hit_id>gnl|CDD|334294</Hit_id>
+  <Hit_def>pfam00873, ACR_tran, AcrB/AcrD/AcrF family.  Members of this family are integral membrane proteins. Some are involved in drug resistance. AcrB cooperates with a membrane fusion protein, AcrA, and an outer membrane channel TolC. The structure shows the AcrB forms a homotrimer.</Hit_def>
+  <Hit_accession>334294</Hit_accession>
+  <Hit_len>1010</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>281.107</Hsp_bit-score>
+      <Hsp_score>720</Hsp_score>
+      <Hsp_evalue>8.60787e-82</Hsp_evalue>
+      <Hsp_query-from>1557</Hsp_query-from>
+      <Hsp_query-to>2258</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>235</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>98</Hsp_identity>
+      <Hsp_positive>139</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>236</Hsp_align-len>
+      <Hsp_qseq>PSRLFIMRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTST--AMPMTQVEDMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDGPSRAITLSANDQMQ</Hsp_qseq>
+      <Hsp_hseq>MSKFFIDRPIFALVLAIAILLAGILSIFSLPVDQYPEIAPPTVQVSTSYPGASPETVEDTVTQPIEQAMNGLDGLKYMSSQSSYGLSSITLTFEDGTDIDIARQQVQNRLQLATPLLPEGV-QRPGISVIKTSLGPIMVLAVTSTDGSYTQTDLRDYADTNIKDQLSRVPGVGDVQLFGGSQYAMRIWLDPQKLASYGLTLTDVVSALKAQNVNIGAGQLEGQGLQALIRAQGRLQ</Hsp_hseq>
+      <Hsp_midline> S+ FI RP+   +L +AILLAGI+   +LPV   PE+  PT+QV T YPGASP+ +   VT P+E+    + GLK MSSQSS G S ITL F+    +D+A Q+VQ  +  AT LLP  +   P  S +  +  PIM LAVTST  +   T + D  +T +  ++S++ GVG V L GG + A+R+ L+ Q +A+ GLT   V +A+   NVN   G L+G      + A  ++Q</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>4</Hit_num>
+  <Hit_id>gnl|CDD|223911</Hit_id>
+  <Hit_def>COG0841, AcrB, Cation/multidrug efflux pump [Defense mechanisms].</Hit_def>
+  <Hit_accession>223911</Hit_accession>
+  <Hit_len>1009</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>271.79</Hsp_bit-score>
+      <Hsp_score>696</Hsp_score>
+      <Hsp_evalue>1.81917e-78</Hsp_evalue>
+      <Hsp_query-from>1560</Hsp_query-from>
+      <Hsp_query-to>2258</Hsp_query-to>
+      <Hsp_hit-from>3</Hsp_hit-from>
+      <Hsp_hit-to>234</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>90</Hsp_identity>
+      <Hsp_positive>129</Hsp_positive>
+      <Hsp_gaps>1</Hsp_gaps>
+      <Hsp_align-len>233</Hsp_align-len>
+      <Hsp_qseq>SRLFIMRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTSTAMPMTQVEDMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDGPSRAITLSANDQMQ</Hsp_qseq>
+      <Hsp_hseq>SRFFIRRPVFAWVLAILILLAGLLAIRTLPVAQYPDVAPPTIVVSATYPGASAETVEDSVTQPIEQQLNGLDGLDYMSSTSSSGSSSITVTFELGTDPDTAAVQVQNKIQQAESRLPSG-VQQPGVTVEKSSSNPLLILALTSTTDSSSDLTDYAASNVRDELSRVPGVGSVQLFGAQEYAMRIWLDPAKLAAYGLTPSDVQSAIRAQNVQVPAGSIGAGPSTATVRAQGRLQ</Hsp_hseq>
+      <Hsp_midline>SR FI RPV   +L + ILLAG++  R LPV+  P+V  PTI V   YPGAS + +  +VT P+E+Q   + GL  MSS SS G+S IT+ F+L    D A  +VQ  I  A + LPS     P  +    +  P++ LA+TST    + + D   + V  ++S++ GVG V L G Q  A+R+ L+   +AA GLT   V++AI   NV    GS+       T+ A  ++Q</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>47.9888</Hsp_bit-score>
+      <Hsp_score>115</Hsp_score>
+      <Hsp_evalue>2.24291e-05</Hsp_evalue>
+      <Hsp_query-from>1578</Hsp_query-from>
+      <Hsp_query-to>2192</Hsp_query-to>
+      <Hsp_hit-from>520</Hsp_hit-from>
+      <Hsp_hit-to>736</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>45</Hsp_identity>
+      <Hsp_positive>79</Hsp_positive>
+      <Hsp_gaps>16</Hsp_gaps>
+      <Hsp_align-len>219</Hsp_align-len>
+      <Hsp_qseq>RPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQV-VTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTSTAMPMTQVEDM-----VETRVAQKISQI---SGVGLVTLSGG-QRPAVRVKLNAQAIAALGLTSE----TVRTAITGANVN</Hsp_qseq>
+      <Hsp_hseq>RRALVLLLYLVLLGGSVLLFLKLPKSFLPEEDQGEFMVQVQLPEGASLERTAEVVRQVEDWLLILEKPEVESVFTVVGFGSGQNNAGRAFVSLKPWSERKENSAQAIIARLTKELAKIPDAT-VFAFTPPAVDGLGQGSGFPF-QLRDRGGDLEALRQAANQLLEKANQSPLLNVRSDLLPDTPQLQVDIDRDKAAALGVSLQDIAQTLQSALGGTYVN</Hsp_hseq>
+      <Hsp_midline>R     LL + +L   ++ +  LP S LPE D     V V L  GAS +     V    +          +      G  S      +  + L    +  + +  A    L  +L   P  + V    PP +      +  P  Q+ D         + A ++ +    S +  V        P ++V ++    AALG++ +    T+++A+ G  VN</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>5</Hit_num>
+  <Hit_id>gnl|CDD|273776</Hit_id>
+  <Hit_def>TIGR01730, COG0845:_Membrane-fusion_protein, RND family efflux transporter, MFP subunit.  This model represents the MFP (membrane fusion protein) component of the RND family of transporters. RND refers to Resistance, Nodulation, and cell Division. It is, in part, a subfamily of pfam00529 (Pfam release 7.5) but hits substantial numbers of proteins missed by that model. The related HlyD secretion protein, for which pfam00529 is named, is outside the scope of this model. Attributed functions imply outward transport. These functions include nodulation, acriflavin resistance, heavy metal efflux, and multidrug resistance proteins. Most members of this family are found in Gram-negative bacteria. The proposed function of MFP proteins is to bring the inner and outer membranes together and enable transport to the outside of the outer membrane. Note, however, that a few members of this family are found in Gram-positive bacteria, where there is no outer membrane. [Transport and binding proteins, Unknown substrate].</Hit_def>
+  <Hit_accession>273776</Hit_accession>
+  <Hit_len>322</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>244.917</Hsp_bit-score>
+      <Hsp_score>626</Hsp_score>
+      <Hsp_evalue>8.85604e-75</Hsp_evalue>
+      <Hsp_query-from>460</Hsp_query-from>
+      <Hsp_query-to>1449</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>322</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>113</Hsp_identity>
+      <Hsp_positive>190</Hsp_positive>
+      <Hsp_gaps>8</Hsp_gaps>
+      <Hsp_align-len>330</Hsp_align-len>
+      <Hsp_qseq>VQAATAVEQAVPRYLTGLGTITAANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIKVKARFNNQDDALFPNQFVNARMLVDTEQNAVVIPTAALQMGNEGHFVWVLNSENKVSKHLVTPGIQDSQKVVIRAGISAGDRVVTDGIDRLTEGAKVEVV</Hsp_qseq>
+      <Hsp_hseq>VTVATVESETLANTLTFPGSLEAVDEADLAAEVAGKITKISVREGQKVKKGQVLARLDDDDYQLALQAALAQLAAAEAQLELAQRSFERAERLVKRNAVSQADLDDAKAAVEAAQADLEAAKASLASAQLNLRYTEIRAPFDGTIGRRLVEVGAYVTAGQT--LATIVDLDPLEADFSVPERDLPQL----RRGQTLTVEL--DALPGEEFKGKLRFIDPRVDSGTGTVRVRATFPNPDGRLLPGMFGRVTISLKVRSSAIVVPTQAVIEDLNGKYVYVVKNDGKVSKRPVEVGLRNGGYVEIESGLKAGDQIVTAGVVKLRDGAKVKVV</Hsp_hseq>
+      <Hsp_midline>V  AT   + +   LT  G++ A +   + + V G++  +  +EGQ+VK G +LA +D   +++AL  A  QLA  +A L  A+R   R ++L K N VS+ +LD  +A V   +  ++A +AS+ASAQL L ++ I AP DG +G + V+VG  +++G T  +  I    P++  F++PE D+  +    + G+ L VE        +  +G L  +D ++D+ TGT++V+A F N D  L P  F    + +    +A+V+PT A+     G +V+V+ ++ KVSK  V  G+++   V I +G+ AGD++VT G+ +L +GAKV+VV</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>6</Hit_num>
+  <Hit_id>gnl|CDD|182589</Hit_id>
+  <Hit_def>PRK10614, PRK10614, multidrug efflux system subunit MdtC; Provisional.</Hit_def>
+  <Hit_accession>182589</Hit_accession>
+  <Hit_len>1025</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>236.162</Hsp_bit-score>
+      <Hsp_score>603</Hsp_score>
+      <Hsp_evalue>7.93184e-66</Hsp_evalue>
+      <Hsp_query-from>1566</Hsp_query-from>
+      <Hsp_query-to>2258</Hsp_query-to>
+      <Hsp_hit-from>6</Hsp_hit-from>
+      <Hsp_hit-to>236</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>110</Hsp_identity>
+      <Hsp_positive>153</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>231</Hsp_align-len>
+      <Hsp_qseq>LFIMRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTSTAMPMTQVEDMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDGPSRAITLSANDQMQ</Hsp_qseq>
+      <Hsp_hseq>LFIYRPVATILLSLAITLCGILGFRLLPVAPLPQVDFPVIMVSASLPGASPETMASSVATPLERSLGRIAGVNEMTSSSSLGSTRIILQFDFDRDINGAARDVQAAINAAQSLLPSGMPSRPTYRKANPSDAPIMILTLTSDTYSQGQLYDFASTQLAQTISQIDGVGDVDVGGSSLPAVRVGLNPQALFNQGVSLDDVRQAISNANVRRPQGAVEDGTHRWQIQTNDELK</Hsp_hseq>
+      <Hsp_midline>LFI RPVAT LL +AI L GI+G+R LPV+ LP+VD+P I V    PGASP+ M S+V  PLER  G+++G+ +M+S SS G++ I LQF     ++ A ++VQAAINAA +LLPS +P+ P Y K NP+D PIM L +TS      Q+ D   T++AQ ISQI GVG V + G   PAVRV LN QA+   G++ + VR AI+ ANV   +G+++  +    +  ND+++</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>7</Hit_num>
+  <Hit_id>gnl|CDD|223914</Hit_id>
+  <Hit_def>COG0845, AcrA, Membrane-fusion protein [Cell envelope biogenesis, outer membrane].</Hit_def>
+  <Hit_accession>223914</Hit_accession>
+  <Hit_len>372</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>180.676</Hsp_bit-score>
+      <Hsp_score>458</Hsp_score>
+      <Hsp_evalue>2.11791e-50</Hsp_evalue>
+      <Hsp_query-from>442</Hsp_query-from>
+      <Hsp_query-to>1458</Hsp_query-to>
+      <Hsp_hit-from>35</Hsp_hit-from>
+      <Hsp_hit-to>371</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>113</Hsp_identity>
+      <Hsp_positive>174</Hsp_positive>
+      <Hsp_gaps>10</Hsp_gaps>
+      <Hsp_align-len>343</Hsp_align-len>
+      <Hsp_qseq>ADPLAPVQAATAVEQAVPRYLTGLGTITAANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQ-FKVALAQAQGQLAKDKATLANARR-DLARYQQLAKTN-LVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIKVKARF-NNQDDALFPNQFVNARMLVDTEQNAVVIPTAALQMGNEGHFVWVLNSENKVSKHLVTPGIQDSQKVVIRAGISAGDRVVTDGIDRLTEGAKVEVVEAQ</Hsp_qseq>
+      <Hsp_hseq>GAVAPKVEVAKVKPAELSAAVRAPGRVEATRSVEVLARVAGIVAEILVKEGDRVKKGQLLARLDPSAVLQAALDQAEAQLARAQALLAPAELGDLQREAKLAAEKAAVSQAELDAAQALLRAAEALVEAAQAALASAKLNLEYTRITAPISGVIGARLVRVGQLVSAGQA--LATIADLDPAA-ALWVLAAVLERDLLAVKVGQK--VTVTLAAGPDQLFAGTVEFISPTVDATTRTVTVRAEVPNPNGDALKPGMFVEVRIEVGDGKDALLVPSEAVQRTGGGAVVFVV-DDGTVEPRPVELGRASGGRVEVLSGLKPGDRVVVEGLFLLRAGAGVLVAPLG</Hsp_hseq>
+      <Hsp_midline>      V+ A      +   +   G + A  +V V +RV G +  +  +EG +VK G LLA +DPS   + AL QA+ QLA+ +A LA A   DL R  +LA     VS+ ELDA QAL+   E  ++A +A++ASA+L L+++RITAP+ G +G + V VG  +S+G    +  I    P      +  + +   + A K G+   V         +L  GT+  +   +DATT T+ V+A   N   DAL P  FV  R+ V   ++A+++P+ A+Q    G  V+V+  +  V    V  G     +V + +G+  GDRVV +G+  L  GA V V    </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>8</Hit_num>
+  <Hit_id>gnl|CDD|169982</Hit_id>
+  <Hit_def>PRK09578, PRK09578, MexX/AxyX family multidrug efflux RND transporter periplasmic adaptor subunit.  </Hit_def>
+  <Hit_accession>169982</Hit_accession>
+  <Hit_len>385</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>153.796</Hsp_bit-score>
+      <Hsp_score>389</Hsp_score>
+      <Hsp_evalue>8.86892e-41</Hsp_evalue>
+      <Hsp_query-from>424</Hsp_query-from>
+      <Hsp_query-to>1473</Hsp_query-to>
+      <Hsp_hit-from>24</Hsp_hit-from>
+      <Hsp_hit-to>382</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>108</Hsp_identity>
+      <Hsp_positive>166</Hsp_positive>
+      <Hsp_gaps>19</Hsp_gaps>
+      <Hsp_align-len>364</Hsp_align-len>
+      <Hsp_qseq>GRRGMRADPLAP--VQAATAVEQAVPRYLTGLGTITAANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEAS----VASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVVEAWDRTNSKKLSEGT-------LLSLDNQIDATTGTIKVKARFNNQDDALFPNQFVNARMLVDTEQNAVVIPTAALQMGNEGHFVWVLNSENKVSK-HLVTPGIQDSQKVVIRAGISAGDRVVTDGIDRLTEGAKVEVVEAQSATAP</Hsp_qseq>
+      <Hsp_hseq>GKGDSDAAAAAPREATVVTVRPTSVPMTVELPGRLDAYRQAEVRARVAGIVTARTYEEGQEVKQGAVLFRIDPAPLKAARDAAAGALAKAEAAHLAALDKRRRYDDLVRDRAVS--ERDYTEAVADERQA--KAAVASAKAELARAQLQLDYATVTAPIDGRARRALVTEGALVGQDQATPLTTVEQLDPIYVNFSQPAADVEALRRAVKSGRATGIAQQDVAVTLVRADGSEYPLKGKLLFSDLAVDPTTDTVAMRALFPNPERELLPGAYVRIALDRAVNPRAILVPRDALLRTADSASVKVVGQNGKVRDVEVEADQMSGRDWIVTR-GLAGGERVIVDNAAQFAPGTAVKAVERAPAAKP</Hsp_hseq>
+      <Hsp_midline>G+    A   AP      T    +VP  +   G + A     VR+RV G + A  ++EGQ+VK G +L  IDP+  K A   A G LAK +A    A     RY  L +   VS  E D  +A+  E +   KA  AS    +A AQLQLD++ +TAP+DGR     V  G  +     T +  + Q  PI + F+ P +D+  + +A K+G+   +   D   +   ++G+       LL  D  +D TT T+ ++A F N +  L P  +V   +       A+++P  AL    +   V V+    KV    +    +     +V R G++ G+RV+ D   +   G  V+ VE   A  P</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>9</Hit_num>
+  <Hit_id>gnl|CDD|184990</Hit_id>
+  <Hit_def>PRK15030, PRK15030, multidrug efflux RND transporter periplasmic adaptor subunit AcrA.  </Hit_def>
+  <Hit_accession>184990</Hit_accession>
+  <Hit_len>397</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>150.25</Hsp_bit-score>
+      <Hsp_score>379</Hsp_score>
+      <Hsp_evalue>2.06519e-39</Hsp_evalue>
+      <Hsp_query-from>391</Hsp_query-from>
+      <Hsp_query-to>1479</Hsp_query-to>
+      <Hsp_hit-from>30</Hsp_hit-from>
+      <Hsp_hit-to>394</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>110</Hsp_identity>
+      <Hsp_positive>180</Hsp_positive>
+      <Hsp_gaps>30</Hsp_gaps>
+      <Hsp_align-len>379</Hsp_align-len>
+      <Hsp_qseq>ATKQAQQSPAGGRRGMRADPLAPVQAATAVEQAVPRYLTGLGTITAANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQ-------AQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIKVKARFNNQDDALFPNQFVNARMLVDTEQNAVVIPTAALQMGNEGH-FVWVLNSENKVSKHLVTPGIQDSQKVVIRAGISAGDRVVTDGIDRLTEGAKVEVVE--------AQSATAPEE</Hsp_qseq>
+      <Hsp_hseq>AQQGGQQMPAVGVVTVKTEPL---QITTELP----------GRTSAYRIAEVRPQVSGIILKRNFKEGSDIEAGVSLYQIDPATYQATYDSAKGDLAKAQAAANIAQLTVNRYQKLLGTQYISKQEYDQALADAQQANAAVTAAKAAVETARINLAYTKVTSPISGRIGKSNVTEGALVQNGQATALATVQQLDPIYVDVTQSSNDFLRLKQELANGTLKQENGKA-KVSLITSDGIKFPQDGTLEFSDVTVDQTTGSITLRAIFPNPDHTLLPGMFVRARLEEGLNPNAILVPQQGVTRTPRGDATVLVVGADDKVETRPIVASQAIGDKWLVTEGLKAGDRVVISGLQKVRPGVQVKAQEVTADNNQQAASGAQPEQ</Hsp_hseq>
+      <Hsp_midline>A +  QQ PA G   ++ +PL   Q  T +           G  +A     VR +V G ++  +F+EG  ++AG  L +IDP+ ++     A+G LAK +A    A+  + RYQ+L  T  +S+QE D   A   +    + A +A+V +A++ L ++++T+P+ GR+G   V  G  + +G  T +  + Q  PI +  T   +D   + Q        Q+ GK   V        K   +GTL   D  +D TTG+I ++A F N D  L P  FV AR+      NA+++P   +     G   V V+ +++KV    +        K ++  G+ AGDRVV  G+ ++  G +V+  E        A S   PE+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>10</Hit_num>
+  <Hit_id>gnl|CDD|137559</Hit_id>
+  <Hit_def>PRK09859, PRK09859, multidrug transporter subunit MdtE.  </Hit_def>
+  <Hit_accession>137559</Hit_accession>
+  <Hit_len>385</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>146.784</Hsp_bit-score>
+      <Hsp_score>370</Hsp_score>
+      <Hsp_evalue>2.46342e-38</Hsp_evalue>
+      <Hsp_query-from>544</Hsp_query-from>
+      <Hsp_query-to>1479</Hsp_query-to>
+      <Hsp_hit-from>64</Hsp_hit-from>
+      <Hsp_hit-to>382</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>90</Hsp_identity>
+      <Hsp_positive>158</Hsp_positive>
+      <Hsp_gaps>7</Hsp_gaps>
+      <Hsp_align-len>319</Hsp_align-len>
+      <Hsp_qseq>VRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVVE-----AWDRTNSKKLSE-GTLLSLDNQIDATTGTIKVKARFNNQDDALFPNQFVNARMLVDTEQNAVVIPTAALQMGNEGHFV-WVLNSENKVSKHLVTPGIQDSQKVVIRAGISAGDRVVTDGIDRLTEGAKVEVVEAQSATAPEE</Hsp_qseq>
+      <Hsp_hseq>IRPQVGGIIIKRNFIEGDKVNQGDSLYQIDPAPLQAELNSAKGSLAKALSTASNARITFNRQASLLKTNYVSRQDYDTARTQLNEAEANVTVAKAAVEQATINLQYANVTSPITGVSGKSSVTVGALVTANQADSLVTVQRLDPIYVDLTQSVQDFLRMKEEVASGQIKQVQGSTPVQLNLENGKRYSQTGTLKFSDPTVDETTGSVTLRAIFPNPNGDLLPGMYVTALVDEGSRQNVLLVPQEGVTHNAQGKATALILDKDDVVQLREIEASKAIGDQWVVTSGLQAGDRVIVSGLQRIRPGIKARAISSSQENASTE</Hsp_hseq>
+      <Hsp_midline>+R +V G ++  +F EG +V  GD L +IDP+  +  L  A+G LAK  +T +NAR    R   L KTN VSRQ+ D  +  ++E E  +   +A+V  A + L ++ +T+P+ G  G   V VG  +++     +V + +  PI +  T    D   + +   +G+   V+       +  N K+ S+ GTL   D  +D TTG++ ++A F N +  L P  +V A +   + QN +++P   +    +G     +L+ ++ V    +        + V+ +G+ AGDRV+  G+ R+  G K   + +    A  E</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>11</Hit_num>
+  <Hit_id>gnl|CDD|366149</Hit_id>
+  <Hit_def>pfam00529, HlyD, HlyD membrane-fusion protein of T1SS.  HlyD is a component of the prototypical alpha-haemolysin (HlyA) bacterial type I secretion system, along with the other components HlyB and TolC. HlyD and HlyB are inner-membrane proteins and specific components of the transport apparatus of alpha-haemolysin. HlyD is anchored in the cytoplasmic membrane by a single transmembrane domain and has a large periplasmic domain within the carboxy-terminal 100 amino acids, HlyB and HlyD form a stable complex that binds the recombinant protein bearing a C-terminal HlyA signal sequence and ATP in the cytoplasm. HlyD, HlyB and TolC combine to form the three-component ABC transporter complex that forms a trans-membrane channel or pore through which HlyA can be transferred directly to the extracellular medium. Cutinase has been shown to be transported effectively through this pore.</Hit_def>
+  <Hit_accession>366149</Hit_accession>
+  <Hit_len>330</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>128.305</Hsp_bit-score>
+      <Hsp_score>323</Hsp_score>
+      <Hsp_evalue>1.93046e-32</Hsp_evalue>
+      <Hsp_query-from>469</Hsp_query-from>
+      <Hsp_query-to>1401</Hsp_query-to>
+      <Hsp_hit-from>6</Hsp_hit-from>
+      <Hsp_hit-to>330</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>79</Hsp_identity>
+      <Hsp_positive>138</Hsp_positive>
+      <Hsp_gaps>14</Hsp_gaps>
+      <Hsp_align-len>325</Hsp_align-len>
+      <Hsp_qseq>ATAVEQAVPRYLTGLGTITA-ANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPL--------VVEAWD---RTNSKKLSEGTLLSLDNQIDATTGTIKVKARF-NNQDDALFPNQFVNARMLVDTEQNAVVIPTAALQMGNEGHF-VWVLNSENKVSKHLVTPGIQDSQKVVIRAGISAGDRVV</Hsp_qseq>
+      <Hsp_hseq>AWVFFAPLTKGVELPGRVVVSGNAKAVQPQVSGIVTKVLVKEGDRVKAGDVLFQLDPTDYQAALDSAEAQLAKAQAQAARLQAELDRLQALVSELAISKQDYDGATAQLRAAQAAVKAAQAQLAQAQIDLARRRVLAPIGGISRESLVTAGALVAQAQANLLATVAQLDQIYVQITQSSAENQALVRSELSQAQLQIAEAEAELKLARLDLERTEIRAPVDGTVAFLSVTVDGGTVTAGLRLMFVVPEDNLLVPGMFVETQLDQVRVGQPVLIPFDAFPQTKTGTFTGVVVGISADTGPVRIVVDKAQGPYYPLRIGLSAGALVR</Hsp_hseq>
+      <Hsp_midline>A      + + +   G +    N   V+ +V G +  +  +EG +VKAGD+L ++DP+ ++ AL  A+ QLAK +A  A  + +L R Q L     +S+Q+ D   A +   +  +KA +A +A AQ+ L   R+ AP+ G      V  G  ++      +  + Q   I +  T   ++   +V+++ +   L        +  A     RT  +   +GT+  L   +D  T T  ++  F   +D+ L P  FV  ++        V+IP  A      G F   V+          +           +R G+SAG  V </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>12</Hit_num>
+  <Hit_id>gnl|CDD|380145</Hit_id>
+  <Hit_def>NF000247, MexA, MexA family multidrug efflux RND transporter periplasmic adaptor subunit.  </Hit_def>
+  <Hit_accession>380145</Hit_accession>
+  <Hit_len>373</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>126.874</Hsp_bit-score>
+      <Hsp_score>318</Hsp_score>
+      <Hsp_evalue>1.60457e-31</Hsp_evalue>
+      <Hsp_query-from>514</Hsp_query-from>
+      <Hsp_query-to>1479</Hsp_query-to>
+      <Hsp_hit-from>56</Hsp_hit-from>
+      <Hsp_hit-to>371</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>86</Hsp_identity>
+      <Hsp_positive>166</Hsp_positive>
+      <Hsp_gaps>28</Hsp_gaps>
+      <Hsp_align-len>333</Hsp_align-len>
+      <Hsp_qseq>GTITAANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQEL-DAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVVEAWDRTN--SKKLSEGTLLSLDNQ-------IDATTGTIKVKARFNNQDDALFPNQFVNARMLVDTEQNAVVIPTAALQMGNEGHFV-WVLNSENKVSKHLVTPGIQDSQKVVIRAGISAGDRVVTDGIDRLTEGAKVEVVEAQSATAPEE</Hsp_qseq>
+      <Hsp_hseq>GRTNAFRIAEVRPQVNGIILKRLFKEGSDVKAGQQLYQIDPATYEADYQSAQ-------ANLASTQEQAQRYKLLVADQAVSKQQYADANAAYLQS--------KAAVEQARINLRYTKVLSPISGRIGRSAVTEGALVTNGQANAMATVQQLDPIYVDVTQPSTALLRLRRELASGQ--LERAGDNAAKVSLKLEDGSQYPLEGRLEFSEVSVDEGTGSVTIRAVFPNPNNELLPGMFVHAQLQEGVKQKAILAPQQGVTRDLKGQATALVVNAQNKVELRVIKADRVIGDKWLVTEGLNAGDKIITEGLQFVQPGVEVKTVPAKNVASAQK</Hsp_hseq>
+      <Hsp_midline>G   A     VR +V+G ++   F+EG  VKAG  L +IDP+ ++     AQ       A LA+ +    RY+ L     VS+Q+  DA  A +          +A+V  A++ L ++++ +P+ GR+G   V  G  +++G    +  + Q  PI +  T P + +  + +   +G+  +  A D     S KL +G+   L+ +       +D  TG++ ++A F N ++ L P  FV+A++    +Q A++ P   +    +G     V+N++NKV   ++        K ++  G++AGD+++T+G+  +  G +V+ V A++  + ++</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>13</Hit_num>
+  <Hit_id>gnl|CDD|273335</Hit_id>
+  <Hit_def>TIGR00915, Probable_aminoglycoside_efflux_pump, The (Largely Gram-negative Bacterial) Hydrophobe/Amphiphile Efflux-1 (HAE1) Family.  Proteins scoring above the trusted cutoff (1000) form a tight clade within the RND (Resistance-Nodulation-Cell Division) superfamily. Proteins scoring greater than the noise cutoff (100) appear to form a larger clade, cleanly separated from more distant homologs that include cadmium/zinc/cobalt resistance transporters. This family is one of several subfamilies within the scope of pfam00873. [Cellular processes, Toxin production and resistance, Transport and binding proteins, Unknown substrate].</Hit_def>
+  <Hit_accession>273335</Hit_accession>
+  <Hit_len>1044</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>125.997</Hsp_bit-score>
+      <Hsp_score>317</Hsp_score>
+      <Hsp_evalue>1.43831e-29</Hsp_evalue>
+      <Hsp_query-from>1560</Hsp_query-from>
+      <Hsp_query-to>2216</Hsp_query-to>
+      <Hsp_hit-from>2</Hsp_hit-from>
+      <Hsp_hit-to>221</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>72</Hsp_identity>
+      <Hsp_positive>114</Hsp_positive>
+      <Hsp_gaps>7</Hsp_gaps>
+      <Hsp_align-len>223</Hsp_align-len>
+      <Hsp_qseq>SRLFIMRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSG-GASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPA-DPPIMTLAVTSTAMPMTQVE--DMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDG</Hsp_qseq>
+      <Hsp_hseq>AKFFIDRPIFAWVIAIIIMLAGTLSILSLPVSQYPSIAPPAITVSASYPGASAQTVQDTVTQVIEQNMNGIDGLRYMSSSSDSDGSMTITLTFEQGTDPDIAQVQVQNKLQLATPLLPQEVQRQGV--RVEKASSNFLMVIGLVSDDGSMTKEDLSDYAASNMVDPLSRLEGVGDVQLFGSQY-AMRIWLDPAKLNSYQLTPADVISAISAQNAQISAGQLGG</Hsp_hseq>
+      <Hsp_midline>++ FI RP+   ++ + I+LAG +   +LPVS  P +  P I V   YPGAS   +   VT  +E+    + GL+ MSS S   G+  ITL F+     D+A+ +VQ  +  AT LLP ++    V  +V  A    +M + + S    MT+ +  D   + +   +S++ GVG V L G Q  A+R+ L+   + +  LT   V +AI+  N   + G L G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>14</Hit_num>
+  <Hit_id>gnl|CDD|182544</Hit_id>
+  <Hit_def>PRK10555, PRK10555, multidrug efflux RND transporter permease AcrD.  </Hit_def>
+  <Hit_accession>182544</Hit_accession>
+  <Hit_len>1037</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>105.682</Hsp_bit-score>
+      <Hsp_score>264</Hsp_score>
+      <Hsp_evalue>3.0746e-23</Hsp_evalue>
+      <Hsp_query-from>1560</Hsp_query-from>
+      <Hsp_query-to>2252</Hsp_query-to>
+      <Hsp_hit-from>2</Hsp_hit-from>
+      <Hsp_hit-to>237</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>71</Hsp_identity>
+      <Hsp_positive>119</Hsp_positive>
+      <Hsp_gaps>9</Hsp_gaps>
+      <Hsp_align-len>238</Hsp_align-len>
+      <Hsp_qseq>SRLFIMRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSG-GASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTST--AMPMTQVEDMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDG----PSRAITLSANDQ</Hsp_qseq>
+      <Hsp_hseq>ANFFIDRPIFAWVLAILLCLTGTLAIFSLPVEQYPDLAPPNVRITANYPGASAQTLENTVTQVIEQNMTGLDNLMYMSSQSSGTGQASVTLSFKAGTDPDEAVQQVQNQLQSAMRKLPQAVQNQGVTVR-KTGDTNILTIAFVSTDGSMDKQDIADYVASNIQDPLSRVNGVGDIDAYGSQY-SMRIWLDPAKLNSFQMTTKDVTDAIESQNAQIAVGQLGGTPSVDKQALNATINAQ</Hsp_hseq>
+      <Hsp_midline>+  FI RP+   +L + + L G +   +LPV   P++  P +++   YPGAS   + + VT  +E+    +  L  MSSQSSG G + +TL F+     D A Q+VQ  + +A   LP  + N  V  +    D  I+T+A  ST  +M    + D V + +   +S+++GVG +   G Q  ++R+ L+   + +  +T++ V  AI   N   A G L G      +A+  + N Q</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>15</Hit_num>
+  <Hit_id>gnl|CDD|183211</Hit_id>
+  <Hit_def>PRK11578, PRK11578, macrolide transporter subunit MacA; Provisional.</Hit_def>
+  <Hit_accession>183211</Hit_accession>
+  <Hit_len>370</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>99.8487</Hsp_bit-score>
+      <Hsp_score>249</Hsp_score>
+      <Hsp_evalue>1.83176e-22</Hsp_evalue>
+      <Hsp_query-from>514</Hsp_query-from>
+      <Hsp_query-to>1404</Hsp_query-to>
+      <Hsp_hit-from>54</Hsp_hit-from>
+      <Hsp_hit-to>362</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>98</Hsp_identity>
+      <Hsp_positive>153</Hsp_positive>
+      <Hsp_gaps>58</Hsp_gaps>
+      <Hsp_align-len>332</Hsp_align-len>
+      <Hsp_qseq>GTITAANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFK-------VALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELD-------AQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISS--GDTTGIVVITQTHPIDLLFTLPESDIAT-VVQAQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIK-VKARFNNQDDALF---------PNQFVNARM------LVDTEQNAVVIPTAAL--QMGNEGHFVWVLNSENKVSKHLVTPGIQDSQKVVIRAGISAGDRVVT</Hsp_qseq>
+      <Hsp_hseq>GKLDALRKVDVGAQVSGQLKTLSVAIGDKVKKDQLLGVIDPEQAENQIKEVEATLMELRAQRQQAEAELKLARVTLSRQQRLAKTQAVSQQDLDTAATELAVKQAQIGTIDAQIKRNQASLDTAKTNLDYTRIVAPMAGEV--------TQITTLQGQT---VIAAQQAPNIL--TL--ADMSTMLVKAQ------VSEA-DVIHLKPGQKAWFTVLGDPLTRYEGVLKDILPTPEKVNDAIFYYARFEVPNPNGLLRLDMTAQVHIQLTDVKNVLTIPLSALGDPVGDNRYKVKLLR-NGETREREVTIGARNDTDVEIVKGLEAGDEVII</Hsp_hseq>
+      <Hsp_midline>G + A   V V ++V GQL  L    G +VK   LL  IDP Q +         L + + Q  + +A L  AR  L+R Q+LAKT  VS+Q+LD        +QA +   +  IK ++AS+ +A+  LD++RI AP+ G V         QI++  G T   V+  Q  P  L  TL  +D++T +V+AQ      V EA D  + K   +     L + +    G +K +       +DA+F         PN  +   M       +   +N + IP +AL   +G+  + V +L    +  +  VT G ++   V I  G+ AGD V+ </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>16</Hit_num>
+  <Hit_id>gnl|CDD|185081</Hit_id>
+  <Hit_def>PRK15127, PRK15127, multidrug efflux RND transporter permease subunit AcrB.  </Hit_def>
+  <Hit_accession>185081</Hit_accession>
+  <Hit_len>1049</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>100.363</Hsp_bit-score>
+      <Hsp_score>250</Hsp_score>
+      <Hsp_evalue>1.37888e-21</Hsp_evalue>
+      <Hsp_query-from>1560</Hsp_query-from>
+      <Hsp_query-to>2216</Hsp_query-to>
+      <Hsp_hit-from>2</Hsp_hit-from>
+      <Hsp_hit-to>221</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>72</Hsp_identity>
+      <Hsp_positive>104</Hsp_positive>
+      <Hsp_gaps>5</Hsp_gaps>
+      <Hsp_align-len>222</Hsp_align-len>
+      <Hsp_qseq>SRLFIMRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQS-SGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTSTAMPMTQ--VEDMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDG</Hsp_qseq>
+      <Hsp_hseq>PNFFIDRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGV-SVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDPISRTSGVGDVQLFGSQY-AMRIWMNPNELNKFQLTPVDVINAIKAQNAQVAAGQLGG</Hsp_hseq>
+      <Hsp_midline>   FI RP+   ++ + I+LAG +    LPV+  P +  P + +   YPGA    +   VT  +E+    +  L  MSS S S G   ITL F+     D+A+ +VQ  +  A  LLP ++    V S    +   +M + V +T   MTQ  + D V   +   IS+ SGVG V L G Q  A+R+ +N   +    LT   V  AI   N   A G L G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>17</Hit_num>
+  <Hit_id>gnl|CDD|273386</Hit_id>
+  <Hit_def>TIGR00999, Nickel-cobalt-cadmium_resistance_protein_NccB, Membrane Fusion Protein cluster 2 (function with RND porters).  [Transport and binding proteins, Other].</Hit_def>
+  <Hit_accession>273386</Hit_accession>
+  <Hit_len>265</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>94.4284</Hsp_bit-score>
+      <Hsp_score>235</Hsp_score>
+      <Hsp_evalue>2.51797e-21</Hsp_evalue>
+      <Hsp_query-from>592</Hsp_query-from>
+      <Hsp_query-to>1422</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>264</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>58</Hsp_identity>
+      <Hsp_positive>121</Hsp_positive>
+      <Hsp_gaps>17</Hsp_gaps>
+      <Hsp_align-len>279</Hsp_align-len>
+      <Hsp_qseq>GQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWS--RITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIKVKARFNNQDDALFPNQFVNARMLVDTEQNAVVIPTAALQMGNEGHFVWVLNSENKVSKHLVTPGIQDSQKVVIRAGISAGDRVVTDGIDRL</Hsp_qseq>
+      <Hsp_hseq>GDPVKKGQVLAVVDSPE----LAKMAAELKVAQKRVELARKTYEREKKLFEQGVIPRQEFESAEYALEEAQAEVQAAKSELRSAREAKDGSYVEVRSPFDGYITQKSVTLGDYVAPQAE--LFRVADLGAVWVEAEVPAKDVSRI----RKGSKATVLL---ENGRPLP-ARVDYVGPEVDGSSRTAKVRVLIKNENLTLKPGLFVQVRVETKIGEPAIAVPEDAVQDLGGRKVVFVR-TQEGFRPRPVKVGRRLGGYYEVLEGLKPGERVAVENTFLL</Hsp_hseq>
+      <Hsp_midline>G  VK G +LA +D  +    LA+   +L   +  +  AR+   R ++L +  ++ RQE ++ +  + E +  ++A ++ + SA+   D S   + +P DG +  K V +G+ ++      +  +     + +   +P  D++ +    + G    V      N + L    +  +  ++D ++ T KV+    N++  L P  FV  R+     + A+ +P  A+Q       V+V  ++       V  G +      +  G+  G+RV  +    L</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>18</Hit_num>
+  <Hit_id>gnl|CDD|224482</Hit_id>
+  <Hit_def>COG1566, EmrA, Multidrug resistance efflux pump [Defense mechanisms].</Hit_def>
+  <Hit_accession>224482</Hit_accession>
+  <Hit_len>352</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>92.392</Hsp_bit-score>
+      <Hsp_score>230</Hsp_score>
+      <Hsp_evalue>4.99262e-20</Hsp_evalue>
+      <Hsp_query-from>526</Hsp_query-from>
+      <Hsp_query-to>969</Hsp_query-to>
+      <Hsp_hit-from>50</Hsp_hit-from>
+      <Hsp_hit-to>244</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>55</Hsp_identity>
+      <Hsp_positive>88</Hsp_positive>
+      <Hsp_gaps>47</Hsp_gaps>
+      <Hsp_align-len>195</Hsp_align-len>
+      <Hsp_qseq>AANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKAT----------------------LANARRDLARYQQLAKTNLVSRQELD--------AQQAL-----------------VSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQT</Hsp_qseq>
+      <Hsp_hseq>RADVVPIAPQVSGRVTEVNVKDNQLVKKGDVLFRIDPRDYRAALEQAEAALAAAEAQLRNLRAQLASAQALIAQAEAQDLDQAQNELERRAELAQRGVVSREELDRARAALQAAEAALAAAQAAQKQNLALLESEVSGAQAQVASAEAALDQAKLDLERTVIRAPVDGYVTNLSVRVGQYVSAGTPLMALVPLDS</Hsp_hseq>
+      <Hsp_midline> A+ V +  +V G++  ++ ++ Q VK GD+L  IDP  ++ AL QA+  LA  +A                       L  A+ +L R  +LA+  +VSR+ELD        A+ AL                 VS  +  + + EA++  A+L L+ + I APVDG V    V VG  +S+G     +V   +</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>19</Hit_num>
+  <Hit_id>gnl|CDD|169981</Hit_id>
+  <Hit_def>PRK09577, PRK09577, multidrug efflux RND transporter permease subunit.  </Hit_def>
+  <Hit_accession>169981</Hit_accession>
+  <Hit_len>1032</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>94.1488</Hsp_bit-score>
+      <Hsp_score>234</Hsp_score>
+      <Hsp_evalue>1.40133e-19</Hsp_evalue>
+      <Hsp_query-from>1560</Hsp_query-from>
+      <Hsp_query-to>2186</Hsp_query-to>
+      <Hsp_hit-from>2</Hsp_hit-from>
+      <Hsp_hit-to>210</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>67</Hsp_identity>
+      <Hsp_positive>110</Hsp_positive>
+      <Hsp_gaps>4</Hsp_gaps>
+      <Hsp_align-len>211</Hsp_align-len>
+      <Hsp_qseq>SRLFIMRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTSTAMPMTQVE--DMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGAN</Hsp_qseq>
+      <Hsp_hseq>ARFFIDRPVFAWVISLFIMLGGIFAIRALPVAQYPDIAPPVVSIYATYPGASAQVVEESVTALIEREMNGAPGLLYTSATSSAGQASLSLTFKQGVNADLAAVEVQNRLKTVEARLPEPVRRDGIQVE-KAADNIQLIVSLTSDDGRLTGVELGEYASANVLQALRRVEGVGKVQFWGAEY-AMRIWPDPVKLAALGLTASDIASAVRAHN</Hsp_hseq>
+      <Hsp_midline>+R FI RPV   ++ + I+L GI   RALPV+  P++  P + +   YPGAS  V+  +VTA +ER+     GL   S+ SS G + ++L F+  +  D+A  EVQ  +      LP  +    +  +   AD   + +++TS    +T VE  +     V Q + ++ GVG V   G +  A+R+  +   +AALGLT+  + +A+   N</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>20</Hit_num>
+  <Hit_id>gnl|CDD|169983</Hit_id>
+  <Hit_def>PRK09579, PRK09579, multidrug efflux RND transporter permease subunit.  </Hit_def>
+  <Hit_accession>169983</Hit_accession>
+  <Hit_len>1017</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>92.2048</Hsp_bit-score>
+      <Hsp_score>229</Hsp_score>
+      <Hsp_evalue>5.42437e-19</Hsp_evalue>
+      <Hsp_query-from>1566</Hsp_query-from>
+      <Hsp_query-to>2258</Hsp_query-to>
+      <Hsp_hit-from>6</Hsp_hit-from>
+      <Hsp_hit-to>235</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>61</Hsp_identity>
+      <Hsp_positive>112</Hsp_positive>
+      <Hsp_gaps>1</Hsp_gaps>
+      <Hsp_align-len>231</Hsp_align-len>
+      <Hsp_qseq>LFIMRPVATTLLMVAILLAGIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMTLAVTSTAMPMTQVEDMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDGPSRAITLSANDQMQ</Hsp_qseq>
+      <Hsp_hseq>PFIRRPVLASVVSLLIVLLGFQAWSKLQIRQYPQMENALITVTTAYPGANAETIQGYITQPLQQSLASAEGIDYMTSVSRQNFSIISIYARIGADSDRLFTELLAKANEVKNQLPQDAED-PVLSKEAADASALMYISFYSEEMSNPQITDYLSRVIQPKLATLPGMAEAEILGNQVFAMRLWLDPVKLAGFGLSAGDVTQAVRRYNFLSAAGEVKGEYVVTSINASTELK</Hsp_hseq>
+      <Hsp_midline> FI RPV  +++ + I+L G   +  L +   P+++   I V T YPGA+ + +   +T PL++      G+  M+S S    S+I++  ++    D    E+ A  N   N LP D  + PV SK       +M ++  S  M   Q+ D +   +  K++ + G+    + G Q  A+R+ L+   +A  GL++  V  A+   N  SA G + G     +++A+ +++</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>21</Hit_num>
+  <Hit_id>gnl|CDD|226220</Hit_id>
+  <Hit_def>COG3696, COG3696, Putative silver efflux pump [Inorganic ion transport and metabolism].</Hit_def>
+  <Hit_accession>226220</Hit_accession>
+  <Hit_len>1027</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>88.1196</Hsp_bit-score>
+      <Hsp_score>219</Hsp_score>
+      <Hsp_evalue>8.73308e-18</Hsp_evalue>
+      <Hsp_query-from>1599</Hsp_query-from>
+      <Hsp_query-to>2219</Hsp_query-to>
+      <Hsp_hit-from>17</Hsp_hit-from>
+      <Hsp_hit-to>225</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>57</Hsp_identity>
+      <Hsp_positive>97</Hsp_positive>
+      <Hsp_gaps>20</Hsp_gaps>
+      <Hsp_align-len>218</Hsp_align-len>
+      <Hsp_qseq>LMVAILLA--GIIGYRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMT---------LAVTSTAMPMTQVEDMVETRVAQKISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLDGP</Hsp_qseq>
+      <Hsp_hseq>LLGALLLAFYGTYSLKKLPLDAFPDLSPVQVQIQTEAPGQSPEEVENQVTYPLETAMMGLPGVKTVRSISKYGLSLVTVIFKDGTDLYWARQRVLERLSQVQSQLPEG---------VEPELGPDSTGLGWIYQYTLVDKSGKTDLDELRELQDWVVRPQLRSVPGVAEVASVGGFEKQYQVVPDPEKLAAYGVSLEDVTNALKANNANAGGGFIERG</Hsp_hseq>
+      <Hsp_midline>L+ A+LLA  G    + LP+ A P++    +Q+ T  PG SP+ + + VT PLE     + G+K + S S  G S++T+ F+    L  A Q V   ++   + LP           V P   P  T         L   S    + ++ ++ +  V  ++  + GV  V   GG     +V  + + +AA G++ E V  A+   N N+  G ++  </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>22</Hit_num>
+  <Hit_id>gnl|CDD|273385</Hit_id>
+  <Hit_def>TIGR00998, Probable_multidrug_resistance_protein_EmrK, efflux pump membrane protein (multidrug resistance protein A).  [Transport and binding proteins, Other].</Hit_def>
+  <Hit_accession>273385</Hit_accession>
+  <Hit_len>334</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>82.9197</Hsp_bit-score>
+      <Hsp_score>205</Hsp_score>
+      <Hsp_evalue>5.32313e-17</Hsp_evalue>
+      <Hsp_query-from>526</Hsp_query-from>
+      <Hsp_query-to>1038</Hsp_query-to>
+      <Hsp_hit-from>39</Hsp_hit-from>
+      <Hsp_hit-to>261</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>59</Hsp_identity>
+      <Hsp_positive>90</Hsp_positive>
+      <Hsp_gaps>56</Hsp_gaps>
+      <Hsp_align-len>225</Hsp_align-len>
+      <Hsp_qseq>AANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAK---------------------DKATLANAR-------RDLARYQQLAKTNLVSRQELD----------------------AQQALVS----ETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKA</Hsp_qseq>
+      <Hsp_hseq>KANQLQVSSQVSGSVIEVNVDDTDYVKQGDVLVRLDPTNAELALAKAEANLAALVRQTKQLEITVQQLQAKVESLKIKLEQAREKLLQAELDLRRRVPLFKKGLISREELDHARKALLSAKAALNAAIQEQLNANQALVRGTPLKKQPAVQEAKERLKTAWLALKRTVIRAPFDGYVARRFVQVGQVVSPGQPLMAVVPAEQMYVEANFK--ETQLKNVRIGQPV</Hsp_hseq>
+      <Hsp_midline> AN + V S+V G ++ ++  +   VK GD+L  +DP+  ++ALA+A+  LA                       K  L  AR        DL R   L K  L+SR+ELD                      A QALV     + +  ++  +  + +A L L  + I AP DG V  + V VG  +S G     VV  +   ++  F   E+ +  V   Q  </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>23</Hit_num>
+  <Hit_id>gnl|CDD|235136</Hit_id>
+  <Hit_def>PRK03598, PRK03598, putative efflux pump membrane fusion protein; Provisional.</Hit_def>
+  <Hit_accession>235136</Hit_accession>
+  <Hit_len>331</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>77.6949</Hsp_bit-score>
+      <Hsp_score>192</Hsp_score>
+      <Hsp_evalue>2.54397e-15</Hsp_evalue>
+      <Hsp_query-from>535</Hsp_query-from>
+      <Hsp_query-to>978</Hsp_query-to>
+      <Hsp_hit-from>43</Hsp_hit-from>
+      <Hsp_hit-to>240</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>47</Hsp_identity>
+      <Hsp_positive>86</Hsp_positive>
+      <Hsp_gaps>54</Hsp_gaps>
+      <Hsp_align-len>200</Hsp_align-len>
+      <Hsp_qseq>TVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLA--------------------------NARRDLARYQQLAKTNLVSRQELD---------------AQQAL-----------VSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPI</Hsp_qseq>
+      <Hsp_hseq>TVNLGFRVGGRLASLAVDEGDAVKAGQVLGELDAAPYENALMQAKANVSVAQAQLDLMLAGYRDEEIAQARAAVKQAQAAYDYAQNFYNRQQGLWKSRTISANDLENARSSRDQAQATLKSAQDKLSQYREGNRPQDIAQAKASLAQAQAALAQAELNLQDTELIAPSDGTILTRAVEPGTMLNAGST--VFTLSLTRPV</Hsp_hseq>
+      <Hsp_midline>TV +  RV G+L +L   EG  VKAG +L E+D + ++ AL QA+  ++  +A L                            A+    R Q L K+  +S  +L+               AQ  L           +++ + ++   +A++A A+L L  + + AP DG +  + V+ G  +++G T  +  ++ T P+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>24</Hit_num>
+  <Hit_id>gnl|CDD|182488</Hit_id>
+  <Hit_def>PRK10476, PRK10476, multidrug transporter subunit MdtN.  </Hit_def>
+  <Hit_accession>182488</Hit_accession>
+  <Hit_len>346</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>77.7596</Hsp_bit-score>
+      <Hsp_score>192</Hsp_score>
+      <Hsp_evalue>2.77474e-15</Hsp_evalue>
+      <Hsp_query-from>529</Hsp_query-from>
+      <Hsp_query-to>1008</Hsp_query-to>
+      <Hsp_hit-from>46</Hsp_hit-from>
+      <Hsp_hit-to>243</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>58</Hsp_identity>
+      <Hsp_positive>84</Hsp_positive>
+      <Hsp_gaps>66</Hsp_gaps>
+      <Hsp_align-len>212</Hsp_align-len>
+      <Hsp_qseq>ANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARR----------------------------DLARYQQLAKTNLVSRQELD---------------------AQQALVSET---EGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESD</Hsp_qseq>
+      <Hsp_hseq>ADVVHVASEVGGRIVELAVTENQAVKKGDLLFRIDPRPYELTVAQAQADLALADAQIMTTQRSVDAERSNAASANEQVERARANAKLATRTLERLEPLLAKGYVSAQQVDQARTAQRDAEVSLNQALLQAQAAAAAVGGVDALVAQRAAREAALAIAELHLEDTTVRAPFDGRV------VGLKVSVGEFAA--------PMQPIFTLIDTD</Hsp_hseq>
+      <Hsp_midline>A+ V V S V G+++ L   E Q VK GDLL  IDP  +++ +AQAQ  LA   A +   +R                             L R + L     VS Q++D                     A  A V           A EA++A A+L L+ + + AP DGRV      VG ++S G+           P+  +FTL ++D</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>25</Hit_num>
+  <Hit_id>gnl|CDD|372628</Hit_id>
+  <Hit_def>pfam13533, Biotin_lipoyl_2, Biotin-lipoyl like.  </Hit_def>
+  <Hit_accession>372628</Hit_accession>
+  <Hit_len>50</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>59.4769</Hsp_bit-score>
+      <Hsp_score>145</Hsp_score>
+      <Hsp_evalue>1.53783e-11</Hsp_evalue>
+      <Hsp_query-from>532</Hsp_query-from>
+      <Hsp_query-to>681</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>50</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>24</Hsp_identity>
+      <Hsp_positive>35</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>50</Hsp_align-len>
+      <Hsp_qseq>NTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLA</Hsp_qseq>
+      <Hsp_hseq>PVVKIAPDVSGKVVEVNVKEGQQVKKGDVLATIDPPDLQLALAQAEAQLA</Hsp_hseq>
+      <Hsp_midline>  V +   V G+++ ++ +EGQQVK GD+LA IDP   ++ALAQA+ QLA</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>26</Hit_num>
+  <Hit_id>gnl|CDD|182548</Hit_id>
+  <Hit_def>PRK10559, PRK10559, p-hydroxybenzoic acid efflux pump subunit AaeA.  </Hit_def>
+  <Hit_accession>182548</Hit_accession>
+  <Hit_len>310</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>65.1474</Hsp_bit-score>
+      <Hsp_score>159</Hsp_score>
+      <Hsp_evalue>3.27132e-11</Hsp_evalue>
+      <Hsp_query-from>526</Hsp_query-from>
+      <Hsp_query-to>1020</Hsp_query-to>
+      <Hsp_hit-from>44</Hsp_hit-from>
+      <Hsp_hit-to>205</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>43</Hsp_identity>
+      <Hsp_positive>79</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>165</Hsp_align-len>
+      <Hsp_qseq>AANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATV</Hsp_qseq>
+      <Hsp_hseq>SADVVAIAPDVSGLITQVNVHDNQLVKKGQVLFTIDQPRYQKALAEAEADVAYYQVLAQEKRREAGRRNRLG-VQAMSREEIDQANNVLQTVLHQLAKAQATRDLAKLDLERTVIRAPADGWVTNLNVYTGEFITRGSTA--VALVKQNSFYVLAYMEETKLEGV</Hsp_hseq>
+      <Hsp_midline>+A+ V +   V G +  ++  + Q VK G +L  ID  +++ ALA+A+  +A  +      RR+  R  +L     +SR+E+D    ++      +   +A+   A+L L+ + I AP DG V    V  G  I+ G T   V + + +   +L  + E+ +  V</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>27</Hit_num>
+  <Hit_id>gnl|CDD|185090</Hit_id>
+  <Hit_def>PRK15136, PRK15136, multidrug efflux MFS transporter periplasmic adaptor subunit EmrA.  </Hit_def>
+  <Hit_accession>185090</Hit_accession>
+  <Hit_len>390</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>65.4858</Hsp_bit-score>
+      <Hsp_score>160</Hsp_score>
+      <Hsp_evalue>3.68768e-11</Hsp_evalue>
+      <Hsp_query-from>526</Hsp_query-from>
+      <Hsp_query-to>936</Hsp_query-to>
+      <Hsp_hit-from>58</Hsp_hit-from>
+      <Hsp_hit-to>240</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>48</Hsp_identity>
+      <Hsp_positive>73</Hsp_positive>
+      <Hsp_gaps>46</Hsp_gaps>
+      <Hsp_align-len>183</Hsp_align-len>
+      <Hsp_qseq>AANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKD---------------------KATLANARRDLARYQQLAKTNLVSRQEL---------------------DAQQALVSET----EGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSG</Hsp_qseq>
+      <Hsp_hseq>AGNQVQIMSQVSGSVTKVWADNTDFVKEGDVLVTLDPTDAEQAFEKAKTALANSVRQTHQLMINSKQYQANIELQKTALAQAQSDLNRRVPLGNANLIGREELQHARDAVASAQAQLDVAIQQYNANQAMILNTPLEDQPAVQQAATEVRNAWLALQRTKIVSPMTGYVSRRSVQVGAQISPT</Hsp_hseq>
+      <Hsp_midline>A N V + S+V G +  +       VK GD+L  +DP+  + A  +A+  LA                       K  LA A+ DL R   L   NL+ R+EL                     +A QA++  T    +  ++     V +A L L  ++I +P+ G V  + V VG QIS  </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>28</Hit_num>
+  <Hit_id>gnl|CDD|129992</Hit_id>
+  <Hit_def>TIGR00914, Nickel-cobalt-cadmium_resistance_protein_NccA, heavy metal efflux pump, CzcA family.  This model represents a family of H+/heavy metal cation antiporters. This family is one of several subfamilies within the scope of pfam00873. [Cellular processes, Detoxification, Transport and binding proteins, Cations and iron carrying compounds].</Hit_def>
+  <Hit_accession>129992</Hit_accession>
+  <Hit_len>1051</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>58.619</Hsp_bit-score>
+      <Hsp_score>142</Hsp_score>
+      <Hsp_evalue>1.05077e-08</Hsp_evalue>
+      <Hsp_query-from>1596</Hsp_query-from>
+      <Hsp_query-to>2213</Hsp_query-to>
+      <Hsp_hit-from>15</Hsp_hit-from>
+      <Hsp_hit-to>230</Hsp_hit-to>
+      <Hsp_query-frame>3</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>58</Hsp_identity>
+      <Hsp_positive>91</Hsp_positive>
+      <Hsp_gaps>28</Hsp_gaps>
+      <Hsp_align-len>225</Hsp_align-len>
+      <Hsp_qseq>LLMVAILLAGIIG---YRALPVSALPEVDYPTIQVVTLYPGASPDVMTSAVTAPLERQFGQMSGLKQMSSQSSGGASVITLQFQLTLPLDVAEQEVQAAINAATNLLPSDLPNPPVYSKVNPADPPIMT----------LAVTSTAMPMTQVEDMVETRVAQ------KISQISGVGLVTLSGGQRPAVRVKLNAQAIAALGLTSETVRTAITGANVNSAKGSLD</Hsp_qseq>
+      <Hsp_hseq>LVLLATLVMAILGIWSYNRLPIDAVPDITNVQVQINTSAPGYSPLEVEQRVTYPIETAMAGLPGLETTRSLSRYGLSQVTVIFKDGTDLYFARQLVNERLQQARDNLPEG---------VSPEMGPISTGLGEIFLYTVEAEEGARKKDGGAYTLTDLRTIQDWIIRPQLRTVPGVAEVNSIGGYVKQFLVAPDPEKLAAYGLSLADVVNALERNNQNVGAGYIE</Hsp_hseq>
+      <Hsp_midline>L+++A L+  I+G   Y  LP+ A+P++    +Q+ T  PG SP  +   VT P+E     + GL+   S S  G S +T+ F+    L  A Q V   +  A + LP           V+P   PI T           A             + + R  Q      ++  + GV  V   GG      V  + + +AA GL+   V  A+   N N   G ++</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>29</Hit_num>
+  <Hit_id>gnl|CDD|236625</Hit_id>
+  <Hit_def>PRK09783, PRK09783, copper/silver efflux system membrane fusion protein CusB; Provisional.</Hit_def>
+  <Hit_accession>236625</Hit_accession>
+  <Hit_len>409</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>52.1773</Hsp_bit-score>
+      <Hsp_score>125</Hsp_score>
+      <Hsp_evalue>6.68081e-07</Hsp_evalue>
+      <Hsp_query-from>343</Hsp_query-from>
+      <Hsp_query-to>1413</Hsp_query-to>
+      <Hsp_hit-from>44</Hsp_hit-from>
+      <Hsp_hit-to>384</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>88</Hsp_identity>
+      <Hsp_positive>158</Hsp_positive>
+      <Hsp_gaps>68</Hsp_gaps>
+      <Hsp_align-len>383</Hsp_align-len>
+      <Hsp_qseq>FWFWQGRNDSQSAAPGAT---------KQAQQSPAGGRRGMRADPLAPVQAATAVEQAVPRYLTGLGTITAANT------------VTVRSRVDGQLMALH-FQEGQQVKAGDLLAEID-PSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIKVKARFNNQDDALFPNQFVNARMLVDTE-QNAVVIPTAAL-QMGNEGHFVWVLNSENKVSKHLVTPGIQDSQKVV-IRAGISAGDRVVTDGI</Hsp_qseq>
+      <Hsp_hseq>FWYDPMYPNTRFDKPGKSPFMDMDLVPKYADEESSASSGGVRIDP-TQTQNLGVKTATVTR-----GPLTFAQTFPANVSYNEYQYAIVQARAAGFIDKVYPLTVGDKVQKGTPLLDLTIPDWVE---AQSEYLLLRETGGTATQTEGILERLRLAGMPEADIRRLIATRKI--QTRFTLKA-------------------PIDGVITAFDLRAGMNIAKDNV--VAKIQGMDPVWVTAAIPES-IAWLVKDASQFT-LTVPARPDK-TFTIRKWTLLP---SVDAATRTLQLRLEVDNADEALKPG--MNAWLQLNTASEPMLLIPSQALIDTGSEQRVITVDADGRFVPKRVAV--FQESQGVTAIRSGLAEGEKVVSSGL</Hsp_hseq>
+      <Hsp_midline>FW+     +++   PG +         K A +  +    G+R DP    Q        V R     G +T A T              V++R  G +  ++    G +V+ G  L ++  P   +   AQ++  L ++    A     +    +LA       + L A + +  +T  T+KA                   P+DG +    +  G  I+  +   +  I    P+ +   +PES IA +V+       L V A     +  + + TLL     +DA T T++++   +N D+AL P   +NA + ++T  +  ++IP+ AL   G+E   + V      V K +     Q+SQ V  IR+G++ G++VV+ G+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>30</Hit_num>
+  <Hit_id>gnl|CDD|379862</Hit_id>
+  <Hit_def>pfam16576, HlyD_D23, Barrel-sandwich domain of CusB or HlyD membrane-fusion.  HlyD_D23 is the combined domains 2 and 3 of the membrane-fusion proteins CusB and HlyD, which forms a barrel-sandwich. CusB and HlyD proteins are membrane fusion proteins of the CusCFBA copper efflux system in E.coli and related bacteria. The whole molecule hinges between D2 and D3. Efflux systems of this resistance-nodulation-division group - RND - have been developed to excrete poisonous metal ions, and in E.coli the only one that deals with silver and copper is the CusA transporter. The transporter CusA works in conjunction with a periplasmic component that is a membrane fusion protein, eg CusB, and an outer-membrane channel component CusC in a CusABC complex driven by import of protons.</Hit_def>
+  <Hit_accession>379862</Hit_accession>
+  <Hit_len>214</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>48.2645</Hsp_bit-score>
+      <Hsp_score>116</Hsp_score>
+      <Hsp_evalue>3.64624e-06</Hsp_evalue>
+      <Hsp_query-from>496</Hsp_query-from>
+      <Hsp_query-to>1203</Hsp_query-to>
+      <Hsp_hit-from>4</Hsp_hit-from>
+      <Hsp_hit-to>214</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>58</Hsp_identity>
+      <Hsp_positive>92</Hsp_positive>
+      <Hsp_gaps>45</Hsp_gaps>
+      <Hsp_align-len>246</Hsp_align-len>
+      <Hsp_qseq>RYLTGLGTITA--ANTVTVRSRVDGQLMALHFQ-EGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVV-------EAWDRTNSKKLSEGTLLSLDNQIDATTGTIKVKARFNNQDDALFPNQFV</Hsp_qseq>
+      <Hsp_hseq>RTIRAVGTVAYDERRLAHVHARVEGWIEKLYVNATGDPVKKGQPLAELYSPE----LVAAQEEYL-----LALRSGDSLSASELLRA---ARQRL--RLLGMPE--AQIAALERTGKVQP----TVTVYAPISGVVTELNVREGMYVQPGDT--LFTIADLSTVWVEADVPEQDLALV----KVGQPVEVTLPALPGKTF---------TGKVDYIYPTLDPKTRTLRVRIELPNPDGRLKPGMFA</Hsp_hseq>
+      <Hsp_midline>R +  +GT+         V +RV+G +  L+    G  VK G  LAE+   +    L  AQ +       LA    D     +L +    +RQ L  +   + E    I A E +            + AP+ G V    V  G  +  GDT  +  I     + +   +PE D+A V    K G+P+ V       + +          G +  +   +D  T T++V+    N D  L P  F </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>31</Hit_num>
+  <Hit_id>gnl|CDD|379183</Hit_id>
+  <Hit_def>pfam13437, HlyD_3, HlyD family secretion protein.  This is a family of largely bacterial haemolysin translocator HlyD proteins.</Hit_def>
+  <Hit_accession>379183</Hit_accession>
+  <Hit_len>104</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>42.7337</Hsp_bit-score>
+      <Hsp_score>101</Hsp_score>
+      <Hsp_evalue>5.04085e-05</Hsp_evalue>
+      <Hsp_query-from>865</Hsp_query-from>
+      <Hsp_query-to>1185</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>99</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>27</Hsp_identity>
+      <Hsp_positive>45</Hsp_positive>
+      <Hsp_gaps>8</Hsp_gaps>
+      <Hsp_align-len>107</Hsp_align-len>
+      <Hsp_qseq>RITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKAGKPLVVEAWDRTNSKKLSEGTLLSLDNQIDATTGTIKVKARFNNQDDAL</Hsp_qseq>
+      <Hsp_hseq>TIRAPVDGVVVELNVEEGQVVSAGDP--LATIIPPDRLLVEASVPAADLASLKIGQKV----TLKL--DPGSDYTLPGKISRISPTPDADTGAYPVRVSLENPLDDI</Hsp_hseq>
+      <Hsp_midline> I APVDG V    V+ G  +S+GD   +  I     + +  ++P +D+A++   QK      ++      S     G +  +    DA TG   V+    N  D +</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>38.4965</Hsp_bit-score>
+      <Hsp_score>90</Hsp_score>
+      <Hsp_evalue>0.00178786</Hsp_evalue>
+      <Hsp_query-from>541</Hsp_query-from>
+      <Hsp_query-to>690</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>51</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>21</Hsp_identity>
+      <Hsp_positive>29</Hsp_positive>
+      <Hsp_gaps>1</Hsp_gaps>
+      <Hsp_align-len>51</Hsp_align-len>
+      <Hsp_qseq>TVRSRVDGQLMALHFQEGQQVKAGDLLAEI-DPSQFKVALAQAQGQLAKDK</Hsp_qseq>
+      <Hsp_hseq>TIRAPVDGVVVELNVEEGQVVSAGDPLATIIPPDRLLVEASVPAADLASLK</Hsp_hseq>
+      <Hsp_midline>T+R+ VDG ++ L+ +EGQ V AGD LA I  P +  V  +     LA  K</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>32</Hit_num>
+  <Hit_id>gnl|CDD|130902</Hit_id>
+  <Hit_def>TIGR01843, Hemolysin_secretion_protein_D_plasmid, type I secretion membrane fusion protein, HlyD family.  Type I secretion is an ABC transport process that exports proteins, without cleavage of any signal sequence, from the cytosol to extracellular medium across both inner and outer membranes. The secretion signal is found in the C-terminus of the transported protein. This model represents the adaptor protein between the ATP-binding cassette (ABC) protein of the inner membrane and the outer membrane protein, and is called the membrane fusion protein. This model selects a subfamily closely related to HlyD; it is defined narrowly and excludes, for example, colicin V secretion protein CvaA and multidrug efflux proteins. [Protein fate, Protein and peptide secretion and trafficking].</Hit_def>
+  <Hit_accession>130902</Hit_accession>
+  <Hit_len>423</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>45.0006</Hsp_bit-score>
+      <Hsp_score>107</Hsp_score>
+      <Hsp_evalue>0.00011254</Hsp_evalue>
+      <Hsp_query-from>652</Hsp_query-from>
+      <Hsp_query-to>957</Hsp_query-to>
+      <Hsp_hit-from>204</Hsp_hit-from>
+      <Hsp_hit-to>304</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>28</Hsp_identity>
+      <Hsp_positive>46</Hsp_positive>
+      <Hsp_gaps>7</Hsp_gaps>
+      <Hsp_align-len>105</Hsp_align-len>
+      <Hsp_qseq>ALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEAS--VASAQLQLDWSRITAPVDGRV-GLKQVDVGNQISSGDTTGIVV</Hsp_qseq>
+      <Hsp_hseq>ERAEAQGELGRLEAELEVLKRQIDELQL----ERQQIEQTFREEVLEELTEAQARLAELRERLNKARDRLQRLIIRSPVDGTVQSLKVHTVGGVVQPGETLMEIV</Hsp_hseq>
+      <Hsp_midline>  A+AQG+L + +A L   +R +   Q          ++   ++ L   TE   +  E    +  A+ +L    I +PVDG V  LK   VG  +  G+T   +V</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>45.0006</Hsp_bit-score>
+      <Hsp_score>107</Hsp_score>
+      <Hsp_evalue>0.000127064</Hsp_evalue>
+      <Hsp_query-from>520</Hsp_query-from>
+      <Hsp_query-to>744</Hsp_query-to>
+      <Hsp_hit-from>31</Hsp_hit-from>
+      <Hsp_hit-to>105</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>19</Hsp_identity>
+      <Hsp_positive>33</Hsp_positive>
+      <Hsp_gaps>14</Hsp_gaps>
+      <Hsp_align-len>82</Hsp_align-len>
+      <Hsp_qseq>ITAANTVTVRSRVD-------GQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAK</Hsp_qseq>
+      <Hsp_hseq>ATATGKVVPSGNVKVVQHLEGGIVREILVREGDRVKAGQVLVELDATDVEADAAELESQ-------VLRLEAEVARLRAEAD</Hsp_hseq>
+      <Hsp_midline> TA   V     V        G +  +  +EG +VKAG +L E+D +  +   A+ + Q       +     ++AR +  A </Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>3</Hsp_num>
+      <Hsp_bit-score>44.2302</Hsp_bit-score>
+      <Hsp_score>105</Hsp_score>
+      <Hsp_evalue>0.000211896</Hsp_evalue>
+      <Hsp_query-from>616</Hsp_query-from>
+      <Hsp_query-to>858</Hsp_query-to>
+      <Hsp_hit-from>149</Hsp_hit-from>
+      <Hsp_hit-to>227</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>22</Hsp_identity>
+      <Hsp_positive>41</Hsp_positive>
+      <Hsp_gaps>2</Hsp_gaps>
+      <Hsp_align-len>81</Hsp_align-len>
+      <Hsp_qseq>LLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEASVASAQLQLD</Hsp_qseq>
+      <Hsp_hseq>ILAQIKQLEAELAGLQAQLQALRQQLEVISEELEARR--KLKEKGLVSRLELLELERERAEAQGELGRLEAELEVLKRQID</Hsp_hseq>
+      <Hsp_midline>+LA+I   + ++A  QAQ Q  + +  + +   +  R  +L +  LVSR EL   +   +E +G +   EA +   + Q+D</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>33</Hit_num>
+  <Hit_id>gnl|CDD|133459</Hit_id>
+  <Hit_def>cd06850, biotinyl_domain, The biotinyl-domain or biotin carboxyl carrier protein (BCCP) domain is present in all biotin-dependent enzymes, such as acetyl-CoA carboxylase, pyruvate carboxylase, propionyl-CoA carboxylase, methylcrotonyl-CoA carboxylase, geranyl-CoA carboxylase, oxaloacetate decarboxylase, methylmalonyl-CoA decarboxylase, transcarboxylase and urea amidolyase. This domain functions in transferring CO2 from one subsite to another, allowing carboxylation, decarboxylation, or transcarboxylation. During this process, biotin is covalently attached to a specific lysine.</Hit_def>
+  <Hit_accession>133459</Hit_accession>
+  <Hit_len>67</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>39.7068</Hsp_bit-score>
+      <Hsp_score>94</Hsp_score>
+      <Hsp_evalue>0.000279167</Hsp_evalue>
+      <Hsp_query-from>541</Hsp_query-from>
+      <Hsp_query-to>630</Hsp_query-to>
+      <Hsp_hit-from>38</Hsp_hit-from>
+      <Hsp_hit-to>67</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>12</Hsp_identity>
+      <Hsp_positive>17</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>30</Hsp_align-len>
+      <Hsp_qseq>TVRSRVDGQLMALHFQEGQQVKAGDLLAEI</Hsp_qseq>
+      <Hsp_hseq>EVTAPVAGVVKEILVKEGDQVEAGQLLVVI</Hsp_hseq>
+      <Hsp_midline> V + V G +  +  +EG QV+AG LL  I</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>34</Hit_num>
+  <Hit_id>gnl|CDD|213754</Hit_id>
+  <Hit_def>TIGR02971, devB-like_secretion_protein, ABC exporter membrane fusion protein, DevB family.  Members of this protein family are found mostly in the Cyanobacteria, but also in the Planctomycetes. DevB from Anabaena sp. strain PCC 7120 is partially characterized as a membrane fusion protein of the DevBCA ABC exporter, probably a glycolipid exporter, required for heterocyst formation. Most Cyanobacteria have one member only, but Nostoc sp. PCC 7120 has seven members.</Hit_def>
+  <Hit_accession>213754</Hit_accession>
+  <Hit_len>327</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>43.2767</Hsp_bit-score>
+      <Hsp_score>102</Hsp_score>
+      <Hsp_evalue>0.000349619</Hsp_evalue>
+      <Hsp_query-from>598</Hsp_query-from>
+      <Hsp_query-to>1038</Hsp_query-to>
+      <Hsp_hit-from>73</Hsp_hit-from>
+      <Hsp_hit-to>260</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>44</Hsp_identity>
+      <Hsp_positive>73</Hsp_positive>
+      <Hsp_gaps>47</Hsp_gaps>
+      <Hsp_align-len>191</Hsp_align-len>
+      <Hsp_qseq>QVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATL-------ANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGT-------------------------------------IKADEASVASAQLQLDWSRITAPVDGRVGLKQVDVGNQISSGDTTGIVVITQTHPIDLLFTLPESDIATVVQAQKA</Hsp_qseq>
+      <Hsp_hseq>QVRAGAKKGEIAAQRAARAAAKLFKDVAAQQATLNRLEAELETAQREVDRYRSLFRDGAVSASDLDSKALKLRTAEEELEEALASRSEQIDGARAALASLAEEVRETDVDLAQAEVKSALEAVQQAEALLELTYVKAPIDGRVLKIHAREGEVIGS---EGILEMGDTSQMYAVAEVYETDINRVRVGQRA</Hsp_hseq>
+      <Hsp_midline>QV+AG    EI   +   A A+    +A  +ATL         A+R++ RY+ L +   VS  +LD++   +   E                                       +K+   +V  A+  L+ + + AP+DGRV       G  I S    GI+ +  T  +  +  + E+DI  V   Q+A</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>35</Hit_num>
+  <Hit_id>gnl|CDD|237263</Hit_id>
+  <Hit_def>PRK12999, PRK12999, pyruvate carboxylase; Reviewed.</Hit_def>
+  <Hit_accession>237263</Hit_accession>
+  <Hit_len>1146</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>40.1218</Hsp_bit-score>
+      <Hsp_score>95</Hsp_score>
+      <Hsp_evalue>0.00626682</Hsp_evalue>
+      <Hsp_query-from>541</Hsp_query-from>
+      <Hsp_query-to>636</Hsp_query-to>
+      <Hsp_hit-from>1115</Hsp_hit-from>
+      <Hsp_hit-to>1146</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>14</Hsp_identity>
+      <Hsp_positive>22</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>32</Hsp_align-len>
+      <Hsp_qseq>TVRSRVDGQLMALHFQEGQQVKAGDLLAEIDP</Hsp_qseq>
+      <Hsp_hseq>TITAPVDGTVKRVLVKAGDQVEAGDLLVELEP</Hsp_hseq>
+      <Hsp_midline>T+ + VDG +  +  + G QV+AGDLL E++P</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>36</Hit_num>
+  <Hit_id>gnl|CDD|274787</Hit_id>
+  <Hit_def>TIGR03794, conserved_hypothetical_protein, NHLM bacteriocin system secretion protein.  Members of this protein family are homologs of the HlyD membrane fusion protein of type I secretion systems. Their occurrence in prokaryotic genomes is associated with the occurrence of a novel class of microcin (small bacteriocins) with a leader peptide region related to nitrile hydratase. We designate the class of bacteriocin as Nitrile Hydratase Leader Microcin, or NHLM. This family, therefore, is designated as NHLM bacteriocin system secretion protein. Some but not all NHLM-class putative microcins belong to the TOMM (thiazole/oxazole modified microcin) class as assessed by the presence of the scaffolding protein and/or cyclodehydratase in the same gene clusters. [Transport and binding proteins, Amino acids, peptides and amines, Cellular processes, Biosynthesis of natural products].</Hit_def>
+  <Hit_accession>274787</Hit_accession>
+  <Hit_len>421</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>39.4423</Hsp_bit-score>
+      <Hsp_score>92</Hsp_score>
+      <Hsp_evalue>0.00636527</Hsp_evalue>
+      <Hsp_query-from>490</Hsp_query-from>
+      <Hsp_query-to>828</Hsp_query-to>
+      <Hsp_hit-from>42</Hsp_hit-from>
+      <Hsp_hit-to>149</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>25</Hsp_identity>
+      <Hsp_positive>53</Hsp_positive>
+      <Hsp_gaps>7</Hsp_gaps>
+      <Hsp_align-len>114</Hsp_align-len>
+      <Hsp_qseq>VPRYLTGLGTIT-AANTVTVRSRVDGQLMALHFQEGQQVKAGDLLAEIDPSQFKVALAQAQGQLAKDKATLANARRDLARYQQLAKTNLVSRQELDAQQALVSETEGTIKADEA</Hsp_qseq>
+      <Hsp_hseq>IPITVSGNGILILSSGVDTIQSPGSGVVIDLDVEVGDQVKKGQVVARLFQPELRERLQESYQKLTQ----LQEQLEEVRNYTGRLK-EGRERHFQKSKEAL-EETIGRLREELA</Hsp_hseq>
+      <Hsp_midline>+P  ++G G +  ++   T++S   G ++ L  + G QVK G ++A +   + +  L ++  +L +    L     ++  Y    K     R    +++AL  ET G ++ + A</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>37</Hit_num>
+  <Hit_id>gnl|CDD|133458</Hit_id>
+  <Hit_def>cd06849, lipoyl_domain, Lipoyl domain of the dihydrolipoyl acyltransferase component (E2) of 2-oxo acid dehydrogenases. 2-oxo acid dehydrogenase multienzyme complexes, like pyruvate dehydrogenase (PDH), 2-oxoglutarate dehydrogenase (OGDH) and branched-chain 2-oxo acid dehydrogenase (BCDH), contain at least three different enzymes, 2-oxo acid dehydrogenase (E1), dihydrolipoyl acyltransferase (E2) and dihydrolipoamide dehydrogenase (E3) and play a key role in redox regulation. E2, the central component of the complex, catalyzes the transfer of the acyl group of CoA from E1 to E3 via reductive acetylation of a lipoyl group covalently attached to a lysine residue.</Hit_def>
+  <Hit_accession>133458</Hit_accession>
+  <Hit_len>74</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>35.4579</Hsp_bit-score>
+      <Hsp_score>83</Hsp_score>
+      <Hsp_evalue>0.00874767</Hsp_evalue>
+      <Hsp_query-from>535</Hsp_query-from>
+      <Hsp_query-to>630</Hsp_query-to>
+      <Hsp_hit-from>43</Hsp_hit-from>
+      <Hsp_hit-to>74</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>11</Hsp_identity>
+      <Hsp_positive>16</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>32</Hsp_align-len>
+      <Hsp_qseq>TVTVRSRVDGQLMALHFQEGQQVKAGDLLAEI</Hsp_qseq>
+      <Hsp_hseq>TVEVEAPAAGVLAKILVEEGDTVPVGQVIAVI</Hsp_hseq>
+      <Hsp_midline>TV V +   G L  +  +EG  V  G ++A I</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+</Iteration_hits>
+  <Iteration_stat>
+    <Statistics>
+      <Statistics_db-num>55570</Statistics_db-num>
+      <Statistics_db-len>12873547</Statistics_db-len>
+      <Statistics_hsp-len>105</Statistics_hsp-len>
+      <Statistics_eff-space>4561075656</Statistics_eff-space>
+      <Statistics_kappa>0.050055168</Statistics_kappa>
+      <Statistics_lambda>0.267</Statistics_lambda>
+      <Statistics_entropy>0.14</Statistics_entropy>
+    </Statistics>
+  </Iteration_stat>
+</Iteration>
+</BlastOutput_iterations>
+</BlastOutput>
+

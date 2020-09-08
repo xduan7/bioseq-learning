@@ -1,0 +1,3 @@
+genome_id	genome_name	accession	annotation	feature_type	patric_id	refseq_locus_tag	alt_locus_tag	uniprotkb_accession	start	end	strand	na_length	gene	product	figfam_id	plfam_id	pgfam_id	go	ec	pathway
+562.2284	Escherichia coli GSK2024	AXOE01000128	PATRIC	CDS	fig|562.2284.peg.4133		VBIEscCol313224_4133		17	202	-	186		hypothetical protein		PLF_561_00004376	PGF_00135346			
+562.2284	Escherichia coli GSK2024	AXOE01000128	PATRIC	CDS	fig|562.2284.peg.4134		VBIEscCol313224_4134		242	862	+	621		Arylsulfatase (EC 3.1.6.1)	FIG01304512	PLF_561_00001821	PGF_00065535	GO:0004065|arylsulfatase activity	3.1.6.1|Arylsulfatase	00140|C21-Steroid hormone metabolism;00600|Sphingolipid metabolism

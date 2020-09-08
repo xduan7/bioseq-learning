@@ -1,0 +1,2 @@
+genome_id	genome_name	accession	annotation	feature_type	patric_id	refseq_locus_tag	alt_locus_tag	uniprotkb_accession	start	end	strand	na_length	gene	product	figfam_id	plfam_id	pgfam_id	go	ec	pathway
+562.2285	Escherichia coli GSK202B	AXOA01000128	PATRIC	CDS	fig|562.2285.peg.4129		VBIEscCol307008_4129		523	648	-	126		hypothetical protein		PLF_561_00010899	PGF_01624790			

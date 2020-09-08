@@ -1,0 +1,798 @@
+<?xml version="1.0"?>
+<!DOCTYPE BlastOutput PUBLIC "-//NCBI//NCBI BlastOutput/EN" "http://www.ncbi.nlm.nih.gov/dtd/NCBI_BlastOutput.dtd">
+<BlastOutput>
+  <BlastOutput_program>rpstblastn</BlastOutput_program>
+  <BlastOutput_version>RPSTBLASTN 2.10.1+</BlastOutput_version>
+  <BlastOutput_reference>Stephen F. Altschul, Thomas L. Madden, Alejandro A. Sch&amp;auml;ffer, Jinghui Zhang, Zheng Zhang, Webb Miller, and David J. Lipman (1997), &quot;Gapped BLAST and PSI-BLAST: a new generation of protein database search programs&quot;, Nucleic Acids Res. 25:3389-3402.</BlastOutput_reference>
+  <BlastOutput_db>/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd</BlastOutput_db>
+  <BlastOutput_query-ID>Query_1</BlastOutput_query-ID>
+  <BlastOutput_query-def>AXOE01000131 Escherichia coli GSK2024 contig131, whole genome shotgun sequence. [Escherichia coli GSK2024 | 562.2284]</BlastOutput_query-def>
+  <BlastOutput_query-len>1873</BlastOutput_query-len>
+  <BlastOutput_param>
+    <Parameters>
+      <Parameters_matrix>BLOSUM62</Parameters_matrix>
+      <Parameters_expect>0.01</Parameters_expect>
+      <Parameters_gap-open>11</Parameters_gap-open>
+      <Parameters_gap-extend>1</Parameters_gap-extend>
+      <Parameters_filter>F</Parameters_filter>
+    </Parameters>
+  </BlastOutput_param>
+<BlastOutput_iterations>
+<Iteration>
+  <Iteration_iter-num>1</Iteration_iter-num>
+  <Iteration_query-ID>Query_1</Iteration_query-ID>
+  <Iteration_query-def>AXOE01000131 Escherichia coli GSK2024 contig131, whole genome shotgun sequence. [Escherichia coli GSK2024 | 562.2284]</Iteration_query-def>
+  <Iteration_query-len>1873</Iteration_query-len>
+<Iteration_hits>
+<Hit>
+  <Hit_num>1</Hit_num>
+  <Hit_id>gnl|CDD|273805</Hit_id>
+  <Hit_def>TIGR01783, Ferrienterobactin_receptor, TonB-dependent siderophore receptor.  This subfamily model encompasses a wide variety of TonB-dependent outer membrane siderophore receptors. It has no overlap with TonB receptors known to transport other substances, but is likely incomplete due to lack of characterizations. It is likely that genuine siderophore receptors will be identified which score below the noise cutoff to this model at which point the model should be updated. [Transport and binding proteins, Cations and iron carrying compounds, Transport and binding proteins, Porins].</Hit_def>
+  <Hit_accession>273805</Hit_accession>
+  <Hit_len>651</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>443.392</Hsp_bit-score>
+      <Hsp_score>1141</Hsp_score>
+      <Hsp_evalue>3.23156e-148</Hsp_evalue>
+      <Hsp_query-from>2</Hsp_query-from>
+      <Hsp_query-to>1801</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>564</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>166</Hsp_identity>
+      <Hsp_positive>241</Hsp_positive>
+      <Hsp_gaps>56</Hsp_gaps>
+      <Hsp_align-len>610</Hsp_align-len>
+      <Hsp_qseq>EMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYG-MNVRGRPLVVLVDGVRLNSSRTDSR-QLDSIDPFNIDHIEVISGATS-LYGGGSTGGLINIVTKKGQ--PETMMEFEAGTKSGFSSSKDHDERIAGAVSGGNEHISGRLSVAYQKFGGWFDGNGDATLLDNTQTGLQYSDRLDIMGTGTLNIDESRQLQLITQYYKSQGDDDYGLNLGKGFSAIRGTSTPFVSNGLNSDRIPGTE--RHLISLQYSDSAFLGQELVGQVYYRDESLRFYPFPTVNANKQVTAFSSSQQDTDQYGMKLTLNSKPMDGWQITWGLDADHERFTSNQMFFDLAQASASGGLNNKKIYTTGRYPSYDITNLAVFLQSGYDINNLFTLNGGVRYQYTENKIDDFIGYAQQRQIAAGKATSADAIPGGSVDYDNFLFNAGLLMHITERQQAWLNFSQGVELPDPGKYYGRGIYGAAVNGHLPLTKSVNVSDSKLEGVKVDSYELGWRFTGNNLRTQIAAYYSI--SDKSVVANKDLTISVVDDKRRIYGVE-GAVDYLIPDTDWSTGVNFNVLKTESKVNGTWQKYDVKTASPSKATAYIGWAPDPWSL</Hsp_qseq>
+      <Hsp_hseq>DIPQSVSVITRQELEDQQAG--SLSEALQRVPGVVVGGSGGTTQFGNITIRGFGLEVDIDNVYLDGVPLLSRGNLAIVDPAMVERVEVLRGPASLLYGGSAPGGVINIVTKRPQDEPKGSVTFGAGTRSGYRTAFDLGGPL-----GADGTFRGRLNGARQDGDSFYDGAGEETRLGATATDWQ--------------LDDRTLLRLGAYYQKERDRGGYG-----GLPASGGTS----GRDLSSDRYLGTSSNRNYDDREYLSYGLSLEYQFNDVWTGKQNLRYSYFDTDSNQVQASGYSS---DGGLFGRSLTVVNVKQDRVQIDAGLDGEFETGPIEHDLLLGV----SYGQRTTNRFNNTGYPSDNIYSLTATSSARTDIGDSPKDRALSSTTKALN------GVALQRILLADKWTLTLGGRYDSVDVKS---NNGVAGSTGKRDDSQFTPSLGVAYKPTDDWSLYASYAESFKPGGYYPKGAGNSGDILEPEKGKNYELGVRYDLGDSLLATAALFRITKDNQLVQDPVNGTFSVNAGKTRNRGVELEARGYLTPGLSLSAGYTYTDAEFTEDTNGDTQGNTVPFVPKHTASLWASYAPPVGDN</Hsp_hseq>
+      <Hsp_midline>++ Q+  VI   ELE Q  G   L +AL ++   +   S   T +G + +RG  L V +D V L+     SR  L  +DP  ++ +EV+ G  S LYGG + GG+INIVTK+ Q  P+  + F AGT+SG+ ++ D    +     G +    GRL+ A Q    ++DG G+ T L  T T  Q              +D+   L+L   Y K +    YG     G  A  GTS       L+SDR  GT   R+    +Y       +     V+   ++LR+  F T +   Q + +SS   D   +G  LT+ +   D  QI  GLD + E                S G      +    YPS +I +L     +  DI +              N      G A QR + A K T        SVD  +   N G+     +R  +    S GV       +     Y  +        K    S   LE  K  +YELG R+   +     AA + I   ++ V    + T SV   K R  GVE  A  YL P    S G  +   +     NG  Q   V       A+ +  +AP     </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>2</Hit_num>
+  <Hit_id>gnl|CDD|238657</Hit_id>
+  <Hit_def>cd01347, ligand_gated_channel, TonB dependent/Ligand-Gated channels are created by a monomeric 22 strand (22,24) anti-parallel beta-barrel. Ligands apparently bind to the large extracellular loops. The N-terminal 150-200 residues form a plug from the periplasmic end of barrel.   Energy (proton-motive force) and TonB-dependent conformational alteration of channel (parts of plug, and loops 7 and 8) allow passage of ligand. FepA residues 12-18 form the TonB box, which mediates the interaction with the TonB-containing  inner membrane complex. TonB preferentially interacts with ligand-bound receptors. Transport thru the channel may resemble passage thru an air lock.  In this model, ligand binding leads to closure of the extracellular end of pore, then a TonB-mediated  signal facillitates opening of the interior side of pore, deforming the N-terminal plug and allowing passage of the ligand to the periplasm. Such a mechanism would prevent the free diffusion of small molecules thru the pore.</Hit_def>
+  <Hit_accession>238657</Hit_accession>
+  <Hit_len>635</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>259.306</Hsp_bit-score>
+      <Hsp_score>663</Hsp_score>
+      <Hsp_evalue>8.26678e-78</Hsp_evalue>
+      <Hsp_query-from>11</Hsp_query-from>
+      <Hsp_query-to>1789</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>546</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>139</Hsp_identity>
+      <Hsp_positive>219</Hsp_positive>
+      <Hsp_gaps>99</Hsp_gaps>
+      <Hsp_align-len>619</Hsp_align-len>
+      <Hsp_qseq>TTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNY-GMNVRGRPL---VVLVDGVRLNSSRT-DSRQLDSIDPFNIDHIEVISGATS-LYGGGSTGGLINIVTKKGQPETMMEFEAGTKS---GFSSSKDHDERIAGAVSGGNEHISGRLSVAYQKFGGWFDGNGDATLLDNTQTGLQYSDRLDIMGTGTLNIDESRQLQLITQYYKSQGDDDYGLNLGKGFSAIRGTSTPFVSNGLNSDRIPGTERHLISLQYS-DSAFLGQELVGQVYYRDESLRFYPFPTVNAN-----KQVTAFSSSQQDTDQYGMKLTLNSKPMDG---WQITWGLDADHERFTSNQMFFDLAQASASGGLNNKKIYTTGRYPSYDITNLAVFLQSGYDINNLFTLNGGVRYQYTENKIDDFIGYAQQRQIAAGKATSADAIPGGSVDYDNFLFNAGLLMHITERQQAWLNFSQGVELPDPGKYYGRGIYGAAVNGHLPLTKSVNVSDSKLEGVKVDSYELGWRFTGNNLRTQIAAYYSISDKSVVANKD-------LTISVVDDKRRIYGVEGAVDYLIPDTDWSTGVNFNVLKTESK-VNGTWQKYDVKTASPSKATAYIGWAPDP</Hsp_qseq>
+      <Hsp_hseq>SVSVITAEDIEKQ--PATSLADLLRR-IPGVSVTRGGGGGGSTISIRGFGPDRTLVLVDGLPLASSNYGRGVDLNTIPPELIERVEVLKGPSSALYGSGAIGGVVNIITKRPTDEFGGSVTAGYGSDNSGSSGGGGFDVSGALA---DDGAFGARLYGAYRD--------GDGTIDGDGQADDSDEERYNVAGKLDWRPDDDTRLTLDAGYQDQDADGPGGTLPANGTGSSLGGGPSSNTNGDRDWDYRDRYRKRASLGLEHDLNDTGWTLRANLSYSYTDNDGDPLILNGGNNAAGGDLGRSGYSSERDTTQLGFDAGLNAPFGTGPVAHTLTLGVEYRREEL--------------------------------DEKQTALYAQDTIELTDDLTLTLGLRYDHYDQDSKDTIA----------------GGTTAKKSYSHWSPSLGLVYKLTDGLSLYASYSQGFRAPSLGELYGGGSHGG----------TAAVGNPNLKPEKSKQYELGLKYDPGDGLTLSAALFRIDIKNEIVSTPTNTGLGLVTVYVNGGKARIRGVELEASYDLTD-GLGLTGSYTYTDTEVKRTDGATTGNRLPGIPKHTANLGLDYELPD</Hsp_hseq>
+      <Hsp_midline>+  VI   ++E+Q      L D L + IPG+ V+         +++RG      +VLVDG+ L SS       L++I P  I+ +EV+ G +S LYG G+ GG++NI+TK+   E      AG  S   G S     D   A A    +     RL  AY+         GD T+  + Q      +R ++ G      D+  +L L   Y     D   G     G  +  G      +NG          R   SL    D    G  L   + Y        P      N         +  SS++DT Q G    LN+    G     +T G++   E                                  D    A++ Q   ++ +  TL  G+RY + +    D I                         Y ++  + GL+  +T+    + ++SQG   P  G+ YG G +G           +  V +  L+  K   YELG ++   +  T  AA + I  K+ + +         +T+ V   K RI GVE    Y + D       ++    TE K  +G      +       A   + +    </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>3</Hit_num>
+  <Hit_id>gnl|CDD|224544</Hit_id>
+  <Hit_def>COG1629, CirA, Outer membrane receptor proteins, mostly Fe transport [Inorganic ion transport and metabolism].</Hit_def>
+  <Hit_accession>224544</Hit_accession>
+  <Hit_len>768</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>171.609</Hsp_bit-score>
+      <Hsp_score>434</Hsp_score>
+      <Hsp_evalue>3.41948e-45</Hsp_evalue>
+      <Hsp_query-from>5</Hsp_query-from>
+      <Hsp_query-to>1873</Hsp_query-to>
+      <Hsp_hit-from>45</Hsp_hit-from>
+      <Hsp_hit-to>676</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>110</Hsp_identity>
+      <Hsp_positive>212</Hsp_positive>
+      <Hsp_gaps>55</Hsp_gaps>
+      <Hsp_align-len>655</Hsp_align-len>
+      <Hsp_qseq>PAVAQQTDDETFVVSANRSNRTVAEMAQTTWVIENAELEQQIQG--GKELKDALAQLIPGLDVSSRSRTNYGMNVRG--RPLVVLVDGVRLNSSRTDSRQLDSIDPFNIDHIEVISGATS-LYGGGSTGGLINIVTKK---GQPETMMEFEAGTKSGFSSSKDHDERI--AGAVSGGNEHISGRLSVAYQKFGGWFDGNGDATLLD-NTQTGLQYSDRLDIMGTGTLNIDESRQLQLITQYYKSQGDDDYGLNLGKGFSAIRGTSTPFVSNGLNSDRIPGTERHL-ISLQYSDSAFLGQELVGQVYYRDESLRFYPFPTVNANKQVTAFSSSQQDTDQYGMKLTLNSKPMDGW---QITWGLDADHERF-TSNQMFFDLAQASASGGLNNKKIYTTGRYPSY-------DITNLAVFLQSGYDINNLFTLNGGVRYQYTENKIDDFIGYAQQRQIAAGKATSADAIPGGSVDYDNFLFNAGLLMHITERQQAWLNFSQGVELPDPGKYYGRGIYGAAVNGHLPLTKSVNVSDSKLEGVKVDSYELGWRFTGNNLRTQIAAYYSISDKSVVANKD-------LTISVVDDKRRIYGVEGAVDYLIPDTDWSTGVNFNVLKTE-SKVNGTWQKYDVKTASPSKATAYIG-WAPDPWS</Hsp_qseq>
+      <Hsp_hseq>AAATAAGYVAPDSVTATRTDTPLRDTPQSVSVVTADLLEDRGAGTLVGEALRGVPGVVVIRGGGGGGRRV-GINIRGFSQANVLAGSAVLNDGVGDSGGGTNSIDPELVERVEVLKGPASALYGSGAPGGVVNIVTKDAPDGGPEGGVYGGYGSRGRSGTNGGDRGTLDLSGRLGGFDDLLLYRLRGSYERRGGGRDGDNLGNRTAAAPSLTWKPDDDTRL----TFQGSYNKDNYGFDRGG--YGLPEGGTVFAPPAGGYLGDPDDNETNPATARLGLDFEHDLGDNDNWTLRAGLGYAQLAKSANSDYATGLTSLDTGRTATR-RYGADQDLDLDTFGLDTDLEAEFATGAIGHELVFGADYSRTDNSAGVDRGYGTGNGSPPLDIFNPVYGNPAFVLAALPTTSTNTQDTLGLYAQDQIKLTDRLTLTLGLRYDKTDKTLGGNNVAPAATDALTGTT-------SASRSDTAFSPSLGLVYDPTPDLSLYASYSRGFRPPSSDELYASFGTSA--------DGGISLGNPNLKPETADQYELGVKYYPGDGLLSATAFYFDITKNNIQLTTDLANSGLVTFYDNAGEARSRGVELSASYRLTPGLLSLIGSYAYTDAKYTKDNTGGLTGNRLVGVPKNTVSLLGTYEFPGVW</Hsp_hseq>
+      <Hsp_midline> A           V+A R++  + +  Q+  V+    LE +  G    E    +  ++         R   G+N+RG  +  V+    V  +         +SIDP  ++ +EV+ G  S LYG G+ GG++NIVTK    G PE  +    G++    ++      +  +G + G ++ +  RL  +Y++ GG  DG+              +  D   +    T     ++      +     G  + G           G      +N   +      E  L  +  ++  A LG   + +    D +       T     +    +    D D +G+   L ++   G    ++ +G D             +     S    + N          +            L ++ Q    + +  TL  G+RY  T+  +              G           S     F  + GL+   T     + ++S+G   P   + Y      A           +++ +  L+    D YELG ++   +      A+Y    K+ +           +T      + R  GVE +  Y +     S   ++     + +K N      +     P    + +G +      </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>4</Hit_num>
+  <Hit_id>gnl|CDD|273808</Hit_id>
+  <Hit_def>TIGR01786, hemoglobin-haptoglobin-binding_protein, TonB-dependent hemoglobin/transferrin/lactoferrin receptor family protein.  This model represents a family of TonB-dependent outer membrane receptor/transporters acting on iron-containing proteins such as hemoglobin, transferrin and lactoferrin. Two subfamily models with a narrower scope are contained within this model, the heme/hemoglobin receptor family protein model (TIGR01785) and the transferrin/lactoferrin receptor family model (TIGR01776). Accessions which score above trusted to this model while not scoring above trusted to the more specific models are most likely to be hemoglobin transporters. Nearly all of the species containing trusted hits to this model have access to hemoglobin, transferrin or lactoferrin or related proteins in their biological niche. [Transport and binding proteins, Cations and iron carrying compounds, Transport and binding proteins, Porins].</Hit_def>
+  <Hit_accession>273808</Hit_accession>
+  <Hit_len>715</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>116.358</Hsp_bit-score>
+      <Hsp_score>292</Hsp_score>
+      <Hsp_evalue>5.32936e-27</Hsp_evalue>
+      <Hsp_query-from>26</Hsp_query-from>
+      <Hsp_query-to>1846</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>609</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>135</Hsp_identity>
+      <Hsp_positive>239</Hsp_positive>
+      <Hsp_gaps>104</Hsp_gaps>
+      <Hsp_align-len>660</Hsp_align-len>
+      <Hsp_qseq>ETFVVSANR----SNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNY-GMNVRG----RPLVVLVDGVRLNSSRTDSRQLD----SIDPFNIDHIEVISGATS-LYGGGSTGGLINIVTKKG----QPETMMEFEAGTKSGFSSSKDHDERIAGAVSGGNEHISGRLSVAYQKFGGWFDGNG----------DATLLDNTQTGLQYSDRLDIMGTGTLNIDESRQLQLITQYYKSQGDDD---YGLNLGKGFSAIRGTSTPFVSNGLNSDRIPGTERHLISLQ-YSDSAFLGQELV-GQVYYRDESLRFYPFPTVNANKQVTAFSSSQQDTDQYGMKLTLNS-KPMDGWQITWGLDADHERFTSNQMFFDLAQASASGGLNNKKIYTTGRYPSYDITNLAVFLQSGYDINNLFTLNGGVRYQYTENKIDDFIGYAQQRQIAAGKATSADAIPGGSVDYDNFLFNAGLLMHITERQQAWLNFSQGVELPDPGKYYGRGIYGAAVNGHLPLTKSVNVSDSKLEGVKVDSYELGWRFTGNNLRTQIAAYYS-----ISDKSVVANK-------DLTIS--VVDDKRRIYGVEGAVDY-----LIPDTDWSTGVNFNVLKTESKVNGTWQKYDVKTASPSKATAYIG</Hsp_qseq>
+      <Hsp_hseq>DTITVTATRTADPQRRDLSVTPASVSVISREQLKSQ--QVRNLRDLLRY-EPGVSVVEGGRGGSQGINIRGLDKNR-VAVLVDGIRQNTSYGGQGSTFYAINSIDPELIKSIEIVKGASSSLYGSGALGGVVAFRTKDAADLLKPGK--DLGGLSKLGYSS-ANNRFTQSVAAAGRNDDVDALVQATYRRGHELKNGNKANIGNESKRSKPNPSDYKSQSF--------LAKLGWQLNDAHRLGLSLEYTQTDYDEPEMTNTSYLTKPLGAPLLSSTVVLGDSKTRDRRTGLDYELNPDNSWLDTVKLALDKQYIQLYNYLNATSASDYPGVDKN----GRYKDKYDYYTLGFDTNNKIEFSVHSLSLTYGLDRFKDKVSTGDSRRNLPTA------AYNLYGYEGENRPVKGSNFGLFLQDNIKLGDWLSLSAGLRYDHYKTD---------------PKADESKDYGAISKTYSRWSPSLGLTYKPTPWLTLYYSYSQGFRAPSFDELYGTG-------AHPGGGPYTFLPNPNLKPETSKNWEIGINLHFDQLDFKVSYFRNDYKDFIDLGIGVTAKGNMAQVGSNTITNYVNIDNARIRGIELSGRYDLGSFFSGPDGWTTTLKYG--YTKGKDSDTNPWLN--AITPLKVVLGLG</Hsp_hseq>
+      <Hsp_midline>+T  V+A R      R ++    +  VI   +L+ Q    + L+D L    PG+ V    R    G+N+RG    R + VLVDG+R N+S            SIDP  I  IE++ GA+S LYG G+ GG++   TK      +P    +    +K G+SS  ++    + A +G N+ +   +   Y++     +GN                D              +      ++++ +L L  +Y ++  D+        L K   A   +ST  + +    DR  G +  L     + D+  L  +    Q+Y    +     +P V+ N         + D    G          +    +T+GLD   ++ ++     +L  A              G       +N  +FLQ    + +  +L+ G+RY + +                  KA  +      S  Y  +  + GL    T     + ++SQG   P   + YG G        H        + +  L+     ++E+G     + L  +++ + +     I     V  K         TI+  V  D  RI G+E +  Y           W+T + +    T+ K + T    +    +P K    +G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>5</Hit_num>
+  <Hit_id>gnl|CDD|273807</Hit_id>
+  <Hit_def>TIGR01785, Heme/hemopexin_utilization_protein_C, TonB-dependent heme/hemoglobin receptor family protein.  This model represents the TonB-dependent outer membrane heme/hemoglobin receptor/transporter found in bacteria which live in contact with animals (which contain hemoglobin or other heme-bearing globins) or legumes (which contain leghemoglobin). Some species having hits to this model such as Nostoc, Caulobacter and Chlorobium do not have an obvious source of hemoglobin-like proteins in their biological niche and so the possibility exists that they act on some other substance. [Transport and binding proteins, Cations and iron carrying compounds, Transport and binding proteins, Porins].</Hit_def>
+  <Hit_accession>273807</Hit_accession>
+  <Hit_len>665</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>113.641</Hsp_bit-score>
+      <Hsp_score>285</Hsp_score>
+      <Hsp_evalue>2.98616e-26</Hsp_evalue>
+      <Hsp_query-from>2</Hsp_query-from>
+      <Hsp_query-to>1846</Hsp_query-to>
+      <Hsp_hit-from>2</Hsp_hit-from>
+      <Hsp_hit-to>579</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>126</Hsp_identity>
+      <Hsp_positive>233</Hsp_positive>
+      <Hsp_gaps>117</Hsp_gaps>
+      <Hsp_align-len>655</Hsp_align-len>
+      <Hsp_qseq>ETFVVSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRT-NYGMNVRG---RPLVVLVDGVRLNSSRTDSRQ-LDSIDPFNIDHIEVISGATS-LYGGGSTGGLINIVTKKGQPETMME----FEAGTKSGFSSSKDHDERIAGAVSGGNEHISGRLSVAYQKFGGWFDGNGDATLLDNTQTGLQYS--DRLDIMGTGTLNIDESRQLQLITQYYKSQGDDDYGLNLGKGFSAIRGTSTPFVSNGLNSDRIPGTERHLISLQYSDSAFLGQELVG---QVYYRDESLRFYPFPTVNANKQVTAFSSSQQDTDQYGMKLTLNSKPMDG---WQITWGLDADHERFTSNQMFFDLAQASASGGLN--NKKIYTTGRYPSYDITNLAVFLQSGYDINNL-FTLNGGVRYQYTENKIDDFIGYAQQRQIAAGKATSADAIPGGSVDYDNFLFNAGLLMHITERQQAWLNFSQGVELPDPGKYYGRGIYGAAVNGHLPLTKSVNVSDSKLEGVKVDSYELGWRFTGNNLRTQ-------IAAYYS-----ISDKSVVANK------DLTISVVDDKRRIYGVEGAVDYLIPDT-DWSTGVNFNVLKTESKVNGTWQKYDVKTASPSKATAYIGWAPDPWSL</Hsp_qseq>
+      <Hsp_hseq>DTVTVTATRTRQVLSEAPASVSVISGEQIES--KQANNLADALNT-VPGVDVTGGGRPPGQSINIRGLQDNRVLVVVDGARQNYQRGGAHNGSLFVDPELLKRIEIVKGPSSSLYGSGALGGVVAFRTKD--AADLLRPGQLFGGLAKLSYGS--------NNNSFGGSVAVAGRLDDNLDALVAATYRDGGN-YRNGNKEEATNSAYVQKNLLAKLGWQLDDAQRLEF--SYFTTEGSLDEAQNSGPGTEYVLGSSSTLLAS--------STRDRSATLTYNWTP-EDNPWLDATASLYYNRTEND-------NDRSARGVGREEGYQYTTYGATLQ-NTSRFDVASWSTLTYGVD-----------WMKDKRRTESFDPNSVTTIVPNP---PSAKEYFFGLFLQDNIPLLDDRLTLSAGLRYDHYKLSPKTTADT--------------EAV---DRSYSRWSPSLGLSYKPVDWLTLYASYSQGFRAPSIDELYGTG-DHPGTPGG-----YTFAPNPNLKPETSKTWELGANLSFDNLLLDNDQLQFKVAYFYNDVKDFIDLTIGVTDNVTAGMNNITQYVNIDGARIRGIEASASY---DAGLWATGLSYGYTIGKDQNTNQW----LSNIPPLKLVVTVGYRFPDRRL</Hsp_hseq>
+      <Hsp_midline>+T  V+A R+ + ++E   +  VI   ++E   +    L DAL   +PG+DV+   R     +N+RG     ++V+VDG R N  R  +      +DP  +  IE++ G +S LYG G+ GG++   TK      ++     F    K  + S             GG+  ++GRL             +G     +  +     S   + +++      +D++++L+    Y+ ++G  D   N G G   + G+S+  +++         T     +L Y+ +       +     +YY             N                 YG  L  N+   D      +T+G+D           +    + + S   N     +      PS       +FLQ    + +   TL+ G+RY + +                       +A+      Y  +  + GL     +    + ++SQG   P   + YG G       G           +  L+     ++ELG   + +NL          +A +Y+     I     V +       ++T  V  D  RI G+E +  Y   D   W+TG+++     + +    W    +    P K    +G+      L</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>6</Hit_num>
+  <Hit_id>gnl|CDD|366183</Hit_id>
+  <Hit_def>pfam00593, TonB_dep_Rec, TonB dependent receptor.  This model now only covers the conserved part of the barrel structure.</Hit_def>
+  <Hit_accession>366183</Hit_accession>
+  <Hit_len>435</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>86.6831</Hsp_bit-score>
+      <Hsp_score>214</Hsp_score>
+      <Hsp_evalue>5.53114e-18</Hsp_evalue>
+      <Hsp_query-from>2</Hsp_query-from>
+      <Hsp_query-to>1162</Hsp_query-to>
+      <Hsp_hit-from>2</Hsp_hit-from>
+      <Hsp_hit-to>353</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>61</Hsp_identity>
+      <Hsp_positive>113</Hsp_positive>
+      <Hsp_gaps>59</Hsp_gaps>
+      <Hsp_align-len>399</Hsp_align-len>
+      <Hsp_qseq>DYGLNLGKGFSAIRGTSTPFVSNGLNSDRIPGTERHLISLQYSDSAFLGQELVGQVYYRDESLRF-YPFPTVNANKQVTAFSSSQQDTDQYGMKLTLNSKPMDGWQITWGLDADHERFTSNQMFFDLAQASASGGLNNKKIYTTGRYPSYDITNLAVFLQSGYDINNLFTLNGGVRYQYTENKIDDFIGYAQQRQIAAGKATSADAIPGGSVDYDNFLFNAGLLMHITERQQAWLNFSQGVELPDPGKYYGRGIYGAAVNGHLPLTKSVNVSDSKLEGVKVDSYELGWRFTGNNLRTQIAAYYS-----ISDKSVVANKDLTISVVD--DKRRIYGVEGAVDYLIPDTDWSTGVNFNV---LKTESKVNGTWQKYDVKTASPSKATAYIGWAP-DPWSL</Hsp_qseq>
+      <Hsp_hseq>DLGLTLDGYGTDGGYLGDRPLYYGRGYSDT-DRKSLSLGYDYDLSDGLSWDLKLGLRYSSTDDDETSNSSGLSGAGDYLSGDRYYGLDGDLELSLDLSHDLLLGVEHRLTAGLDYRRLDTD-----------AYDPYDPANPSSDSSDGTTTDSYGLYLQDNIKLTDRLTLTLGLRYDHYSTDSDD----------------------RFSRSGSAFSPRLGLVYKPTDNLSLRASYSRGFRAPSLGELYGSGSGGG--------GGAVAGGNPDLKPETSDNYELGLKYDDGRLSLSLALFYNDIKNLITSDPTGPGLGGTVYQYTNVGKARIRGVELELSG-----RWGLGLSGGGYTYLDADDDDDADDTGNPLPNVPRHTANLGLTYTPLGGWGA</Hsp_hseq>
+      <Hsp_midline>D GL L    +         +  G         +   +   Y  S  L  +L   + Y             ++      +            + L L+   + G +       D+ R  ++           +    +    ++         +  ++LQ    + +  TL  G+RY +     DD                        S     F    GL+   T+      ++S+G   P  G+ YG G  G           +V   +  L+    D+YELG ++    L   +A +Y+     I+          T+       K RI GVE  +        W  G++      L  +   +       +       A   + + P   W  </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>7</Hit_num>
+  <Hit_id>gnl|CDD|369481</Hit_id>
+  <Hit_def>pfam07715, Plug, TonB-dependent Receptor Plug Domain.  The Plug domain has been shown to be an independently folding subunit of the TonB-dependent receptors. It acts as the channel gate, blocking the pore until the channel is bound by ligand. At this point it under goes conformational changes opens the channel.</Hit_def>
+  <Hit_accession>369481</Hit_accession>
+  <Hit_len>106</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>72.3034</Hsp_bit-score>
+      <Hsp_score>178</Hsp_score>
+      <Hsp_evalue>1.89964e-15</Hsp_evalue>
+      <Hsp_query-from>1499</Hsp_query-from>
+      <Hsp_query-to>1807</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>105</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>41</Hsp_identity>
+      <Hsp_positive>61</Hsp_positive>
+      <Hsp_gaps>8</Hsp_gaps>
+      <Hsp_align-len>108</Hsp_align-len>
+      <Hsp_qseq>VAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYG-MNVRG---RPLVVLVDGVRLNSSRTDSRQLDSIDPFNIDHIEVISGATS-LYGGGSTGG</Hsp_qseq>
+      <Hsp_hseq>LRDTPGSVSVVTAEDIEDQ--GATNLADAL-RGVPGVSVSSGGGGGGSSISIRGFGSNRVLVLVDGVPLNSGGGGSVDLNSIDPEDIERVEVLKGPASALYGSGAIGG</Hsp_hseq>
+      <Hsp_midline>+ +   +  V+   ++E Q  G   L DAL + +PG+ VSS        +++RG     ++VLVDGV LNS    S  L+SIDP +I+ +EV+ G  S LYG G+ GG</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>8</Hit_num>
+  <Hit_id>gnl|CDD|226664</Hit_id>
+  <Hit_def>COG4206, BtuB, Outer membrane cobalamin receptor protein [Coenzyme metabolism].</Hit_def>
+  <Hit_accession>226664</Hit_accession>
+  <Hit_len>608</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>79.3917</Hsp_bit-score>
+      <Hsp_score>196</Hsp_score>
+      <Hsp_evalue>2.40956e-15</Hsp_evalue>
+      <Hsp_query-from>1232</Hsp_query-from>
+      <Hsp_query-to>1873</Hsp_query-to>
+      <Hsp_hit-from>16</Hsp_hit-from>
+      <Hsp_hit-to>239</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>67</Hsp_identity>
+      <Hsp_positive>105</Hsp_positive>
+      <Hsp_gaps>24</Hsp_gaps>
+      <Hsp_align-len>231</Hsp_align-len>
+      <Hsp_qseq>PAVAQQT-DDETFVVSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYGMN------VRG---RPLVVLVDGVRLNSSRTDSRQLDSIDPFNIDHIEVISGA-TSLYGGGSTGGLINIVTKKGQPETMMEFEAGTKS------GFSSSKDHDERIAGAVSGGNEHISGRLSVAYQKFGGWFDGNGDATLLDNTQTGLQYSDRLDIMGTG</Hsp_qseq>
+      <Hsp_hseq>SAWAQDTVPLDTLVVTANRFEQPLSSVLAPVTVITRADIERS--QAPSVPELLRRL-PGVSIA----QNGGSGQLASLFIRGTSSDHVLVLIDGVRLNSATSGSTDLSQLPVTLIERIEYVRGPRSSLYGSDAIGGVINIITRRGGQEPGTESSAGYGSHSYQEYSAGSSQGLGDKTRYALGGSYTHTKGYDVVAPGGTGAEPDRDGFLNKSLNGALEHRFDDAWSLFARG</Hsp_hseq>
+      <Hsp_midline> A AQ T   +T VV+ANR  + ++ +     VI  A++E+       + + L +L PG+ ++     N G        +RG     ++VL+DGVRLNS+ + S  L  +    I+ IE + G  +SLYG  + GG+INI+T++G  E   E  AG  S         SS+   ++   A+ G   H  G   VA    G   D +G      N     ++ D   +   G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>9</Hit_num>
+  <Hit_id>gnl|CDD|227113</Hit_id>
+  <Hit_def>COG4772, FecA, Outer membrane receptor for Fe3+-dicitrate [Inorganic ion transport and metabolism].</Hit_def>
+  <Hit_accession>227113</Hit_accession>
+  <Hit_len>753</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>78.2461</Hsp_bit-score>
+      <Hsp_score>193</Hsp_score>
+      <Hsp_evalue>6.71575e-15</Hsp_evalue>
+      <Hsp_query-from>227</Hsp_query-from>
+      <Hsp_query-to>1780</Hsp_query-to>
+      <Hsp_hit-from>61</Hsp_hit-from>
+      <Hsp_hit-to>561</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>110</Hsp_identity>
+      <Hsp_positive>188</Hsp_positive>
+      <Hsp_gaps>121</Hsp_gaps>
+      <Hsp_align-len>570</Hsp_align-len>
+      <Hsp_qseq>VIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYGMNVRGRPLVVLVDGVRLNSSRTDSRQLDSID-------PF-------------NIDHIEVISGATSL-YGGGSTGGLINIVTKKGQPETMMEFEAGTKSGFSSSKDHDERIAG-----AVSGG--NEHISGRLSVAYQKFGGWFDGNGDATLLDNTQTGLQYSDRLDIMGTGTLNIDESRQLQLITQYYKSQGDDDYGLNLGKGFSAIRGTSTPFVSNGLNSDRIPGTERHLISLQYSDSAFLGQELVGQVYYRDESLRFYPFPTVNANKQVTAFSSSQQDTDQYGMKLTLNSKPMDGW------QITWGLD---ADHE-----RFTSNQMFFDLAQASASGGLNNKKIYTTGRYPSYDITNL------AVFLQSGYDINNLFTLNGGVRYQYTENKIDDFIGYAQQRQIAAGKATSADAIPG----GSVDYDNFLFNAGLLMHITERQQAWLNFSQGVELPDPGKYYGRGIYGAAVNGHLPLTKSVNVSDSKLEGVKVDSYELGWRFTGNNLRTQIAAYYSISDKSVVAN</Hsp_qseq>
+      <Hsp_hseq>VISNKDLEKS--GNQSIEEALRN-VPG--VQIRDATGTG----LRPLI-SNRGIRGLGPGHSNRITVLVDGIPIYVAPYGQPALYIFPVTFQRMDRIDVVKGGGSVRYGPNTVGGVINFITK-AIPEDF-EGQLAERATFWGKSSNGGFKVGNNMLFNTTGGMANKHLGIAAQANWTRGQGF---------RDNSPTDIQ-----DYWLKLVYQINDSNTFKAYYQYYDYS-ADTPG-----GLTAADYKDDPFQNTRPN-DQFGG-RRKRFGAVYQNTFGDSDKFTFTYYGTDMTRDFQFSSSYLNQNMNGWVSPANDYYATNYPGWRITDNPRRYIVNGFEPRLNLIFNTGKVKQEFEMGARYLTEDMNRRQYQSTTE--KANPTILPSVGSGGDQDNRLNFNEATAVYLSDKIEAGN-LTITPGLRYE--------FINYDQK------NAPSAPGRPLPGTTKERDYNEWIPALNVGYHPTDEWLLYANYHRSFAPPQYSQI---GGAGGSTD---------------IEAEKFNTWEIGSRYDYGILLSFNANFFIDFANQYVPG</Hsp_hseq>
+      <Hsp_midline>VI N +LE+   G + +++AL   +PG  V  R  T  G     RPL+    G+R       +R    +D       P+              +D I+V+ G  S+ YG  + GG+IN +TK   PE   E +   ++ F     +     G       +GG  N+H+       + +  G+          DN+ T +Q     D        I++S   +   QYY     D  G     G +A      PF +   N D+  G  R      Y ++     +     Y  D +  F    +          S +            +   P          ++    +      E     R+ +  M     Q++      N  I  +          L      AV+L    +  N  T+  G+RY+        FI Y Q+       A SA   P        DY+ ++    +  H T+    + N+ +    P   +    G  G + +               +E  K +++E+G R+    L +  A ++       V  </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>10</Hit_num>
+  <Hit_id>gnl|CDD|273802</Hit_id>
+  <Hit_def>TIGR01779, Vitamin_B12_transporter_BtuB, TonB-dependent vitamin B12 receptor.  This model represents the TonB-dependent outer membrane receptor found in gamma proteobacteria responsible for translocating the cobalt-containing vitamin B12 (cobalamin). [Transport and binding proteins, Other, Transport and binding proteins, Porins].</Hit_def>
+  <Hit_accession>273802</Hit_accession>
+  <Hit_len>614</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>76.4425</Hsp_bit-score>
+      <Hsp_score>188</Hsp_score>
+      <Hsp_evalue>2.10399e-14</Hsp_evalue>
+      <Hsp_query-from>596</Hsp_query-from>
+      <Hsp_query-to>1846</Hsp_query-to>
+      <Hsp_hit-from>29</Hsp_hit-from>
+      <Hsp_hit-to>465</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>95</Hsp_identity>
+      <Hsp_positive>167</Hsp_positive>
+      <Hsp_gaps>78</Hsp_gaps>
+      <Hsp_align-len>466</Hsp_align-len>
+      <Hsp_qseq>ETFVVSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSR--TNYGMNVRGRP---LVVLVDGVRLNSSRTDSRQLDSIDPFNIDHIEVISGA-TSLYGGGSTGGLINIVTKKGQPETMMEFEAGTKSGFSSSKDHDERIAGAVSGGNEHISGRLSV-----------AYQKFGGWFDGNGDATLLDNT--QTGLQYSDRLDIMGTGTLNIDESRQLQLITQY---------YKSQGDDDYGLNLGKGFSAIRGTSTPFVS------------NGLNSDRIPGTERHLISLQYSDSAFLGQELVGQVYYRDESLRFYPFPTVNANKQVTAFSSSQQDTDQYGMKLTL----NSK--PMDGWQITWGLD-ADHERFTSNQMFFDLAQASASGGLNNKKIYTTGRYPSYDITNLAVFLQSGYDINNLFTLNGGVRYQYT--ENKIDDFIGY</Hsp_qseq>
+      <Hsp_hseq>DTVVVTANRFAQTASQTLAPVTIITRQDIERT--QAKSLPELLRRL-PGVSIAQNGGRGQNTSLFLRGTESDHVLVLIDGIRFGSAAAGAADFQQLPVELVERIEYVRGPRSSLYGSEAIGGVINIITRRRSGGQGTTLSAG--LGSLDYQEYSIASGVAIGEN-----GWYSVALGTESTKGINVRPGGPGVYDPDRDGFRSDSLLLGGGHRFDESWSLFVNA-------LRYENRNDYDNYSFGTRLYKEAEKGDQSFTGGRQRQSERDVSELTLSTGKSKDWDYAYSKGRYSSTSDTREQRNIQWQNDLLVGDGWVLAGGVDWQKDSIISSTADKEDDRSNTAAFAQVLQQWGQQLLEASLRRDDNQQFGSHTTGSIAWGYQFIEELRFTA-------SYGTAFKAPNLNQLY----YPSYGNPNLQPETSKSAEL-GFYGLFSGGKWSISGYRTKINDLIDY</Hsp_hseq>
+      <Hsp_midline>+T VV+ANR  +T ++      +I   ++E+     K L + L +L PG+ ++       N  + +RG     ++VL+DG+R  S+   +     +    ++ IE + G  +SLYG  + GG+INI+T++          AG   G    +++      A+        G  SV                 G +D + D    D+     G ++ +   +            + +    Y         YK     D     G+   + R  S   +S             G  S      E+  I  Q       G  L G V ++ +S+        +      AF+   Q   Q  ++ +L    N +        I WG    +  RFT+       +  +A    N  ++Y    YPSY   NL        ++   + L  G ++  +    KI+D I Y</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>11</Hit_num>
+  <Hit_id>gnl|CDD|227112</Hit_id>
+  <Hit_def>COG4771, FepA, Outer membrane receptor for ferrienterochelin and colicins [Inorganic ion transport and metabolism].</Hit_def>
+  <Hit_accession>227112</Hit_accession>
+  <Hit_len>699</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>70.5138</Hsp_bit-score>
+      <Hsp_score>173</Hsp_score>
+      <Hsp_evalue>1.35829e-12</Hsp_evalue>
+      <Hsp_query-from>1076</Hsp_query-from>
+      <Hsp_query-to>1873</Hsp_query-to>
+      <Hsp_hit-from>22</Hsp_hit-from>
+      <Hsp_hit-to>282</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>66</Hsp_identity>
+      <Hsp_positive>120</Hsp_positive>
+      <Hsp_gaps>33</Hsp_gaps>
+      <Hsp_align-len>280</Hsp_align-len>
+      <Hsp_qseq>PAVAQQTDDETF---VVSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYGMNVRGRP---LVVLVDGVRLNSSRT------DSR-QLDSIDPFNIDHIEVISG-ATSLYGGGSTGGLINIVTKKGQPETMMEFEAGTKSGFSSSKDHDERIAGAVSGGNEHISGRLSVAYQKFGGWFDGNGDATLLDNTQTGLQYSDRLDIMGTGTLNIDESRQLQLITQYYKSQGDDDYGLNLGKGFSAIRGTSTPFVSNGLNSDR</Hsp_qseq>
+      <Hsp_hseq>PVAAAEDDGTAEDTMVVTASGAEQNLKDAPASVSVITAEDLQKRPY--RDLAEALRT-VPGVNLTGNRGNNRQISIRGMGPEYTLILVDGKRVSSRNSVRPNGRDSRGDTGWVPPESIERIEVIRGPMSSLYGSDALGGVVNIITKKVGDKW-----HGSVTLDTNLQEHKKE--GDTYQTNFYLSGPLI--DDKLGLRLYGSLAKRQEDDVDINTTAAGRTPAGREGVNNKD-------INGRLSWKATPDQVLDFEAGYSRQGRDTQNGNSDALTKGT</Hsp_hseq>
+      <Hsp_midline>P  A + D       VV+A+ + + + +   +  VI   +L+++    ++L +AL   +PG++++     N  +++RG      ++LVDG R++S  +      DSR     + P +I+ IEVI G  +SLYG  + GG++NI+TKK   +       G+ +  ++ ++H +   G     N ++SG L     K G    G+      D+       + R      G  N D       I      +   D  L+   G+S     +    S+ L    </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>12</Hit_num>
+  <Hit_id>gnl|CDD|236646</Hit_id>
+  <Hit_def>PRK10064, PRK10064, catecholate siderophore receptor CirA; Provisional.</Hit_def>
+  <Hit_accession>236646</Hit_accession>
+  <Hit_len>663</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>69.143</Hsp_bit-score>
+      <Hsp_score>169</Hsp_score>
+      <Hsp_evalue>4.04702e-12</Hsp_evalue>
+      <Hsp_query-from>1349</Hsp_query-from>
+      <Hsp_query-to>1873</Hsp_query-to>
+      <Hsp_hit-from>22</Hsp_hit-from>
+      <Hsp_hit-to>194</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>57</Hsp_identity>
+      <Hsp_positive>95</Hsp_positive>
+      <Hsp_gaps>20</Hsp_gaps>
+      <Hsp_align-len>184</Hsp_align-len>
+      <Hsp_qseq>PAVAQQTDDETFVVSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYGMNVRGRP---LVVLVDGVRLNSS----RTDSRQLDSIDPFNIDHIEVISGA-TSLYGGGSTGGLINIVTKK-GQPETMMEFEAGTKSGFSSSKDHDERIAGAVSGGNEHISGRL</Hsp_qseq>
+      <Hsp_hseq>PVLAVDDDGETMVVTASAVEQNLKDAPASISVITQEDL--QRKPVQNLKDVLKE-VPGVQLTNEGDNRKGVSIRGLDSSYTLILIDGKRVNSRNAVFRHNDFDLNWIPVDAIERIEVVRGPMSSLYGSDALGGVVNIITKKIGQKWH------GTVTVDTTIQEHRDR--GDTYNGQFFTSGPL</Hsp_hseq>
+      <Hsp_midline>P +A   D ET VV+A+   + + +   +  VI   +L  Q +  + LKD L + +PG+ +++      G+++RG      ++L+DG R+NS     R +   L+ I    I+ IEV+ G  +SLYG  + GG++NI+TKK GQ         GT +  ++ ++H +R  G    G    SG L</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>13</Hit_num>
+  <Hit_id>gnl|CDD|236730</Hit_id>
+  <Hit_def>PRK10641, btuB, TonB-dependent vitamin B12 receptor BtuB.  </Hit_def>
+  <Hit_accession>236730</Hit_accession>
+  <Hit_len>614</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>60.3912</Hsp_bit-score>
+      <Hsp_score>147</Hsp_score>
+      <Hsp_evalue>1.8705e-09</Hsp_evalue>
+      <Hsp_query-from>1430</Hsp_query-from>
+      <Hsp_query-to>1864</Hsp_query-to>
+      <Hsp_hit-from>20</Hsp_hit-from>
+      <Hsp_hit-to>168</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>50</Hsp_identity>
+      <Hsp_positive>82</Hsp_positive>
+      <Hsp_gaps>20</Hsp_gaps>
+      <Hsp_align-len>157</Hsp_align-len>
+      <Hsp_qseq>AQQTDDETFVVSANRSNRTVAEMAQTTWVIENAELEQ-QIQGGKELKDALAQLIPGLDVSSRSRTNYGMN------VRG---RPLVVLVDGVRLNSSR-TDSRQLDSIDPFNIDHIEVISGATS-LYGGGSTGGLINIVTKKGQPETMMEFEAGTKS</Hsp_qseq>
+      <Hsp_hseq>AQDTSPDTLVVTANRFQQPVSTVLAPTTVVTRDDIDRWQ---SKSVNDVLRRL-PGVDIAQ----NGGLGQLSSLFIRGTNSSHVLVLIDGVRLNQAGISGSADLSQIPISLVQRIEYIRGPRSAVYGSDAIGGVVNIITTRDKPGTTLSAGWGSNG</Hsp_hseq>
+      <Hsp_midline>AQ T  +T VV+ANR  + V+ +   T V+   ++++ Q    K + D L +L PG+D++     N G+       +RG     ++VL+DGVRLN +  + S  L  I    +  IE I G  S +YG  + GG++NI+T + +P T +    G+  </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>14</Hit_num>
+  <Hit_id>gnl|CDD|184080</Hit_id>
+  <Hit_def>PRK13483, PRK13483, ligand-gated channel protein.  </Hit_def>
+  <Hit_accession>184080</Hit_accession>
+  <Hit_len>660</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>59.7889</Hsp_bit-score>
+      <Hsp_score>145</Hsp_score>
+      <Hsp_evalue>3.55743e-09</Hsp_evalue>
+      <Hsp_query-from>1436</Hsp_query-from>
+      <Hsp_query-to>1873</Hsp_query-to>
+      <Hsp_hit-from>22</Hsp_hit-from>
+      <Hsp_hit-to>177</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>50</Hsp_identity>
+      <Hsp_positive>78</Hsp_positive>
+      <Hsp_gaps>18</Hsp_gaps>
+      <Hsp_align-len>160</Hsp_align-len>
+      <Hsp_qseq>PAVAQQT---DDETFVVSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYGMNVRGRP---LVVLVDGVRLNSSRT----DSRQLDS--IDPFN-IDHIEVISGA-TSLYGGGSTGGLINIVTKKGQPETMMEFEAGT</Hsp_qseq>
+      <Hsp_hseq>HALAQAAPDKTMETVVVTASGYEQQIRDAPASISVITREDLENRFY--RDLTDALLD-VPGVVVTGGGDRT-DISLRGMGSQYTLILVDGKRQSSRETRPNSDGPGVEQAWTPPLAAIERIEVIRGPMSSLYGSDAIGGVINIITRKVPNEWQGEVRLDT</Hsp_hseq>
+      <Hsp_midline> A+AQ       ET VV+A+   + + +   +  VI   +LE +    ++L DAL   +PG+ V+        +++RG      ++LVDG R +S  T    D   ++     P   I+ IEVI G  +SLYG  + GG+INI+T+K   E   E    T</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>15</Hit_num>
+  <Hit_id>gnl|CDD|236643</Hit_id>
+  <Hit_def>PRK10044, PRK10044, ferrichrome outer membrane transporter; Provisional.</Hit_def>
+  <Hit_accession>236643</Hit_accession>
+  <Hit_len>727</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>55.9207</Hsp_bit-score>
+      <Hsp_score>135</Hsp_score>
+      <Hsp_evalue>5.08251e-08</Hsp_evalue>
+      <Hsp_query-from>1409</Hsp_query-from>
+      <Hsp_query-to>1759</Hsp_query-to>
+      <Hsp_hit-from>90</Hsp_hit-from>
+      <Hsp_hit-to>212</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>38</Hsp_identity>
+      <Hsp_positive>64</Hsp_positive>
+      <Hsp_gaps>14</Hsp_gaps>
+      <Hsp_align-len>127</Hsp_align-len>
+      <Hsp_qseq>EQQIQGGKELKDALAQLIPGLDVSSR--SRTNYGMNVRGRPLVVL-----VDGVRLNSSRTDSRQLDSIDPFNIDHIEVISGATS-LYGGGSTGGLINIVTKKGQPETMME--FEAGTKSGFSSSKD</Hsp_qseq>
+      <Hsp_hseq>EMALHQPKSVKEALS-YTPGVSVGTRGASNTYDHLIIRGFAASGQSQNNYLDGLKLQG---NFYNDAVIDPYMLERAELMRGPVSVLYGKSNPGGLLNMVSKRPTTEPLKEVQFKMGTDNLFQTGFD</Hsp_hseq>
+      <Hsp_midline>E  +   K +K+AL+   PG+ V +R  S T   + +RG           +DG++L     +      IDP+ ++  E++ G  S LYG  + GGL+N+V+K+   E + E  F+ GT + F +  D</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>16</Hit_num>
+  <Hit_id>gnl|CDD|237595</Hit_id>
+  <Hit_def>PRK14050, PRK14050, TonB-dependent siderophore receptor.  </Hit_def>
+  <Hit_accession>237595</Hit_accession>
+  <Hit_len>728</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>54.0366</Hsp_bit-score>
+      <Hsp_score>130</Hsp_score>
+      <Hsp_evalue>2.18608e-07</Hsp_evalue>
+      <Hsp_query-from>1370</Hsp_query-from>
+      <Hsp_query-to>1576</Hsp_query-to>
+      <Hsp_hit-from>153</Hsp_hit-from>
+      <Hsp_hit-to>234</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>29</Hsp_identity>
+      <Hsp_positive>43</Hsp_positive>
+      <Hsp_gaps>13</Hsp_gaps>
+      <Hsp_align-len>82</Hsp_align-len>
+      <Hsp_qseq>IDPFNIDHIEVISGATS-LYGGGSTGGLINIVTKKGQPETMMEFEAGTKS------GF------SSSKDHDERIAGAVSGGN</Hsp_qseq>
+      <Hsp_hseq>IDPFMLERVEVLKGPASVLYGGSNPGGIVNMVSKRPLDEPLYYTEIGINSYGNAFTGFDVGDKLSDDGTVRYRVTGKVAGGD</Hsp_hseq>
+      <Hsp_midline>IDPF ++ +EV+ G  S LYGG + GG++N+V+K+   E +   E G  S      GF      S       R+ G V+GG+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>17</Hit_num>
+  <Hit_id>gnl|CDD|139606</Hit_id>
+  <Hit_def>PRK13486, PRK13486, TonB-dependent receptor.  </Hit_def>
+  <Hit_accession>139606</Hit_accession>
+  <Hit_len>696</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>52.7166</Hsp_bit-score>
+      <Hsp_score>126</Hsp_score>
+      <Hsp_evalue>4.78329e-07</Hsp_evalue>
+      <Hsp_query-from>1475</Hsp_query-from>
+      <Hsp_query-to>1849</Hsp_query-to>
+      <Hsp_hit-from>25</Hsp_hit-from>
+      <Hsp_hit-to>159</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>43</Hsp_identity>
+      <Hsp_positive>70</Hsp_positive>
+      <Hsp_gaps>16</Hsp_gaps>
+      <Hsp_align-len>138</Hsp_align-len>
+      <Hsp_qseq>DETFVVSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYGM--NVRGRP---LVVLVDGVRLNSSRT------DSRQLDSIDPFN-IDHIEVISGATS-LYGGGSTGGLINIVTKK</Hsp_qseq>
+      <Hsp_hseq>EDVMIVSASGYEKKLTNAAASVSVISQEEL--QSSQYHDLAEAL-RSVEGVDVESGTGKTGGLEISIRGMPASYTLILIDGVRQGGSSDVTPNGFSAMNTGFMPPLAAIERIEVIRGPMSTLYGSDAMGGVVNIITRK</Hsp_hseq>
+      <Hsp_midline>++  +VSA+   + +   A +  VI   EL  Q     +L +AL + + G+DV S +    G+  ++RG P    ++L+DGVR   S         +     + P   I+ IEVI G  S LYG  + GG++NI+T+K</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>18</Hit_num>
+  <Hit_id>gnl|CDD|184104</Hit_id>
+  <Hit_def>PRK13513, PRK13513, ligand-gated channel protein.  </Hit_def>
+  <Hit_accession>184104</Hit_accession>
+  <Hit_len>659</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>52.4628</Hsp_bit-score>
+      <Hsp_score>126</Hsp_score>
+      <Hsp_evalue>6.12586e-07</Hsp_evalue>
+      <Hsp_query-from>1436</Hsp_query-from>
+      <Hsp_query-to>1873</Hsp_query-to>
+      <Hsp_hit-from>27</Hsp_hit-from>
+      <Hsp_hit-to>179</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>44</Hsp_identity>
+      <Hsp_positive>75</Hsp_positive>
+      <Hsp_gaps>17</Hsp_gaps>
+      <Hsp_align-len>158</Hsp_align-len>
+      <Hsp_qseq>PAVAQQTDDETFVVSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDV----SSRSRTNYGMNVRGRPLVVLVDGVRLNSSRTDSRQLDS------IDPFN-IDHIEVISGA-TSLYGGGSTGGLINIVTKKGQPETMMEFEAGT</Hsp_qseq>
+      <Hsp_hseq>EKTNTATPTDTMVVTASGFQQRIQDAPASISVVTREQLENKAY--RDVTDALKD-VPGVVVTGGGSTSDISIRGMA--AKYTLILVDGKRVDTRSTRPNSDGSGIEQGWLPPLAAIERIEVVRGPMSSLYGSDAMGGVINIITRKVQKEWHGSLRADA</Hsp_hseq>
+      <Hsp_midline>      T  +T VV+A+   + + +   +  V+   +LE +    +++ DAL   +PG+ V    S+   +  GM    +  ++LVDG R+++  T      S      + P   I+ IEV+ G  +SLYG  + GG+INI+T+K Q E      A  </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>19</Hit_num>
+  <Hit_id>gnl|CDD|139605</Hit_id>
+  <Hit_def>PRK13484, PRK13484, IreA family TonB-dependent siderophore receptor.  </Hit_def>
+  <Hit_accession>139605</Hit_accession>
+  <Hit_len>682</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>49.6203</Hsp_bit-score>
+      <Hsp_score>118</Hsp_score>
+      <Hsp_evalue>4.25519e-06</Hsp_evalue>
+      <Hsp_query-from>1460</Hsp_query-from>
+      <Hsp_query-to>1864</Hsp_query-to>
+      <Hsp_hit-from>25</Hsp_hit-from>
+      <Hsp_hit-to>165</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>41</Hsp_identity>
+      <Hsp_positive>74</Hsp_positive>
+      <Hsp_gaps>18</Hsp_gaps>
+      <Hsp_align-len>147</Hsp_align-len>
+      <Hsp_qseq>AQQTDDETFVVSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYGMNVRGRP---LVVLVDGVRLNSSRTDSRQLDS-------IDPFN-IDHIEVISGA-TSLYGGGSTGGLINIVTKKGQPET</Hsp_qseq>
+      <Hsp_hseq>SSDKKEDTLVVTASGFTQQLRNAPASVSVITSEQLQKKPV--SDLVDAVKD-VEGISITGGNEKP-DISIRGLSGDYTLILVDGRRQSGR--ESRPNGSGGFEAGFIPPVEAIERIEVIRGPMSSLYGSDAIGGVINIITKPVNNQT</Hsp_hseq>
+      <Hsp_midline>+    ++T VV+A+   + +     +  VI + +L+++     +L DA+   + G+ ++  +     +++RG      ++LVDG R +    +SR   S       I P   I+ IEVI G  +SLYG  + GG+INI+TK    +T</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>20</Hit_num>
+  <Hit_id>gnl|CDD|227115</Hit_id>
+  <Hit_def>COG4774, Fiu, Outer membrane receptor for monomeric catechols [Inorganic ion transport and metabolism].</Hit_def>
+  <Hit_accession>227115</Hit_accession>
+  <Hit_len>750</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>48.679</Hsp_bit-score>
+      <Hsp_score>116</Hsp_score>
+      <Hsp_evalue>1.01885e-05</Hsp_evalue>
+      <Hsp_query-from>1325</Hsp_query-from>
+      <Hsp_query-to>1870</Hsp_query-to>
+      <Hsp_hit-from>45</Hsp_hit-from>
+      <Hsp_hit-to>243</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>58</Hsp_identity>
+      <Hsp_positive>89</Hsp_positive>
+      <Hsp_gaps>57</Hsp_gaps>
+      <Hsp_align-len>219</Hsp_align-len>
+      <Hsp_qseq>AVAQQTDDETFVVSANRSNRT-------------VAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRSRTNYGMNVRG-RPLV--------VLVDGVRLNSSRTDSRQLDSIDPFNIDHIEVISGATSLYGG-GSTGGLINIVTKKGQPETMMEFEAGTKSGFSSSKDHDERIAGAVS--------------GGNEHISGRLSVAYQKFG</Hsp_qseq>
+      <Hsp_hseq>AKDQTLSLDAAVVTAEQPSTYAVDRSADPKYTAPLLDTPQTVTVIPQQVIKDQ--GATSLTDALRN-VPGITFGAGE----GGNPTGDSIYIRGFDASNSIYVDGIR------DSGSQ-SRDVFNLEQVEVIKGPGSDYGGAGPTGGSINLISK--QPKA----DSFTDASASIGTDWYRRGTLDVNQVIGDSTAFRLNLMGHDTHVAGRDKVKNERWG</Hsp_hseq>
+      <Hsp_midline>A  Q    +  VV+A + +               + +  QT  VI    ++ Q  G   L DAL   +PG+   +      G N  G    +        + VDG+R      DS    S D FN++ +EVI G  S YGG G TGG IN+++K  QP+     ++ T +  S   D   R    V+              G + H++GR  V  +++G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>21</Hit_num>
+  <Hit_id>gnl|CDD|237410</Hit_id>
+  <Hit_def>PRK13524, PRK13524, FepA family TonB-dependent siderophore receptor.  </Hit_def>
+  <Hit_accession>237410</Hit_accession>
+  <Hit_len>744</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>48.4872</Hsp_bit-score>
+      <Hsp_score>116</Hsp_score>
+      <Hsp_evalue>1.13122e-05</Hsp_evalue>
+      <Hsp_query-from>1298</Hsp_query-from>
+      <Hsp_query-to>1711</Hsp_query-to>
+      <Hsp_hit-from>112</Hsp_hit-from>
+      <Hsp_hit-to>229</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>42</Hsp_identity>
+      <Hsp_positive>66</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>141</Hsp_align-len>
+      <Hsp_qseq>LIPGLDVSSRSRTNYGMNVRGRPLVVLVDGVRLNSSRTDSRQLDSIDPFNIDHIEVISG-ATSLYGGGSTGGLINIVTKKGQPETMMEFEAGTKSGFSSSKDHDERIAGAVSGGNEHISGRLS--VAYQKFGGWFDGNGDA</Hsp_qseq>
+      <Hsp_hseq>LIDGKPVSSRNSVRYGWR-----------GER--DTRGDT---NWVPPEMIERIEVLRGPAAARYGNGAAGGVVNIITKKPTGEW-----HGSWNTYFNAPEHKAE--GATKRTNFSLSGPLGDELSFRLYGNLNKTQADA</Hsp_hseq>
+      <Hsp_midline>LI G  VSSR+   YG             G R   +R D+   + + P  I+ IEV+ G A + YG G+ GG++NI+TKK   E       G+ + + ++ +H     GA    N  +SG L   ++++ +G       DA</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>22</Hit_num>
+  <Hit_id>gnl|CDD|273804</Hit_id>
+  <Hit_def>TIGR01782, TonB-dependent_receptor, TonB-dependent receptor.  This model represents a family of TonB-dependent outer-membrane receptors which are found mainly in Xanthomonas and Caulobacter. These appear to represent the expansion of a paralogous family in that the 22 X. axonopodis (21 in X. campestris) and 18 C. crescentus sequences are more closely related to each other than any of the many TonB-dependent receptors found in other species. In fact, the Crescentus and Xanthomonas sequences are inseparable on a phylogenetic tree using a PAM-weighted neighbor-joining method, indicating that one of the two genuses may have acquired this set of receptors from the other. The mechanism by which this family is shared between Xanthomonas, a gamma proteobacterial plant pathogen and Caulobacter, an alpha proteobacterial aquatic organism is unclear. [Transport and binding proteins, Porins].</Hit_def>
+  <Hit_accession>273804</Hit_accession>
+  <Hit_len>845</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>48.4849</Hsp_bit-score>
+      <Hsp_score>116</Hsp_score>
+      <Hsp_evalue>1.13779e-05</Hsp_evalue>
+      <Hsp_query-from>5</Hsp_query-from>
+      <Hsp_query-to>1423</Hsp_query-to>
+      <Hsp_hit-from>252</Hsp_hit-from>
+      <Hsp_hit-to>758</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>100</Hsp_identity>
+      <Hsp_positive>159</Hsp_positive>
+      <Hsp_gaps>86</Hsp_gaps>
+      <Hsp_align-len>533</Hsp_align-len>
+      <Hsp_qseq>SSSKDHDERIAGAVSGGNEHISGRLSVAYQKFGGWFDGNGDATLLDNTQTGLQYSDRLDIMGTGTLNIDESR---QLQLITQYYKSQGD-DDYGLNLGKGFSAI-----RGTSTPFVSNGLNSDRIPGT--------ERHLISLQYS---------DSAFLGQ--ELVGQVYYRDESLRFYPFPTVNANKQVTAFSSSQ---QDTDQYGMKLTLNSKPMDGWQITWGLDADHERFTSNQMFFDLAQASASGGLNNKKIYTTGRYPSYDIT--NLAVFLQSGYDINNLFTLNGGVRYQYTENKIDDFIGYAQQRQIAAGKATSADAIPGGSVDYDNFLFNAGLLMHITERQQAWLNFSQGVELPDPGKYYGRGIYGAAVNGHLPLTKSVNVSDSKLEGVKVDSYELG--WRFTGNNLRTQIAAYY-----SISDKSVVANKDLTISVV------------DDKRRIYGVE-GAVDYL--IPDTDWSTGVNFNVLKTESKVNGTWQKYDVKT-----ASPSKATAYIGWAPDPWS</Hsp_qseq>
+      <Hsp_hseq>SKYDDDETRQQIEFRTLNGGSTVITSNQTAT-SGALV-QGTVANLQ-ILVEARYNEEKETTTSLTLGGEWTGDRWTLDGDLGYSKATRDRPDRVTRFFTAPTPGYDFDYRGGPTLTLGTPADGDDASNYTNPANGELRRTQISYQKAEDSEDAAQLDATFDGPFTSLKFGVRYRRRDKTNRGSRYRRSIIGATGASGLAGVPSDLAGAGL-DGGLGGPLTGW-DPADLDA----------FLNAARGDAAGGGTYT--YASTAPNTYTVTEDTTAAYAMANFDTGLRLRGNVGVRYERTDQTSD-----GWQSQPAANGTGSVLVPVSADRDYTDVLPSLNLAYDLTDDLVLRFAASKTITRPDFGDL--AANTSLSDDGT-GGTVTVSGGNPDLKPYESDNLDLSLEWYFGPGGLLS-AAVFYKDIKNFIVTTTSTETNDGGGGLVVAGVLVSRPVNGGKAGKIRGVELGYQQTFDFLPGPLSGFGVQANYTYVDSEADPSVDGVQRRKLPLPGLSKNTANATLYYEKGGFS</Hsp_hseq>
+      <Hsp_midline>S   D + R        N   +   S       G     G    L       +Y++  +   + TL  + +     L     Y K+  D  D         +       RG  T  +    + D              R  IS Q +         D+ F G    L   V YR             +    T  S       D    G+       P+ GW     LDA          F + A+  A+GG      Y +    +Y +T    A +  + +D       N GVRY+ T+   D       Q Q AA    S         DY + L +  L   +T+        S+ +  PD G          + +G    T +V+  +  L+  + D+ +L   W F    L +  A +Y      I   +     D    +V                +I GVE G       +P      GV  N    +S+ + +      +       S + A A + +    +S</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>23</Hit_num>
+  <Hit_id>gnl|CDD|227114</Hit_id>
+  <Hit_def>COG4773, FhuE, Outer membrane receptor for ferric coprogen and ferric-rhodotorulic acid [Inorganic ion transport and metabolism].</Hit_def>
+  <Hit_accession>227114</Hit_accession>
+  <Hit_len>719</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>47.0475</Hsp_bit-score>
+      <Hsp_score>112</Hsp_score>
+      <Hsp_evalue>2.92023e-05</Hsp_evalue>
+      <Hsp_query-from>1313</Hsp_query-from>
+      <Hsp_query-to>1801</Hsp_query-to>
+      <Hsp_hit-from>81</Hsp_hit-from>
+      <Hsp_hit-to>239</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>47</Hsp_identity>
+      <Hsp_positive>72</Hsp_positive>
+      <Hsp_gaps>34</Hsp_gaps>
+      <Hsp_align-len>178</Hsp_align-len>
+      <Hsp_qseq>EMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLDVSSRS--RTNY---GMNVRGRPLVVLVDGVRLNSSRTDSRQLD---SIDPFNIDHIEVISGATSLY-GGGSTGGLINIVTKKGQPETMMEFEAGTKSGFSSSKDHDERIAGA-VSG-----GNEHISGRLSVAYQKFGGWFD</Hsp_qseq>
+      <Hsp_hseq>ETPQSVSVITRQRMDDQ--NLNTLDEAMKN-TTGISVQQYDSDRTGYYSRGFYIDN----YMIDGI---PTVAATRKNDGSALTDLAAYDRVEVVRGATGLMQGTGNPSATVNLVRKRPT----REFKGSVSAGAGS---WDKYRAEADVSGPLNSEGT--VRGRLVAAYEDKDSFKD</Hsp_hseq>
+      <Hsp_midline>E  Q+  VI    ++ Q      L +A+     G+ V      RT Y   G  +       ++DG+    +   +R+ D     D    D +EV+ GAT L  G G+    +N+V K+       EF+    +G  S    D+  A A VSG     G   + GRL  AY+    + D</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>24</Hit_num>
+  <Hit_id>gnl|CDD|182105</Hit_id>
+  <Hit_def>PRK09840, PRK09840, catecholate siderophore receptor Fiu; Provisional.</Hit_def>
+  <Hit_accession>182105</Hit_accession>
+  <Hit_len>761</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>44.412</Hsp_bit-score>
+      <Hsp_score>105</Hsp_score>
+      <Hsp_evalue>0.000172405</Hsp_evalue>
+      <Hsp_query-from>1415</Hsp_query-from>
+      <Hsp_query-to>1834</Hsp_query-to>
+      <Hsp_hit-from>59</Hsp_hit-from>
+      <Hsp_hit-to>193</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>38</Hsp_identity>
+      <Hsp_positive>62</Hsp_positive>
+      <Hsp_gaps>25</Hsp_gaps>
+      <Hsp_align-len>150</Hsp_align-len>
+      <Hsp_qseq>VSANRSNRTVAEMAQTTWVIENAELEQQIQGGKELKDALAQLIPGLD---VSSRSRTNYGMNVRGRPL----VVLVDGVRLNSSRTDSRQLDSI--DPFNIDHIEVISGATSL-YGGGSTGGLINIVTKKGQPETMMEFEAGTKSGFSSS</Hsp_qseq>
+      <Hsp_hseq>SADPKFSQPLADTTQTITVISEQVIKDQ--GATNLTEALRN-VPGVGTFFAGENGNTTTGDAIYMRGFDTSNSIYVDGIR---------DIGSISRDTFNTEQVEVIKGPSGTDYGRSAPTGSINMISK--QP-RNDSGIDASASIGSAW</Hsp_hseq>
+      <Hsp_midline> +  + ++ +A+  QT  VI    ++ Q  G   L +AL   +PG+          T  G  +  R       + VDG+R          + SI  D FN + +EVI G +   YG  +  G IN+++K  QP         + S  S+ </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>25</Hit_num>
+  <Hit_id>gnl|CDD|274948</Hit_id>
+  <Hit_def>TIGR04056, OMP_RagA_SusC, TonB-linked outer membrane protein, SusC/RagA family.  This model describes a distinctive clade among the TonB-linked outer membrane proteins (OMP). Members of this family are restricted to the Bacteriodetes lineage (except for Gemmatimonas aurantiaca T-27 from the novel phylum Gemmatimonadetes) and occur in high copy numbers, with over 100 members from Bacteroides thetaiotaomicron VPI-5482 alone. Published descriptions of members of this family are available for RagA from Porphyromonas gingivalis, SusC from Bacteroides thetaiotaomicron, and OmpW from Bacteroides caccae. Members form pairs with members of the SusD/RagB family (pfam07980). Transporter complexes including these outer membrane proteins are likely to import large degradation products of proteins (e.g. RagA) or carbohydrates (e.g. SusC) as nutrients, rather than siderophores. [Transport and binding proteins, Unknown substrate].</Hit_def>
+  <Hit_accession>274948</Hit_accession>
+  <Hit_len>981</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>42.9625</Hsp_bit-score>
+      <Hsp_score>102</Hsp_score>
+      <Hsp_evalue>0.000615251</Hsp_evalue>
+      <Hsp_query-from>1469</Hsp_query-from>
+      <Hsp_query-to>1744</Hsp_query-to>
+      <Hsp_hit-from>102</Hsp_hit-from>
+      <Hsp_hit-to>207</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>31</Hsp_identity>
+      <Hsp_positive>49</Hsp_positive>
+      <Hsp_gaps>28</Hsp_gaps>
+      <Hsp_align-len>113</Hsp_align-len>
+      <Hsp_qseq>GGKELKD--------ALAQLIPGLDVSSRSRT---NYGMNVRGR--------PLVVLVDGVRLNSSRTDSRQLDSIDPFNIDHIEVISGA--TSLYGGGSTGGLINIVTKKGQ</Hsp_qseq>
+      <Hsp_hseq>KAKELKKVPVSNLSNALQGKVAGVIITQSSGEPGGDAEIWIRGISSFGGNNSPLYV-IDGVPR------DNGLSDLNPEDIESISVLKDASATAIYGSRGANGVILITTKRGK</Hsp_hseq>
+      <Hsp_midline>  KELK         AL   + G+ ++  S     +  + +RG         PL V +DGV           L  ++P +I+ I V+  A  T++YG     G+I I TK+G+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>26</Hit_num>
+  <Hit_id>gnl|CDD|237413</Hit_id>
+  <Hit_def>PRK13528, PRK13528, outer membrane receptor FepA; Provisional.</Hit_def>
+  <Hit_accession>237413</Hit_accession>
+  <Hit_len>727</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>41.2804</Hsp_bit-score>
+      <Hsp_score>97</Hsp_score>
+      <Hsp_evalue>0.00194134</Hsp_evalue>
+      <Hsp_query-from>1475</Hsp_query-from>
+      <Hsp_query-to>1711</Hsp_query-to>
+      <Hsp_hit-from>110</Hsp_hit-from>
+      <Hsp_hit-to>173</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>27</Hsp_identity>
+      <Hsp_positive>42</Hsp_positive>
+      <Hsp_gaps>17</Hsp_gaps>
+      <Hsp_align-len>80</Hsp_align-len>
+      <Hsp_qseq>LIPGLDVSSRSRTNYGMNVRGRPLVVLVDGVRLNSSRTDSRQLDSIDPFNIDHIEVISG-ATSLYGGGSTGGLINIVTKK</Hsp_qseq>
+      <Hsp_hseq>LIDGVPVTSRNSVRYSWR-----------GER--DTRGDT---NWVPPEMVERIEVIRGPAAARYGSGAAGGVVNIITKR</Hsp_hseq>
+      <Hsp_midline>LI G+ V+SR+   Y              G R   +R D+   + + P  ++ IEVI G A + YG G+ GG++NI+TK+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>27</Hit_num>
+  <Hit_id>gnl|CDD|367457</Hit_id>
+  <Hit_def>pfam03349, Toluene_X, Outer membrane protein transport protein (OMPP1/FadL/TodX).  This family includes TodX from Pseudomonas putida F1 and TbuX from Ralstonia pickettii PKO1. These are membrane proteins of uncertain function that are involved in toluene catabolism. Related proteins involved in the degradation of similar aromatic hydrocarbons are also in this family, such as CymD. This family also includes FadL involved in translocation of long-chain fatty acids across the outer membrane. It is also a receptor for the bacteriophage T2.</Hit_def>
+  <Hit_accession>367457</Hit_accession>
+  <Hit_len>430</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>40.0561</Hsp_bit-score>
+      <Hsp_score>94</Hsp_score>
+      <Hsp_evalue>0.00334136</Hsp_evalue>
+      <Hsp_query-from>350</Hsp_query-from>
+      <Hsp_query-to>679</Hsp_query-to>
+      <Hsp_hit-from>150</Hsp_hit-from>
+      <Hsp_hit-to>277</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>30</Hsp_identity>
+      <Hsp_positive>49</Hsp_positive>
+      <Hsp_gaps>18</Hsp_gaps>
+      <Hsp_align-len>128</Hsp_align-len>
+      <Hsp_qseq>YDINNLFTLNGGVRYQYTENKIDDFIGYAQQRQIAAGKAT------SADAIPGGSVDYDNFLFNAGLLMHITERQQAWLNFSQGVELPDPGKY----------YGRGIYGAAVNG--HLPLTKSVNVS</Hsp_qseq>
+      <Hsp_hseq>YRVNDELSVGLGVDAVHAKGKLSRLLGLLQIAAESGGVAGLNIGPGSGDNLIGLKGDDWSIGWNLGVLYEPTDDNRIGFAYRSKVKMKLKGKYEVSAVSGAAGLGGAATGATVPGTLTLTLPASAELS</Hsp_hseq>
+      <Hsp_midline>Y +N+  ++  GV   + + K+   +G  Q    + G A       S D + G   D  +  +N G+L   T+  +    +   V++   GKY           G    GA V G   L L  S  +S</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+</Iteration_hits>
+  <Iteration_stat>
+    <Statistics>
+      <Statistics_db-num>55570</Statistics_db-num>
+      <Statistics_db-len>12873547</Statistics_db-len>
+      <Statistics_hsp-len>104</Statistics_hsp-len>
+      <Statistics_eff-space>3689018840</Statistics_eff-space>
+      <Statistics_kappa>0.074951592</Statistics_kappa>
+      <Statistics_lambda>0.267</Statistics_lambda>
+      <Statistics_entropy>0.14</Statistics_entropy>
+    </Statistics>
+  </Iteration_stat>
+</Iteration>
+</BlastOutput_iterations>
+</BlastOutput>
+

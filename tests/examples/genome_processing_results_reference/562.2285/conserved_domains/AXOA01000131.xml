@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<!DOCTYPE BlastOutput PUBLIC "-//NCBI//NCBI BlastOutput/EN" "http://www.ncbi.nlm.nih.gov/dtd/NCBI_BlastOutput.dtd">
+<BlastOutput>
+  <BlastOutput_program>rpstblastn</BlastOutput_program>
+  <BlastOutput_version>RPSTBLASTN 2.10.1+</BlastOutput_version>
+  <BlastOutput_reference>Stephen F. Altschul, Thomas L. Madden, Alejandro A. Sch&amp;auml;ffer, Jinghui Zhang, Zheng Zhang, Webb Miller, and David J. Lipman (1997), &quot;Gapped BLAST and PSI-BLAST: a new generation of protein database search programs&quot;, Nucleic Acids Res. 25:3389-3402.</BlastOutput_reference>
+  <BlastOutput_db>/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd</BlastOutput_db>
+  <BlastOutput_query-ID>Query_1</BlastOutput_query-ID>
+  <BlastOutput_query-def>AXOA01000131 Escherichia coli GSK202B contig131, whole genome shotgun sequence. [Escherichia coli GSK202B | 562.2285]</BlastOutput_query-def>
+  <BlastOutput_query-len>2251</BlastOutput_query-len>
+  <BlastOutput_param>
+    <Parameters>
+      <Parameters_matrix>BLOSUM62</Parameters_matrix>
+      <Parameters_expect>0.01</Parameters_expect>
+      <Parameters_gap-open>11</Parameters_gap-open>
+      <Parameters_gap-extend>1</Parameters_gap-extend>
+      <Parameters_filter>F</Parameters_filter>
+    </Parameters>
+  </BlastOutput_param>
+<BlastOutput_iterations>
+<Iteration>
+  <Iteration_iter-num>1</Iteration_iter-num>
+  <Iteration_query-ID>Query_1</Iteration_query-ID>
+  <Iteration_query-def>AXOA01000131 Escherichia coli GSK202B contig131, whole genome shotgun sequence. [Escherichia coli GSK202B | 562.2285]</Iteration_query-def>
+  <Iteration_query-len>2251</Iteration_query-len>
+<Iteration_hits>
+<Hit>
+  <Hit_num>1</Hit_num>
+  <Hit_id>gnl|CDD|185047</Hit_id>
+  <Hit_def>PRK15091, PRK15091, phospholipid-binding lipoprotein MlaA.  </Hit_def>
+  <Hit_accession>185047</Hit_accession>
+  <Hit_len>251</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>559.308</Hsp_bit-score>
+      <Hsp_score>1442</Hsp_score>
+      <Hsp_evalue>0</Hsp_evalue>
+      <Hsp_query-from>122</Hsp_query-from>
+      <Hsp_query-to>874</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>251</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>232</Hsp_identity>
+      <Hsp_positive>242</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>251</Hsp_align-len>
+      <Hsp_qseq>MKLRLSALALGTTLLVGCASSGTDQQGRSDPLEGFNRTMYNFNFNVLDPYIVRPVAVAWRDYVPQPARNGLSNFTGNLEEPAVMVNYFLQGDPYQGMVHFTRFFLNTILGMGGFIDVAGMANPKLQRTEPHRFGSTLGHYGVGYGPYVQLPFYGSFTLRDDGGDMADSLYPVLSWLTWPMSVGKWTLEGIETRAQLLDSDGLLRQSSDPYIMVREAYFQRHDFIANGGELKPQENPNAQAIQDDLKDIDSE</Hsp_qseq>
+      <Hsp_hseq>MKLRLSGLALGSTLLVGCASSGTDQQGRSDPLEGFNRTMFNFNYNVLDPYVVRPVAVAWRDYVPQPARNGLSNFTGNLEEPASMVNYFLQGDPYQGMVHFTRFFLNTLLGMGGLIDVAGMANPKLAKEEPHRFGSTLGHYGVGYGPYVQLPGYGSFTLREDGGDMADTLYPVLSWLTWWMSAGKWTLEGIETRAQLLDSDGLLRNSSDPYIMVREAYFQRHDFLANGGKLKPQENPNAQAIQDDLKDIDSE</Hsp_hseq>
+      <Hsp_midline>MKLRLS LALG+TLLVGCASSGTDQQGRSDPLEGFNRTM+NFN+NVLDPY+VRPVAVAWRDYVPQPARNGLSNFTGNLEEPA MVNYFLQGDPYQGMVHFTRFFLNT+LGMGG IDVAGMANPKL + EPHRFGSTLGHYGVGYGPYVQLP YGSFTLR+DGGDMAD+LYPVLSWLTW MS GKWTLEGIETRAQLLDSDGLLR SSDPYIMVREAYFQRHDF+ANGG+LKPQENPNAQAIQDDLKDIDSE</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>2</Hit_num>
+  <Hit_id>gnl|CDD|225409</Hit_id>
+  <Hit_def>COG2853, VacJ, Surface lipoprotein [Cell envelope biogenesis, outer membrane].</Hit_def>
+  <Hit_accession>225409</Hit_accession>
+  <Hit_len>250</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>345.841</Hsp_bit-score>
+      <Hsp_score>888</Hsp_score>
+      <Hsp_evalue>1.70592e-114</Hsp_evalue>
+      <Hsp_query-from>122</Hsp_query-from>
+      <Hsp_query-to>868</Hsp_query-to>
+      <Hsp_hit-from>5</Hsp_hit-from>
+      <Hsp_hit-to>250</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>142</Hsp_identity>
+      <Hsp_positive>172</Hsp_positive>
+      <Hsp_gaps>11</Hsp_gaps>
+      <Hsp_align-len>253</Hsp_align-len>
+      <Hsp_qseq>LRLSALALGTTLLVGCASSGTDQQ---GRSDPLEGFNRTMYNFNFNVLDPYIVRPVAVAWRDYVPQPARNGLSNFTGNLEEPAVMVNYFLQGDPYQGMVHFTRFFLNTILGMGGFIDVAGMANPKLQRTEPHRFGSTLGHYGVGYGPYVQLPFYGSFTLRDDGGDMADS-LYPVLSWLTWPMSVGKWTLEGIETRAQLLDSDGLLRQSSDPYIMVREAYFQRHDFIANGGELKPQENPNAQAIQDDLKDIDSE</Hsp_qseq>
+      <Hsp_hseq>RRLSGILLSATLLAGCANADNDEYQAAGRNDPLEGFNRAMFKFN-DVLDRYILRPVAVGYRAVTPKPVRSGVSNFFNNLGEPATMVNNLLQGKPKKAMEHFNRFLINTTLGLGGLIDVASKM---GLPKNPEDFGQTLGHYGVGNGPYIVLPILGPSTLRDATGLVVDSVLYPVLYFLTTPASLGKWALQAVDTRAKLLDSDELLKNSPDPYIFVRDAYLQRRNFQVNAGQLKE---EDNQAIPEDLKEIDSE</Hsp_hseq>
+      <Hsp_midline> RLS + L  TLL GCA++  D+    GR+DPLEGFNR M+ FN +VLD YI+RPVAV +R   P+P R+G+SNF  NL EPA MVN  LQG P + M HF RF +NT LG+GG IDVA           P  FG TLGHYGVG GPY+ LP  G  TLRD  G + DS LYPVL +LT P S+GKW L+ ++TRA+LLDSD LL+ S DPYI VR+AY QR +F  N G+LK     + QAI +DLK+IDSE</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>3</Hit_num>
+  <Hit_id>gnl|CDD|377309</Hit_id>
+  <Hit_def>pfam04333, MlaA, MlaA lipoprotein.  MlaA is a component of the Mla pathway, an ABC transport system that functions to maintain the asymmetry of the outer membrane. MlaA is required for the intercellular spreading of Shigella flexneri. It is attached to the outer membrane by a lipid anchor.</Hit_def>
+  <Hit_accession>377309</Hit_accession>
+  <Hit_len>194</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>281.293</Hsp_bit-score>
+      <Hsp_score>721</Hsp_score>
+      <Hsp_evalue>1.80828e-90</Hsp_evalue>
+      <Hsp_query-from>206</Hsp_query-from>
+      <Hsp_query-to>793</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>194</Hsp_hit-to>
+      <Hsp_query-frame>-1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>97</Hsp_identity>
+      <Hsp_positive>121</Hsp_positive>
+      <Hsp_gaps>6</Hsp_gaps>
+      <Hsp_align-len>198</Hsp_align-len>
+      <Hsp_qseq>RSDPLEGFNRTMYNFNFNVLDPYIVRPVAVAWRDYVPQPARNGLSNFTGNLEEPAVMVNYFLQGDPYQGMVHFTRFFLNTILGMGGFIDVAGMANPKLQRTEPHRFGSTLGHYGVGYGPYVQLPFYGSFTLRDDGGDMADS-LYPVLSWLTWPMSVGKWTLEGIETRAQLLDSDGLLRQSS-DPYIMVREAYFQRHDF</Hsp_qseq>
+      <Hsp_hseq>VNDPLEGFNRAMFAFN-DGLDKYVLRPVAKGYRAVVPQPVRTGVSNFFSNLGEPVSFVNNLLQGKFKDAGVDLGRFLINTTLGLGGLFDVASAMGLPKHDED---FGQTLGVWGVGSGPYLVLPFLGPSTVRDTVGLVVDSFLDPLSYILPTPVRLGLTALRGVDTRAQLLDAEDLLDEASLDPYAFVRDAYLQRRRF</Hsp_hseq>
+      <Hsp_midline> +DPLEGFNR M+ FN + LD Y++RPVA  +R  VPQP R G+SNF  NL EP   VN  LQG      V   RF +NT LG+GG  DVA          +   FG TLG +GVG GPY+ LPF G  T+RD  G + DS L P+   L  P+ +G   L G++TRAQLLD++ LL ++S DPY  VR+AY QR  F</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>4</Hit_num>
+  <Hit_id>gnl|CDD|225027</Hit_id>
+  <Hit_def>COG2116, FocA, Formate/nitrite family of transporters [Inorganic ion transport and metabolism].</Hit_def>
+  <Hit_accession>225027</Hit_accession>
+  <Hit_len>265</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>254.885</Hsp_bit-score>
+      <Hsp_score>652</Hsp_score>
+      <Hsp_evalue>2.64637e-79</Hsp_evalue>
+      <Hsp_query-from>1246</Hsp_query-from>
+      <Hsp_query-to>2031</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>265</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>95</Hsp_identity>
+      <Hsp_positive>127</Hsp_positive>
+      <Hsp_gaps>15</Hsp_gaps>
+      <Hsp_align-len>271</Hsp_align-len>
+      <Hsp_qseq>EIDEDRLPSRAMAIHEHIRQDGEKELERDAMALLWSAIAAGLSMGASLLAKGIFHVELEGVPG--SFLLENLGYTFGFIIVIMARQQLFTENTVTAVLPVMQKPTMSNVGLLMRLWGIVLLGNILGTGIAAWAFEYMPIFNEETRDAF--VKIGMDVMKNTPS--EMFANAIISGWLIATMVWMFPAA--GAAKIVVIILMTWLIALGDTTHIVVGSVEIL-YLVFNGTLHWSDFIWPFALPTLAGNICGGTFIFALMSHAQIRNDMSNKR</Hsp_qseq>
+      <Hsp_hseq>EIDDDLLPSEKAAAAEHI---GEKKATKSPLKLLLLAILAGAFIGLGFLFYITVGTGLPGAPGGLAKLVGGLVFSLGLILVVIAGSELFTSNTMLLTVGVLSKKISW--GQLLRNWLVVYLGNLIGALFVALLF-HLSGFNLTANGQWGLFVLGVAEHKLHHTFLEAFAKGILCNWLVCLAVWMSYSAKDGAAKIFAIILPVMLFVASGFEHSVANMFMIPWAAVFSGALTWADFILKNLIPVTLGNIVGGAVFVGLMYWYLYRKQNRYKR</Hsp_hseq>
+      <Hsp_midline>EID+D LPS   A  EHI   GEK+  +  + LL  AI AG  +G   L        L G PG  + L+  L ++ G I+V++A  +LFT NT+   + V+ K      G L+R W +V LGN++G    A  F ++  FN      +    +G+   K   +  E FA  I+  WL+   VWM  +A  GAAKI  IIL   L       H V     I    VF+G L W+DFI    +P   GNI GG     LM     R     KR</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>5</Hit_num>
+  <Hit_id>gnl|CDD|376497</Hit_id>
+  <Hit_def>pfam01226, Form_Nir_trans, Formate/nitrite transporter.  </Hit_def>
+  <Hit_accession>376497</Hit_accession>
+  <Hit_len>242</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>177.288</Hsp_bit-score>
+      <Hsp_score>451</Hsp_score>
+      <Hsp_evalue>8.86843e-51</Hsp_evalue>
+      <Hsp_query-from>1285</Hsp_query-from>
+      <Hsp_query-to>1998</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>242</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>72</Hsp_identity>
+      <Hsp_positive>101</Hsp_positive>
+      <Hsp_gaps>8</Hsp_gaps>
+      <Hsp_align-len>244</Hsp_align-len>
+      <Hsp_qseq>IHEHIRQDGEKELERDAMALLWSAIAAGLSMGASLLAKGIFHVELEGVPGSF--LLENLGYTFGFIIVIMARQQLFTENTVTAVLPVMQKPTMSNVGLLMRLWGIVLLGNILGTGIAAWAFEYMP--IFNEETRDAFVKIGMDVMKNTPSEMFANAIISGWLIATMVWMFPAA--GAAKIVVIILMTWLIALGDTTHIVVGSVEILYLVFNGTLHWSDFIWPFALPTLAGNICGGTFIFALMSH</Hsp_qseq>
+      <Hsp_hseq>IAEAVVAAGVKKARLPLRKLFLLGILAGAFIGFGGLLALTVGAGLPEAPPGLAKLLGGLVFPIGLILVVLGGAELFTGNTLLMTLAVLRKKV--SWGDLLRNWGVVYLGNLVGALFVAALLVYLSGLLGADAVGAALVSIAEAKVSLSFLEAFLRGILCNWLVCLAVWLALAAKDVAGKILAIWFPIFAFVALGFEHSVANMFLIPAGIFLGALTWGDFIWKNLIPVTLGNIVGGAVFVGLLYW</Hsp_hseq>
+      <Hsp_midline>I E +   G K+       L    I AG  +G   L        L   P     LL  L +  G I+V++   +LFT NT+   L V++K    + G L+R WG+V LGN++G    A    Y+   +  +    A V I    +  +  E F   I+  WL+   VW+  AA   A KI+ I    +        H V     I   +F G L W DFIW   +P   GNI GG     L+  </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>6</Hit_num>
+  <Hit_id>gnl|CDD|273269</Hit_id>
+  <Hit_def>TIGR00790, Probable_formate_transporter, formate/nitrite transporter.  The Formate-Nitrite Transporter (FNT) Family (TC 2.A.44)The prokaryotic proteins of the FNT family probably function in the transport of the structurally related compounds, formate and nitrite. The homologous yeast protein may function as a short chain aliphatic carboxylate H+ symporter,transporting formate, acetate and propionate, and functioning primarily as an acetate uptake permease. The putative formate efflux transporters (FocA) of bacteria associated with pyruvate-formate lyase (pfl) comprise cluster I; the putative formate uptake permeases (FdhC) of bacteria and archaea associated with formate dehydrogenase comprise cluster II; the putative nitrite uptake permeases (NirC) of bacteria comprise cluster III, and the single yeast protein, the putative acetate:H+ symporter alone comprises cluster IV. The energy coupling mechanisms for proteins of the FNT family have not been extensively characterized. HCO2 -, CH3CO2 - and NO2 - uptakes are probably coupled to H+symport. HCO2 - efflux may be driven by the membrane potential by a uniport mechanism or by H+ antiport. [Transport and binding proteins, Anions].</Hit_def>
+  <Hit_accession>273269</Hit_accession>
+  <Hit_len>239</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>58.841</Hsp_bit-score>
+      <Hsp_score>143</Hsp_score>
+      <Hsp_evalue>1.40651e-09</Hsp_evalue>
+      <Hsp_query-from>1342</Hsp_query-from>
+      <Hsp_query-to>1992</Hsp_query-to>
+      <Hsp_hit-from>9</Hsp_hit-from>
+      <Hsp_hit-to>232</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>53</Hsp_identity>
+      <Hsp_positive>87</Hsp_positive>
+      <Hsp_gaps>11</Hsp_gaps>
+      <Hsp_align-len>226</Hsp_align-len>
+      <Hsp_qseq>LLWSAIAAG--LSMGASLLAKGIFHVELEGVPGSFLLENLGYTFGFIIVIMARQQLFTENTVTAVLPVMQKPTMSNVGLLMRLWGIVLLGNILGTGIAAWAFEYMPIFNEETRDAFVK---IGMDVMKNTPSEMFANAIISGWLIATMVWMFPAA--GAAKIVVIILMTWLIALGDTTHIVVGSVEILYLVFNGTLH--WSDFIWPFALPTLAGNICGGTFIFALM</Hsp_qseq>
+      <Hsp_hseq>LLVLSILAGAFIALGLVFYITGFTLINGAPPGLAKLVGGATFPIGLILVVIAGSDLFTGNTLFVTMALLRGKI--SWGDLLINWVVSWLGNLVGALFVAYLFSYLGGILTAVDPWGVGSLALAEHKAHHTFVELFFLGILCNWLVCLAVWMSLSGKDLAGKFFAMWFPIFAFVASGFEHSVANMFLIPMGIFIGHFDLTVGQFIGKNLIPVTLGNIIGGAVFVGLI</Hsp_hseq>
+      <Hsp_midline>LL  +I AG  +++G      G   +       + L+    +  G I+V++A   LFT NT+   + +++     + G L+  W +  LGN++G    A+ F Y+           V    +      +T  E+F   I+  WL+   VWM  +    A K   +    +        H V     I   +F G        FI    +P   GNI GG     L+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>7</Hit_num>
+  <Hit_id>gnl|CDD|274951</Hit_id>
+  <Hit_def>TIGR04060, formate_focA, formate transporter FocA.  FocA (formate channel A) forms a pentameric formate-selective channel through the plasma membrane. The focA gene is largely restricted to Proteobacteria and occurs adjacent to genes for pyruvate formate lyase (PFL) and the PFL activase, a radical SAM protein. FocA is homologous to a nitrite transport protein, NirC. [Transport and binding proteins, Carbohydrates, organic alcohols, and acids].</Hit_def>
+  <Hit_accession>274951</Hit_accession>
+  <Hit_len>267</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>50.4389</Hsp_bit-score>
+      <Hsp_score>121</Hsp_score>
+      <Hsp_evalue>1.41181e-06</Hsp_evalue>
+      <Hsp_query-from>1459</Hsp_query-from>
+      <Hsp_query-to>1992</Hsp_query-to>
+      <Hsp_hit-from>63</Hsp_hit-from>
+      <Hsp_hit-to>261</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>46</Hsp_identity>
+      <Hsp_positive>80</Hsp_positive>
+      <Hsp_gaps>35</Hsp_gaps>
+      <Hsp_align-len>206</Hsp_align-len>
+      <Hsp_qseq>YTFGFIIVIMARQQLFTENTVTAVLPVMQKPTMSNVGLLMRLWGIVLLGNILGTGIAAWAFEYMPIFNEETRDAFVKIGMDVMK-------NTPSEMFANAIISGWLIATMVWMFPAAG--AAKIVVIILMT---------------WLIALGDTTHIVVGSVEILYLVFNGT----LHWSDFIWPFALPTLAGNICGGTFIFALM</Hsp_qseq>
+      <Hsp_hseq>FSLGLILVVVCGGELFTSSTLTLVARASKRITTCQ---LLKNWIVVYIGNLIG----ALFFVALIWFAGQYMAANGQWGLNILKTAQHKIHHTWIEAFFLGILCNMMVCLAVWMSYAGKSLTDKAFIMILPVAMFVASGFEHSIANMFMIPLGILIAHFASPEFWQAIGVTPEQFADLTLYHFILNNLIPVTLGNIVGGGVLVGLT</Hsp_hseq>
+      <Hsp_midline>++ G I+V++   +LFT +T+T V    ++ T      L++ W +V +GN++G    A  F  +  F  +   A  + G++++K       +T  E F   I+   ++   VWM  A      K  ++IL                 ++I LG              +         L    FI    +P   GNI GG  +  L </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>8</Hit_num>
+  <Hit_id>gnl|CDD|236741</Hit_id>
+  <Hit_def>PRK10716, PRK10716, long-chain fatty acid transporter FadL.  </Hit_def>
+  <Hit_accession>236741</Hit_accession>
+  <Hit_len>435</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>42.0057</Hsp_bit-score>
+      <Hsp_score>99</Hsp_score>
+      <Hsp_evalue>0.000975954</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>54</Hsp_query-to>
+      <Hsp_hit-from>418</Hsp_hit-from>
+      <Hsp_hit-to>435</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>17</Hsp_identity>
+      <Hsp_positive>18</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>18</Hsp_align-len>
+      <Hsp_qseq>FESEGKAWLFGTNFNYAF</Hsp_qseq>
+      <Hsp_hseq>FESEGKAWLYGTNFNYAF</Hsp_hseq>
+      <Hsp_midline>FESEGKAWL+GTNFNYAF</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+</Iteration_hits>
+  <Iteration_stat>
+    <Statistics>
+      <Statistics_db-num>55570</Statistics_db-num>
+      <Statistics_db-len>12873547</Statistics_db-len>
+      <Statistics_hsp-len>105</Statistics_hsp-len>
+      <Statistics_eff-space>4539959565</Statistics_eff-space>
+      <Statistics_kappa>0.0845472</Statistics_kappa>
+      <Statistics_lambda>0.267</Statistics_lambda>
+      <Statistics_entropy>0.14</Statistics_entropy>
+    </Statistics>
+  </Iteration_stat>
+</Iteration>
+</BlastOutput_iterations>
+</BlastOutput>
+

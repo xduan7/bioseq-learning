@@ -1,0 +1,2 @@
+genome_id	genome_name	accession	annotation	feature_type	patric_id	refseq_locus_tag	alt_locus_tag	uniprotkb_accession	start	end	strand	na_length	gene	product	figfam_id	plfam_id	pgfam_id	go	ec	pathway
+562.2285	Escherichia coli GSK202B	AXOA01000130	PATRIC	CDS	fig|562.2285.peg.4133		VBIEscCol307008_4133		277	1524	+	1248		Multidrug efflux system MdtABC-TolC, membrane fusion component MdtA	FIG00229283	PLF_561_00001136	PGF_05768576			
