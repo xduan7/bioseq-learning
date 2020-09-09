@@ -47,17 +47,27 @@ I'm sticking with nucleotide sequences for the following reasons:
 
 
 ---
-## Sequence Data Processing
+## Data Processing
 
 ### CD Search 
 -   [ ] which CD database(s) to use? There are around 16,000 NCBI-curated CDs, while other 40,000 CDs are sourced from elsewhere. Use NCBI-curated CDs only will limit the search, which means less computation during the training and less knowledgable for trained the model
 -   [ ] computation feasibility
 
-### Other Input Annotations and the Potential Usage
+### Input Annotations and the Potential Usage
 -   [ ] annotation for NCBI-curated CDs. There are binding sites, loop/helix and other region annotation ...
 -   [ ] protein family label
 -   [ ] other annotations
 
+### Visualization and Data Analysis
+-   [ ] conserved domain space visualization (and potentially classification) with PCA, t-SNE, or UMAP 
+    -   [ ] featurize conserved domain with statistical distances 
+        -   [ ] RSAT compare matrices
+        -   [ ] MEME-Tomtom motif comparison
+    -   [ ] featurize conserved domain with descriptors
+-   [ ] genome contigs and genes length histogram (pangenome)
+-   [ ] conserved domain occurrence histogram
+-   [ ] conserved domain length histogram
+-   [ ] conserved domain length versus occurrence?
 
 ---
 ## Predictive Target
@@ -96,12 +106,6 @@ then move on to something like the start and end of each and every CD.
 
 ---
 ## Experiment Design
-
-some visualizations :
--   [ ] genome contigs and genes length histogram (pangenome)
--   [ ] conserved domain occurrence histogram
--   [ ] conserved domain length histogram
--   [ ] conserved domain length versus occurrence?
 
 parameters to tune:
 -   [ ] input length 
