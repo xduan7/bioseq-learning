@@ -32,7 +32,7 @@ class TestProcessGenomes(unittest.TestCase):
     def test_process_genomes(self):
         """test 'process_genomes' function
         """
-        process_genomes(_GENOME_PARENT_DIR_PATH, _OUTPUT_PARENT_DIR_PATH, 4)
+        process_genomes(_GENOME_PARENT_DIR_PATH, _OUTPUT_PARENT_DIR_PATH, 2)
 
         # compare the output with the reference
         from contextlib import redirect_stdout

@@ -14,7 +14,7 @@ from typing import Optional, Iterator, List, Tuple
 import pandas as pd
 from tqdm import tqdm
 from Bio import SeqIO, SeqRecord
-from joblib import Parallel, delayed, parallel_backend
+from multiprocessing import Pool
 
 from src.utilities import create_directory
 from src.datasets import conserved_domain_search
@@ -121,11 +121,16 @@ def process_genome(
     with open(genome_info_path, 'w+') as _fh:
         json.dump(genome_info, _fh, indent=4)
 
+# wrapper genome processing function that only takes one argument
+# this seems to be the only way to work with imap/imap_unordered
+def _process_genome(arg):
+    process_genome(*arg)
+
 
 def process_genomes(
         genome_parent_dir_path: str,
         output_parent_dir_path: Optional[str] = None,
-        num_threads: int = 1,
+        num_workers: int = 1,
 ):
     """process PATRIC genomes in the given parent directory in parallel
 
@@ -135,13 +140,13 @@ def process_genomes(
     :param output_parent_dir_path: optional path to the parent directory of
     all the processed genomes
     :type output_parent_dir_path: str
-    :param num_threads: maximum number of threads for parallelization
-    :type num_threads: int
+    :param num_workers: maximum number of workers for parallelization
+    :type num_workers: int
     :return: None
     """
 
-    # clamp the number of processes between range [1, number of CPU cores]
-    num_threads: int = max(1, min(num_threads, os.cpu_count()))
+    # clamp the number of workers between range [1, number of CPU cores]
+    num_workers: int = max(1, min(num_workers, os.cpu_count()))
 
     # get all the paths to genomes, and output paths if possible
     process_genome_arguments: List[Tuple[str, Optional[str], str]] = []
@@ -155,12 +160,26 @@ def process_genomes(
             process_genome_arguments.append(
                 (_genome_dir_path, _output_dir_path, _genome_id))
 
-    # embarrassingly process the genome processing functions with joblib
-    with parallel_backend('threading', n_jobs=num_threads):
-        Parallel()(
-            delayed(process_genome)(_in_dir, _out_dir, _id)
-            for _in_dir, _out_dir, _id in tqdm(process_genome_arguments)
-        )
+    # TODO: delete the commented code once the function is validated
+    # # embarrassingly process the genome processing functions with joblib
+    # with parallel_backend('threading', n_jobs=num_threads):
+    #     Parallel()(
+    #         delayed(process_genome)(_in_dir, _out_dir, _id)
+    #         for _in_dir, _out_dir, _id in tqdm(process_genome_arguments)
+    #     )
+
+    # # parallelize the processes with pool, doesn't seem to work
+    # from multiprocessing import Pool
+    # with Pool(num_processes) as _pool:
+    #     tqdm(_pool.imap(process_genome, process_genome_arguments),
+    #          total=len(process_genome_arguments))
+
+    with Pool(num_workers) as _pool:
+        for _ in tqdm(_pool.imap_unordered(
+                _process_genome,
+                process_genome_arguments,
+        ), total=len(process_genome_arguments)):
+            pass
 
 
 # TODO: Python script (executable) for genome processing
@@ -192,5 +211,5 @@ if __name__ == '__main__':
     process_genomes(
         genome_parent_dir_path=args.genome_parent_dir_path,
         output_parent_dir_path=args.output_parent_dir_path,
-        num_threads=args.num_threads,
+        num_workers=args.num_threads,
     )
