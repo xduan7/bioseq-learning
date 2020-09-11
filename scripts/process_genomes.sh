@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # change working directory to the directory of this script
-PROJECT_DIR="$(dirname "$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )")")"
+PROJECT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )")"
 
 # process genomes in parallel
 export PYTHONPATH=${PROJECT_DIR}:$PYTHONPATH

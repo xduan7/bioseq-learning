@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # get the directory to project
-PROJECT_DIR="$(dirname "$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )")")"
+PROJECT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )")"
 
 # download NCBI conserved domain database and the internal tracking information
 RAW_CDD_PATH=${PROJECT_DIR}/data/raw/CDD

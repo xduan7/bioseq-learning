@@ -42,11 +42,12 @@ dl-project-template
 │   ├── interim         # intermediate data processing results
 │   └── processed       # processed data (features and targets) ready for learning
 |
-├── notebooks           # Jupyter Notebooks (mostly for data processing and visualization)
+├── notebooks           # Jupyter Notebooks for data processing experiments and visualization
+├── scripts             # shell scripts for data download and processing
 │── src    
 │   │── ...             # top-level scripts for training, testing and global tasks
 │   ├── configs         # configuration files for deep learning experiments
-│   ├── datasets        # data processing classes, functions, and scripts
+│   ├── datasets        # dataset classes and other processing functions
 │   ├── modules         # activations, layers, modules, and networks (subclass of torch.nn.Module)
 │   ├── optimization    # deep learning optimizers and schedulers
 │   └── utilities       # other useful functions and classes
