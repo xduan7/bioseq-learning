@@ -121,10 +121,16 @@ def process_genome(
     with open(genome_info_path, 'w+') as _fh:
         json.dump(genome_info, _fh, indent=4)
 
-# wrapper genome processing function that only takes one argument
-# this seems to be the only way to work with imap/imap_unordered
-def _process_genome(arg):
-    process_genome(*arg)
+
+def __process_genome(arg):
+    """wrapper function for process_genome that only takes one tuple argument
+
+    :param arg: tuple argument for process_genome to be unpacked
+    :type arg: Tuple[str, Optional[str], Optional[str]]
+    :return: None
+    """
+
+    return process_genome(*arg)
 
 
 def process_genomes(
@@ -176,7 +182,7 @@ def process_genomes(
 
     with Pool(num_workers) as _pool:
         for _ in tqdm(_pool.imap_unordered(
-                _process_genome,
+                __process_genome,
                 process_genome_arguments,
         ), total=len(process_genome_arguments)):
             pass

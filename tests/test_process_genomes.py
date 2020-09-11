@@ -35,6 +35,10 @@ class TestProcessGenomes(unittest.TestCase):
         process_genomes(_GENOME_PARENT_DIR_PATH, _OUTPUT_PARENT_DIR_PATH, 2)
 
         # compare the output with the reference
+        # this comparison is flawed because the blast output contains some
+        # meta information that are irrelevant to alignment, such as the
+        # path to blast database, which might differ over systems
+        # TODO (low priority): fix comparison of blast results
         from contextlib import redirect_stdout
         _str_io: StringIO = StringIO()
         with redirect_stdout(_str_io):
