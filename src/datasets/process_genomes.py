@@ -8,13 +8,12 @@ File Description:
 import os
 import json
 import argparse
-
+from multiprocessing import Pool
 from typing import Optional, Iterator, List, Tuple
 
 import pandas as pd
 from tqdm import tqdm
 from Bio import SeqIO, SeqRecord
-from multiprocessing import Pool
 
 from src.utilities import create_directory
 from src.datasets import conserved_domain_search
@@ -166,29 +165,16 @@ def process_genomes(
             process_genome_arguments.append(
                 (_genome_dir_path, _output_dir_path, _genome_id))
 
-    # TODO: delete the commented code once the function is validated
-    # # embarrassingly process the genome processing functions with joblib
-    # with parallel_backend('threading', n_jobs=num_threads):
-    #     Parallel()(
-    #         delayed(process_genome)(_in_dir, _out_dir, _id)
-    #         for _in_dir, _out_dir, _id in tqdm(process_genome_arguments)
-    #     )
-
-    # # parallelize the processes with pool, doesn't seem to work
-    # from multiprocessing import Pool
-    # with Pool(num_processes) as _pool:
-    #     tqdm(_pool.imap(process_genome, process_genome_arguments),
-    #          total=len(process_genome_arguments))
-
+    # parallel genome processing with pool
     with Pool(num_workers) as _pool:
         for _ in tqdm(_pool.imap_unordered(
                 __process_genome,
-                process_genome_arguments,
-        ), total=len(process_genome_arguments)):
+                process_genome_arguments),
+                total=len(process_genome_arguments)):
             pass
 
 
-# TODO: Python script (executable) for genome processing
+# script (executable) for genome processing
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
@@ -203,8 +189,8 @@ if __name__ == '__main__':
         help='optional path to directory for processed genomes',
     )
     parser.add_argument(
-        '-t', '--num_threads', type=int, default=1,
-        help='number of threads for (awkward) parallelization',
+        '-t', '--num_workers', type=int, default=1,
+        help='number of workers for parallelization',
     )
     args = parser.parse_args()
 
@@ -217,5 +203,5 @@ if __name__ == '__main__':
     process_genomes(
         genome_parent_dir_path=args.genome_parent_dir_path,
         output_parent_dir_path=args.output_parent_dir_path,
-        num_workers=args.num_threads,
+        num_workers=args.num_workers,
     )
