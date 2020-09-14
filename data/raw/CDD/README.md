@@ -1,1 +1,0 @@
-CDD (Conserved Domain Database) downloaded directly from the NCBI [FTP server](ftp://ftp.ncbi.nih.gov/pub/mmdb/cdd/).
