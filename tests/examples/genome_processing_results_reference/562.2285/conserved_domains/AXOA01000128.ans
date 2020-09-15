@@ -1,0 +1,3927 @@
+Blast4-archive ::= {
+  request {
+    ident "2.10.1+",
+    body queue-search {
+      program "tblastn",
+      service "rpsblast",
+      queries bioseq-set {
+        seq-set {
+          seq {
+            id {
+              local str "Query_1"
+            },
+            descr {
+              user {
+                type str "CFastaReader",
+                data {
+                  {
+                    label str "DefLine",
+                    data str ">AXOA01000128   Escherichia coli GSK202B
+ contig128, whole genome shotgun sequence.   [Escherichia coli GSK202B |
+ 562.2285]"
+                  }
+                }
+              },
+              title "AXOA01000128   Escherichia coli GSK202B contig128, whole
+ genome shotgun sequence.   [Escherichia coli GSK202B | 562.2285]"
+            },
+            inst {
+              repr raw,
+              mol na,
+              length 2540,
+              seq-data ncbi2na 'D351EDFCD8EB755925652A2359E1964E70160935174D56
+00365229DB416DFCF869795965205AE39CF879A69BAF3EBA6B1AC0CCA78CEDE22B3F3B5F00ADF6
+7F19E8AF8694A25A117F92EB83F4AF0D4814B7CD6FEE38BBA3B65263DFF3921A688E79E8820641
+9E1CDE92AED35679BCED129BAE92AFEB392881069E9239BCD179B3E2596F3A6B9A9E69A07D6CDF
+524928CD68633E94E79E062069B448BA1967BFCE08535A66A2F7BB52C6A88985E9BF7A669EEA68
+A2A8FF7DFE26BF9A684B5A24827867B9863BA6A9ED129AA8BF5BF056844DA4A268868BBB4B3BD6
+F38A64ED656D36B922528F11BF0AE5A1E96A8ECE2492AE205E06849F812CE233F8F35A82B10A38
+124690A3F467B168E8497992E39A00A512A48B0F45827BA5A819AFC6786A9359208E7816E0E92B
+AC4893DED2885259299F469252A88A0519EA434BC8AE316921686E9B51A790240582BA1A944899
+4FB45A979A88A037DEE3813A5AB1AB82FD1EA12B30569068A62F6E7AB9ABB44A6EA6A96ABFAC17
+A631666EA528AE3EF8FF781AA15A14967AD3A9686C538A105BD96AA1796A0608648E18C6B6085C
+C0A09AFF0E2F99FE28E61A30A04ADCCD46648204E8468AC7C185A1868EE0138531A214DA818520
+8C1AEB82A921AF4ADA8520082AA518522CD1AE98185AE4D1AC6C385219E4AE18385A1AE26E2C38
+E1A5EC6D20385B02E1AE82A0928930861AA053B497AE8A809125EBAE0AA85E98A0AE2E999EA8C0
+AD86A8CDB9E88924968C25E0AEAE9DBFBAD353D2AA6E84DB6A58034B743269ACB5AA196B9699E4
+161AE78211EAA38822EB8E92E3D688200E0877A2A079B85A0BAEB8E362B8638A3817800CC7752F
+53FC486386A316CF48056713E5F7F8A3A464854688068E08AACC48'H
+            }
+          }
+        }
+      },
+      subject database "/Users/xduan7/projects/bioseq-learning/data/interim/CD
+D/Cdd",
+      algorithm-options {
+        {
+          name "EvalueThreshold",
+          value cutoff e-value { 1, 10, -2 }
+        },
+        {
+          name "QueryGeneticCode",
+          value integer 1
+        },
+        {
+          name "MaskAtHash",
+          value boolean FALSE
+        },
+        {
+          name "SegFiltering",
+          value boolean FALSE
+        },
+        {
+          name "UngappedMode",
+          value boolean FALSE
+        },
+        {
+          name "HitlistSize",
+          value integer 500
+        },
+        {
+          name "CompositionBasedStats",
+          value integer 1
+        },
+        {
+          name "SmithWatermanMode",
+          value boolean FALSE
+        },
+        {
+          name "MatrixName",
+          value string "BLOSUM62"
+        },
+        {
+          name "GapOpeningCost",
+          value integer 11
+        },
+        {
+          name "GapExtensionCost",
+          value integer 1
+        },
+        {
+          name "EffectiveSearchSpace",
+          value big-integer 5167513980
+        }
+      }
+    }
+  },
+  results {
+    alignments {
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 1738
+          },
+          {
+            id str "blast_score",
+            value int 1738
+          },
+          {
+            id str "e_value",
+            value real { 0, 10, 0 }
+          },
+          {
+            id str "bit_score",
+            value real { 673144544986016, 10, -12 }
+          },
+          {
+            id str "num_ident",
+            value int 227
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 307
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 206574803149606, 10, -13 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              int {
+                from 249,
+                to 269,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 0,
+                to 6,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 274542
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              int {
+                from 270,
+                to 272,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 274542
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              int {
+                from 273,
+                to 755,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 7,
+                to 167,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 274542
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              int {
+                from 756,
+                to 761,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 274542
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              int {
+                from 762,
+                to 815,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 168,
+                to 185,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 274542
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 186,
+                to 187,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 274542
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              int {
+                from 816,
+                to 1298,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 188,
+                to 348,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 274542
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 349,
+                to 349,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 274542
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              int {
+                from 1299,
+                to 1655,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 350,
+                to 468,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 274542
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 469,
+                to 469,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 274542
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 274542
+              }
+            },
+            loc {
+              int {
+                from 1656,
+                to 1784,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 470,
+                to 512,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 274542
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 1504
+          },
+          {
+            id str "blast_score",
+            value int 1504
+          },
+          {
+            id str "e_value",
+            value real { 0, 10, 0 }
+          },
+          {
+            id str "bit_score",
+            value real { 583136538040217, 10, -12 }
+          },
+          {
+            id str "num_ident",
+            value int 230
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 300
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 216023622047244, 10, -13 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 240,
+                to 272,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 10,
+                to 20,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 273,
+                to 275,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 226032
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 276,
+                to 644,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 21,
+                to 143,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 144,
+                to 144,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 645,
+                to 755,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 145,
+                to 181,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 756,
+                to 761,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 226032
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 762,
+                to 803,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 182,
+                to 195,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 196,
+                to 196,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 804,
+                to 1298,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 197,
+                to 361,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 362,
+                to 362,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 1299,
+                to 1814,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 363,
+                to 534,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 1815,
+                to 1817,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 226032
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226032
+              }
+            },
+            loc {
+              int {
+                from 1818,
+                to 1847,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 535,
+                to 544,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226032
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 1047
+          },
+          {
+            id str "blast_score",
+            value int 1047
+          },
+          {
+            id str "e_value",
+            value real { 103607603770067, 10, -147 }
+          },
+          {
+            id str "bit_score",
+            value real { 407245030977577, 10, -12 }
+          },
+          {
+            id str "num_ident",
+            value int 187
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 259
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 194763779527559, 10, -13 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 285,
+                to 419,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 0,
+                to 44,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 45,
+                to 46,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 420,
+                to 731,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 47,
+                to 150,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 732,
+                to 737,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 273730
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 738,
+                to 797,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 151,
+                to 170,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 171,
+                to 173,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 798,
+                to 932,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 174,
+                to 218,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 933,
+                to 941,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 273730
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 942,
+                to 989,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 219,
+                to 234,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 235,
+                to 237,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 990,
+                to 1241,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 238,
+                to 321,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 1242,
+                to 1247,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 273730
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 273730
+              }
+            },
+            loc {
+              int {
+                from 1248,
+                to 1730,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 322,
+                to 482,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 273730
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 636
+          },
+          {
+            id str "blast_score",
+            value int 636
+          },
+          {
+            id str "e_value",
+            value real { 877173803924563, 10, -90 }
+          },
+          {
+            id str "bit_score",
+            value real { 248752060347125, 10, -12 }
+          },
+          {
+            id str "num_ident",
+            value int 103
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 149
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 121929133858268, 10, -13 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              int {
+                from 327,
+                to 617,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 6,
+                to 102,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 368682
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 103,
+                to 103,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 368682
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              int {
+                from 618,
+                to 734,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 104,
+                to 142,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 368682
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              int {
+                from 735,
+                to 740,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 368682
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              int {
+                from 741,
+                to 797,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 143,
+                to 161,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 368682
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 162,
+                to 163,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 368682
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              int {
+                from 798,
+                to 980,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 164,
+                to 224,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 368682
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              int {
+                from 981,
+                to 983,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 368682
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              int {
+                from 984,
+                to 1160,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 225,
+                to 283,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 368682
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 284,
+                to 284,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 368682
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 368682
+              }
+            },
+            loc {
+              int {
+                from 1161,
+                to 1217,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 285,
+                to 303,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 368682
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 267
+          },
+          {
+            id str "blast_score",
+            value int 267
+          },
+          {
+            id str "e_value",
+            value real { 154849714025195, 10, -41 }
+          },
+          {
+            id str "bit_score",
+            value real { 106593571453707, 10, -12 }
+          },
+          {
+            id str "num_ident",
+            value int 46
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 47
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 270472440944882, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 380263
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 25,
+                to 80,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 380263
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 89
+          },
+          {
+            id str "blast_score",
+            value int 89
+          },
+          {
+            id str "e_value",
+            value real { 213285573195727, 10, -17 }
+          },
+          {
+            id str "bit_score",
+            value real { 380280469404183, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 22
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 24
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 223228346456693, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 380263
+              }
+            },
+            loc {
+              int {
+                from 30,
+                to 68,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 3,
+                to 15,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 380263
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 380263
+              }
+            },
+            loc {
+              int {
+                from 69,
+                to 74,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 380263
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 380263
+              }
+            },
+            loc {
+              int {
+                from 75,
+                to 89,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 16,
+                to 20,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 380263
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 380263
+              }
+            },
+            loc {
+              int {
+                from 90,
+                to 95,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 380263
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 380263
+              }
+            },
+            loc {
+              int {
+                from 96,
+                to 161,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 21,
+                to 42,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 380263
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 218
+          },
+          {
+            id str "blast_score",
+            value int 218
+          },
+          {
+            id str "e_value",
+            value real { 798536135881506, 10, -35 }
+          },
+          {
+            id str "bit_score",
+            value real { 877205642846655, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 34
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 38
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 270472440944882, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269822
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 24,
+                to 79,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269822
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 87
+          },
+          {
+            id str "blast_score",
+            value int 87
+          },
+          {
+            id str "e_value",
+            value real { 421818110919985, 10, -17 }
+          },
+          {
+            id str "bit_score",
+            value real { 372594198394923, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 17
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 21
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 227165354330709, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269822
+              }
+            },
+            loc {
+              int {
+                from 27,
+                to 65,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 1,
+                to 13,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269822
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269822
+              }
+            },
+            loc {
+              int {
+                from 66,
+                to 77,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269822
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269822
+              }
+            },
+            loc {
+              int {
+                from 78,
+                to 161,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 14,
+                to 41,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269822
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 165
+          },
+          {
+            id str "blast_score",
+            value int 165
+          },
+          {
+            id str "e_value",
+            value real { 64855787107152, 10, -27 }
+          },
+          {
+            id str "bit_score",
+            value real { 673490369731583, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 28
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 30
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 270472440944882, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269821
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 56,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 20,
+                to 38,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269821
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269821
+              }
+            },
+            loc {
+              int {
+                from 57,
+                to 74,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269821
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269821
+              }
+            },
+            loc {
+              int {
+                from 75,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 39,
+                to 69,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269821
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 91
+          },
+          {
+            id str "blast_score",
+            value int 91
+          },
+          {
+            id str "e_value",
+            value real { 806351698377383, 10, -18 }
+          },
+          {
+            id str "bit_score",
+            value real { 388442683552742, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 22
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 24
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 23503937007874, 10, -13 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269821
+              }
+            },
+            loc {
+              int {
+                from 27,
+                to 50,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 0,
+                to 7,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269821
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269821
+              }
+            },
+            loc {
+              int {
+                from 51,
+                to 53,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269821
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269821
+              }
+            },
+            loc {
+              int {
+                from 54,
+                to 62,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 8,
+                to 10,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269821
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269821
+              }
+            },
+            loc {
+              int {
+                from 63,
+                to 80,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269821
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269821
+              }
+            },
+            loc {
+              int {
+                from 81,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 11,
+                to 39,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269821
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 151
+          },
+          {
+            id str "blast_score",
+            value int 151
+          },
+          {
+            id str "e_value",
+            value real { 741064499371652, 10, -26 }
+          },
+          {
+            id str "bit_score",
+            value real { 618363876442181, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 32
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 35
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 270472440944882, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269827
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 56,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 18,
+                to 36,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269827
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269827
+              }
+            },
+            loc {
+              int {
+                from 57,
+                to 62,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269827
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269827
+              }
+            },
+            loc {
+              int {
+                from 63,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 37,
+                to 71,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269827
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 92
+          },
+          {
+            id str "blast_score",
+            value int 92
+          },
+          {
+            id str "e_value",
+            value real { 751141510989101, 10, -18 }
+          },
+          {
+            id str "bit_score",
+            value real { 391096126650942, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 20
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 23
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 23503937007874, 10, -13 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269827
+              }
+            },
+            loc {
+              int {
+                from 27,
+                to 56,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 0,
+                to 9,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269827
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269827
+              }
+            },
+            loc {
+              int {
+                from 57,
+                to 83,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269827
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269827
+              }
+            },
+            loc {
+              int {
+                from 84,
+                to 146,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 10,
+                to 30,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269827
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269827
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 31,
+                to 31,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269827
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269827
+              }
+            },
+            loc {
+              int {
+                from 147,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 32,
+                to 38,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269827
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 144
+          },
+          {
+            id str "blast_score",
+            value int 144
+          },
+          {
+            id str "e_value",
+            value real { 357166306029829, 10, -25 }
+          },
+          {
+            id str "bit_score",
+            value real { 590692793871844, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 29
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 31
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 270472440944882, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 377514
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 56,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 14,
+                to 32,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 377514
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 377514
+              }
+            },
+            loc {
+              int {
+                from 57,
+                to 74,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 377514
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 377514
+              }
+            },
+            loc {
+              int {
+                from 75,
+                to 86,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 33,
+                to 36,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 377514
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 377514
+              }
+            },
+            loc {
+              int {
+                from 87,
+                to 92,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 377514
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 377514
+              }
+            },
+            loc {
+              int {
+                from 93,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 37,
+                to 61,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 377514
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 140
+          },
+          {
+            id str "blast_score",
+            value int 140
+          },
+          {
+            id str "e_value",
+            value real { 288002058278399, 10, -24 }
+          },
+          {
+            id str "bit_score",
+            value real { 578032449045043, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 28
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 30
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 26259842519685, 10, -13 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226589
+              }
+            },
+            loc {
+              int {
+                from 6,
+                to 50,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 32,
+                to 46,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226589
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226589
+              }
+            },
+            loc {
+              int {
+                from 51,
+                to 59,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 226589
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 226589
+              }
+            },
+            loc {
+              int {
+                from 60,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 47,
+                to 82,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 226589
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 130
+          },
+          {
+            id str "blast_score",
+            value int 130
+          },
+          {
+            id str "e_value",
+            value real { 695830614710569, 10, -23 }
+          },
+          {
+            id str "bit_score",
+            value real { 537899650771916, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 26
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 29
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 258661417322835, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269823
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 59,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 30,
+                to 49,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269823
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269823
+              }
+            },
+            loc {
+              int {
+                from 60,
+                to 77,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269823
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269823
+              }
+            },
+            loc {
+              int {
+                from 78,
+                to 158,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 50,
+                to 76,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269823
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 116
+          },
+          {
+            id str "blast_score",
+            value int 116
+          },
+          {
+            id str "e_value",
+            value real { 415272524429141, 10, -21 }
+          },
+          {
+            id str "bit_score",
+            value real { 485426175120902, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 26
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 29
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 270472440944882, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269826
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 38,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 21,
+                to 33,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269826
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269826
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 34,
+                to 34,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269826
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269826
+              }
+            },
+            loc {
+              int {
+                from 39,
+                to 86,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 35,
+                to 50,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269826
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269826
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 51,
+                to 51,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269826
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269826
+              }
+            },
+            loc {
+              int {
+                from 87,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 52,
+                to 78,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269826
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 107
+          },
+          {
+            id str "blast_score",
+            value int 107
+          },
+          {
+            id str "e_value",
+            value real { 131762632175046, 10, -19 }
+          },
+          {
+            id str "bit_score",
+            value real { 451123040935744, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 27
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 30
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 254724409448819, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269825
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 47,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 40,
+                to 55,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269825
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269825
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 56,
+                to 61,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269825
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269825
+              }
+            },
+            loc {
+              int {
+                from 48,
+                to 155,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 62,
+                to 97,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269825
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 115
+          },
+          {
+            id str "blast_score",
+            value int 115
+          },
+          {
+            id str "e_value",
+            value real { 197283450929656, 10, -19 }
+          },
+          {
+            id str "bit_score",
+            value real { 482126531127136, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 31
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 53
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 538188976377953, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 222900
+              }
+            },
+            loc {
+              int {
+                from 1866,
+                to 2189,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 445,
+                to 552,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 222900
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 222900
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 553,
+                to 559,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 222900
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 222900
+              }
+            },
+            loc {
+              int {
+                from 2190,
+                to 2237,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 560,
+                to 575,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 222900
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 114
+          },
+          {
+            id str "blast_score",
+            value int 114
+          },
+          {
+            id str "e_value",
+            value real { 240317574126458, 10, -19 }
+          },
+          {
+            id str "bit_score",
+            value real { 478274535367963, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 26
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 39
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 384645669291339, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 222900
+              }
+            },
+            loc {
+              int {
+                from 1878,
+                to 1901,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 434,
+                to 441,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 222900
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 222900
+              }
+            },
+            loc {
+              int {
+                from 1902,
+                to 1904,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 222900
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 222900
+              }
+            },
+            loc {
+              int {
+                from 1905,
+                to 2132,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 442,
+                to 517,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 222900
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 97
+          },
+          {
+            id str "blast_score",
+            value int 97
+          },
+          {
+            id str "e_value",
+            value real { 124014021453559, 10, -18 }
+          },
+          {
+            id str "bit_score",
+            value real { 411331686323461, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 23
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 25
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 270472440944882, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269828
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 68,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 23,
+                to 45,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269828
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269828
+              }
+            },
+            loc {
+              int {
+                from 69,
+                to 95,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269828
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269828
+              }
+            },
+            loc {
+              int {
+                from 96,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 46,
+                to 69,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269828
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 95
+          },
+          {
+            id str "blast_score",
+            value int 95
+          },
+          {
+            id str "e_value",
+            value real { 210563985140923, 10, -18 }
+          },
+          {
+            id str "bit_score",
+            value real { 403627694805114, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 24
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 24
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 23503937007874, 10, -13 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269828
+              }
+            },
+            loc {
+              int {
+                from 27,
+                to 50,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 0,
+                to 7,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269828
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269828
+              }
+            },
+            loc {
+              int {
+                from 51,
+                to 59,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269828
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269828
+              }
+            },
+            loc {
+              int {
+                from 60,
+                to 80,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 8,
+                to 14,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269828
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269828
+              }
+            },
+            loc {
+              int {
+                from 81,
+                to 83,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269828
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269828
+              }
+            },
+            loc {
+              int {
+                from 84,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 15,
+                to 42,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269828
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 92
+          },
+          {
+            id str "blast_score",
+            value int 92
+          },
+          {
+            id str "e_value",
+            value real { 603432767462635, 10, -18 }
+          },
+          {
+            id str "bit_score",
+            value real { 39074674175845, 10, -12 }
+          },
+          {
+            id str "num_ident",
+            value int 23
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 25
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 270472440944882, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269829
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 50,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 19,
+                to 35,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269829
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269829
+              }
+            },
+            loc {
+              int {
+                from 51,
+                to 59,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269829
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269829
+              }
+            },
+            loc {
+              int {
+                from 60,
+                to 80,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 36,
+                to 42,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269829
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269829
+              }
+            },
+            loc {
+              int {
+                from 81,
+                to 83,
+                strand plus,
+                id local str "Query_1"
+              },
+              empty general {
+                db "CDD",
+                tag id 269829
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269829
+              }
+            },
+            loc {
+              int {
+                from 84,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 43,
+                to 70,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269829
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        type partial,
+        dim 2,
+        score {
+          {
+            id str "score",
+            value int 92
+          },
+          {
+            id str "blast_score",
+            value int 92
+          },
+          {
+            id str "e_value",
+            value real { 672787686704597, 10, -18 }
+          },
+          {
+            id str "bit_score",
+            value real { 392639735070365, 10, -13 }
+          },
+          {
+            id str "num_ident",
+            value int 25
+          },
+          {
+            id str "comp_adjustment_method",
+            value int 1
+          },
+          {
+            id str "num_positives",
+            value int 27
+          },
+          {
+            id str "hsp_percent_coverage",
+            value real { 270472440944882, 10, -14 }
+          }
+        },
+        segs std {
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269824
+              }
+            },
+            loc {
+              int {
+                from 0,
+                to 56,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 19,
+                to 37,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269824
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269824
+              }
+            },
+            loc {
+              empty local str "Query_1",
+              int {
+                from 38,
+                to 38,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269824
+                }
+              }
+            }
+          },
+          {
+            dim 2,
+            ids {
+              local str "Query_1",
+              general {
+                db "CDD",
+                tag id 269824
+              }
+            },
+            loc {
+              int {
+                from 57,
+                to 167,
+                strand plus,
+                id local str "Query_1"
+              },
+              int {
+                from 39,
+                to 75,
+                strand unknown,
+                id general {
+                  db "CDD",
+                  tag id 269824
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    masks {
+    },
+    ka-blocks {
+      {
+        lambda { 316903381237961, 10, -15 },
+        k { 136031074142982, 10, -15 },
+        h { 413008791961634, 10, -15 },
+        gapped FALSE
+      },
+      {
+        lambda { 267, 10, -3 },
+        k { 6298368, 10, -8 },
+        h { 14, 10, -2 },
+        gapped TRUE
+      }
+    },
+    search-stats {
+      "Effective search space: 5167513980",
+      "Effective search space used: 5167513980",
+      "Length adjustment: 106"
+    }
+  }
+}

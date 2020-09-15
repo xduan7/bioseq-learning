@@ -1,0 +1,127 @@
+Blast4-archive ::= {
+  request {
+    ident "2.10.1+",
+    body queue-search {
+      program "tblastn",
+      service "rpsblast",
+      queries bioseq-set {
+        seq-set {
+          seq {
+            id {
+              local str "Query_1"
+            },
+            descr {
+              user {
+                type str "CFastaReader",
+                data {
+                  {
+                    label str "DefLine",
+                    data str ">AXOD01000131   Escherichia coli GSK2023
+ contig131, whole genome shotgun sequence.   [Escherichia coli GSK2023 |
+ 562.2283]"
+                  }
+                }
+              },
+              title "AXOD01000131   Escherichia coli GSK2023 contig131, whole
+ genome shotgun sequence.   [Escherichia coli GSK2023 | 562.2283]"
+            },
+            inst {
+              repr raw,
+              mol na,
+              length 1684,
+              seq-data ncbi2na 'D14824A6DCE90E0D214C1085BDBFD425B5EC0204B488F8
+D624F0DD1D4D8C515493F0807B12863C0345F0ED3AC9281CFFDF0C05FB83CC0F0BDEF84033F09E
+3B230F33F0A23FF338C18701021088C3FF3A41CD9BAFD19480FC0DC100EE080093D2538F47BC30
+C4377A41C35F6333A0133B4D08CCFE2CE03A246053F1CF8203CA7AFF014963000FD3187C4F30FC
+87990A80933EFFCFDC332FB40CFB3CD0DF8F3F4F330CDFD4DF4A3ED1CC5507498CF4BE8DBF87FE
+D07820BFCE378000803CFF5F57FB3F7DB7D41ECF02F9444C0F9D23FF8FCDDF494FF3E7C5F12533
+237EE7DAD331000533A0CF8AAEF327732B3957CFC8100D3424DF2420D135B82FCF8EE3FDF4F37B
+109034038F9B3FCDFF3F4D203D49F9828ADF707FF4D4D6E4ABF7C0D90F34C3F8FBD30525034FC6
+733F84E4F9B302F5E31DFD3C73FFBD1C3705A3D3139EA4CF9308E4CF453CCFDE8EC68C6067CB0F
+D34C3FFE2F0FCF28C7FA34F0D12400404C44DD7CE03108C4F35143304117C33E3BD3C4638F3397
+FF3BF39D4480E33D0D00383F44609FC10CFCF42A200BB8FC3F3FCCC802853FF110CB5FC0C33CE3
+C4D7D97811C4F348'H
+            }
+          }
+        }
+      },
+      subject database "/Users/xduan7/projects/bioseq-learning/data/interim/CD
+D/Cdd",
+      algorithm-options {
+        {
+          name "EvalueThreshold",
+          value cutoff e-value { 1, 10, -2 }
+        },
+        {
+          name "QueryGeneticCode",
+          value integer 1
+        },
+        {
+          name "MaskAtHash",
+          value boolean FALSE
+        },
+        {
+          name "SegFiltering",
+          value boolean FALSE
+        },
+        {
+          name "UngappedMode",
+          value boolean FALSE
+        },
+        {
+          name "HitlistSize",
+          value integer 500
+        },
+        {
+          name "CompositionBasedStats",
+          value integer 1
+        },
+        {
+          name "SmithWatermanMode",
+          value boolean FALSE
+        },
+        {
+          name "MatrixName",
+          value string "BLOSUM62"
+        },
+        {
+          name "GapOpeningCost",
+          value integer 11
+        },
+        {
+          name "GapExtensionCost",
+          value integer 1
+        },
+        {
+          name "EffectiveSearchSpace",
+          value big-integer 3274625346
+        }
+      }
+    }
+  },
+  results {
+    alignments {
+    },
+    masks {
+    },
+    ka-blocks {
+      {
+        lambda { 317605957635731, 10, -15 },
+        k { 133956144488482, 10, -15 },
+        h { 401214524497119, 10, -15 },
+        gapped FALSE
+      },
+      {
+        lambda { 267, 10, -3 },
+        k { 8087544, 10, -8 },
+        h { 14, 10, -2 },
+        gapped TRUE
+      }
+    },
+    search-stats {
+      "Effective search space: 3274625346",
+      "Effective search space used: 3274625346",
+      "Length adjustment: 103"
+    }
+  }
+}

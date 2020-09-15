@@ -5,3 +5,4 @@
 /examples/genome_processing/*/info.json
 /examples/conserved_domain_search/*.csv
 /examples/conserved_domain_search/*.xml
+/examples/conserved_domain_search/*.ans
