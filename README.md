@@ -1,6 +1,6 @@
 # Biological Sequence Learning with Conserved Domain
 This project contains deep learning experiments on biological sequences (amino acid or nucleotide sequences) using conserved domain information. 
-Please refer to the [DESCRIPTION](docs/DESCRIPTION.md) file for more technical details.
+Please refer to the [REPORT](docs/REPORT.md) file for more technical details.
 
 
 ## Table of Contents  
@@ -66,7 +66,7 @@ dl-project-template
 
 ---
 ## Authors
-* Xiaotian Duan (Email: xduan7 at uchicago.edu)
+* Xiaotian Duan (Email: xduan7 at gmail.com)
 
 
 ---

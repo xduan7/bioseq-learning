@@ -109,6 +109,12 @@ then move on to something like the start and end of each and every CD.
 ---
 ## Experiment Design
 
+before large-scale experiment:
+-   [ ] learning with toy dataset (e.g. the ones used in [this paper](https://arxiv.org/pdf/1806.04342v1.pdf))?
+-   [ ] learning solely on simple masked language model (without any annotation)
+-   [ ] learning on a small fraction of genome
+    -   [ ] test with training set if necessary, to make sure that the loss could be trained to zero 
+    
 parameters to tune:
 -   [ ] input length 
 -   [ ] masked percentage (continuous)
