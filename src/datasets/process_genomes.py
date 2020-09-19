@@ -7,6 +7,7 @@ File Description:
 """
 import os
 import json
+import logging
 import argparse
 from multiprocessing import Pool
 from typing import Optional, Iterator, List, Tuple
@@ -17,6 +18,9 @@ from Bio import SeqIO, SeqRecord
 
 from src.utilities import create_directory
 from src.datasets import conserved_domain_search
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 def process_genome(
@@ -52,6 +56,13 @@ def process_genome(
     contig_seq_path: str = os.path.join(genome_dir_path, f'{genome_id}.fna')
     feature_path: str = \
         os.path.join(genome_dir_path,  f'{genome_id}.PATRIC.features.tab')
+    if not (os.path.exists(contig_seq_path) and os.path.exists(feature_path)):
+        _warning_msg = \
+            f'Genome {genome_id} has incomplete data: ' \
+            f'missing nucleotide sequence file ({genome_id}.fna) and/or ' \
+            f'PATRIC feature table file ({genome_id}.PATRIC.features.tab).'
+        _LOGGER.warning(_warning_msg)
+        return
 
     # create the subdirectories if not exist
     # - ./OUTPUT_DIR: output directory if given
