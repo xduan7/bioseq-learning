@@ -34,11 +34,15 @@ mkdir -p "${INTERIM_CDD_DIR}"
 wget -nc -q ftp://ftp.ncbi.nih.gov/pub/mmdb/cdd/little_endian/Cdd_LE.tar.gz -P "${RAW_CDD_DIR}"
 tar -zxf "${RAW_CDD_DIR}"/Cdd_LE.tar.gz --directory "${INTERIM_CDD_DIR}"
 
-# download metadata files for CDD (required for rpsbproc)
+# download metadata files for CDD (required for rpsbproc and other analysis)
 RAW_CDD_METADATA_DIR=${RAW_DATA_DIR}/CDD_metadata
+RAW_CDD_ALIGNMENT_DIR=${RAW_DATA_DIR}/CDD_alignment
 INTERIM_CDD_METADATA_DIR=${INTERIM_DATA_DIR}/CDD_metadata
+INTERIM_CDD_ALIGNMENT_DIR=${INTERIM_DATA_DIR}/CDD_alignment
 mkdir -p "${RAW_CDD_METADATA_DIR}"
 mkdir -p "${INTERIM_CDD_METADATA_DIR}"
+mkdir -p "${RAW_CDD_ALIGNMENT_DIR}"
+mkdir -p "${INTERIM_CDD_ALIGNMENT_DIR}"
 wget -nc -q https://ftp.ncbi.nih.gov/pub/mmdb/cdd/cdtrack.txt -P "${RAW_CDD_METADATA_DIR}"
 wget -nc -q https://ftp.ncbi.nih.gov/pub/mmdb/cdd/bitscore_specific.txt -P "${RAW_CDD_METADATA_DIR}"
 wget -nc -q https://ftp.ncbi.nih.gov/pub/mmdb/cdd/family_superfamily_links -P "${RAW_CDD_METADATA_DIR}"
@@ -46,4 +50,11 @@ wget -nc -q https://ftp.ncbi.nih.gov/pub/mmdb/cdd/cddid.tbl.gz -P "${RAW_CDD_MET
 wget -nc -q https://ftp.ncbi.nih.gov/pub/mmdb/cdd/cddannot.dat.gz -P "${RAW_CDD_METADATA_DIR}"
 wget -nc -q https://ftp.ncbi.nih.gov/pub/mmdb/cdd/cddannot_generic.dat.gz -P "${RAW_CDD_METADATA_DIR}"
 cp "${RAW_CDD_METADATA_DIR}"/* "${INTERIM_CDD_METADATA_DIR}"
-gzip -d -k -f "${INTERIM_CDD_METADATA_DIR}"/*.gz
+# don't change the names of meta data files of CDD, specified by rpsbproc
+gzip -d -f "${INTERIM_CDD_METADATA_DIR}"/*.gz
+
+# download the sequence file(s) for CDD
+wget -nc -q https://ftp.ncbi.nih.gov/pub/mmdb/cdd/cddmasters.fa.gz -P "${RAW_CDD_ALIGNMENT_DIR}"
+cp "${RAW_CDD_ALIGNMENT_DIR}"/* "${INTERIM_CDD_ALIGNMENT_DIR}"
+gzip -d -f "${INTERIM_CDD_ALIGNMENT_DIR}"/cddmasters.fa.gz
+mv "${INTERIM_CDD_ALIGNMENT_DIR}"/cddmasters.fa "${INTERIM_CDD_ALIGNMENT_DIR}"/cdd_masters.fa
