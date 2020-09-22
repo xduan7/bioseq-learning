@@ -9,6 +9,6 @@ nohup python ${PROJECT_DIR}/src/datasets/process_genomes.py \
   -i ${PROJECT_DIR}/data/raw/genomes/escherichia_coli \
   -o ${PROJECT_DIR}/data/interim/genomes/escherichia_coli \
   -t 240 \
-  >> ${PROJECT_DIR}/data/interim/genomes/process_genomes.txt &
+  >> ${PROJECT_DIR}/logs/process_genomes.txt &
 
 # TODO: rpsbproc (post rpsblast processing)

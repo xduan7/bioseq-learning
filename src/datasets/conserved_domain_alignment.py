@@ -8,6 +8,7 @@ File Description:
 import os
 import subprocess
 
+import numpy as np
 import pandas as pd
 from Bio import SeqIO
 from sklearn.decomposition import PCA
@@ -38,6 +39,11 @@ CDD_MASTER_PROCESSED_ALGN_PATH = \
 CDD_MASTER_PROCESSED_ALGN_FEAT_PATH = \
     os.path.join(PROCESSED_CDD_ALGN_DIR_PATH,
                  'cdd_master_alignment_feature.csv')
+
+
+NUM_PCA_COMPONENT = 1024
+ALGN_VALUE = ['seq_identity', 'bitscore', 'e_value'][0]
+
 
 # read the identification metadata of CDs for PSSM <-> accession translation
 cdd_id_df = pd.read_table(
@@ -128,38 +134,61 @@ if not os.path.exists(CDD_MASTER_PROCESSED_ALGN_PATH):
 else:
     cdd_master_seq_algn_df = pd.read_csv(CDD_MASTER_PROCESSED_ALGN_PATH)
 
-# create symmetric matrix of sequence alignment for all CDs
-_cdd_master_seq_algn_df = cdd_master_seq_algn_df.loc[
-    cdd_master_seq_algn_df['query_pssm_id'] != cdd_master_seq_algn_df['target_pssm_id']]
-_cdd_master_seq_algn_df.columns = [
-    'target_pssm_id', 'target_accession', 'query_pssm_id', 'query_accession',
-    'seq_identity', 'bitscore', 'e_value',
-    'length', 'mismatches', 'gap_openings',
-    'target_start', 'target_end', 'query_start', 'query_end',
-]
-_cdd_master_seq_algn_df = _cdd_master_seq_algn_df[[
-    'query_pssm_id', 'query_accession', 'target_pssm_id', 'target_accession',
-    'seq_identity', 'bitscore', 'e_value',
-    'length', 'mismatches', 'gap_openings',
-    'query_start', 'query_end', 'target_start', 'target_end',
-]]
+# # create symmetric matrix of sequence alignment for all CDs
+# _cdd_master_seq_algn_df = cdd_master_seq_algn_df.loc[
+#     cdd_master_seq_algn_df['query_pssm_id'] != cdd_master_seq_algn_df['target_pssm_id']]
+# _cdd_master_seq_algn_df.columns = [
+#     'target_pssm_id', 'target_accession', 'query_pssm_id', 'query_accession',
+#     'seq_identity', 'bitscore', 'e_value',
+#     'length', 'mismatches', 'gap_openings',
+#     'target_start', 'target_end', 'query_start', 'query_end',
+# ]
+# _cdd_master_seq_algn_df = _cdd_master_seq_algn_df[[
+#     'query_pssm_id', 'query_accession', 'target_pssm_id', 'target_accession',
+#     'seq_identity', 'bitscore', 'e_value',
+#     'length', 'mismatches', 'gap_openings',
+#     'query_start', 'query_end', 'target_start', 'target_end',
+# ]]
 
-# pivot the query and target accessions
-# TODO: this step causes int32 overflow error, need newer pandas version
-# reference: https://github.com/pandas-dev/pandas/issues/26314
-cdd_master_seq_algn_df = pd.concat(
-    [cdd_master_seq_algn_df, _cdd_master_seq_algn_df]
-).pivot_table(
-    index='query_accession',
-    columns='target_accession',
-    values='seq_identity',
-    fill_value=0.,
+# # pivot the query and target accessions
+# # this step causes int32 overflow error, need newer pandas version
+# # reference: https://github.com/pandas-dev/pandas/issues/26314
+# cdd_master_seq_algn_df = pd.concat(
+#     [cdd_master_seq_algn_df, _cdd_master_seq_algn_df]
+# ).pivot_table(
+#     index='query_accession',
+#     columns='target_accession',
+#     values='seq_identity',
+#     fill_value=0.,
+#
+
+accessions = list(set(
+    list(cdd_master_seq_algn_df['query_accession'].unique()) +
+    list(cdd_master_seq_algn_df['target_accession'].unique())
+))
+
+accession_index_dict = {
+    _accession: _i for _i, _accession in enumerate(accessions)
+}
+
+cdd_master_seq_algn_mat = np.zeros(
+    shape=(len(accession_index_dict), len(accession_index_dict)),
+    dtype=np.float32,
 )
 
-# reduce the dimensionality and save for visualization
-pca = PCA(n_components=1024)
-pd.DataFrame(
-    pca.fit_transform(cdd_master_seq_algn_df),
-    index=cdd_master_seq_algn_df.index,
-).to_csv(CDD_MASTER_PROCESSED_ALGN_FEAT_PATH)
+for _row in cdd_master_seq_algn_df.itertuples():
 
+    _query_index = accession_index_dict[_row.query_accession]
+    _target_index = accession_index_dict[_row.target_accession]
+    _algn_value = _row._asdict()[ALGN_VALUE]
+
+    cdd_master_seq_algn_mat[_query_index, _target_index] = _algn_value
+    cdd_master_seq_algn_mat[_target_index, _query_index] = _algn_value
+
+
+# reduce the dimensionality and save for visualization
+pca = PCA(n_components=NUM_PCA_COMPONENT)
+pd.DataFrame(
+    pca.fit_transform(cdd_master_seq_algn_mat),
+    index=accessions,
+).to_csv(CDD_MASTER_PROCESSED_ALGN_FEAT_PATH)
