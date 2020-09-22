@@ -17,6 +17,10 @@ from src import INTERIM_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH
 from src.utilities import create_directory
 
 
+NUM_PCA_COMPONENT = 1024
+ALGN_VALUE = ['seq_identity', 'bitscore', 'e_value'][0]
+
+
 CDD_ID_PATH = os.path.join(INTERIM_DATA_DIR_PATH, 'CDD_metadata/cddid.tbl')
 
 INTERIM_CDD_ALGN_DIR_PATH = \
@@ -39,10 +43,6 @@ CDD_MASTER_PROCESSED_ALGN_PATH = \
 CDD_MASTER_PROCESSED_ALGN_FEAT_PATH = \
     os.path.join(PROCESSED_CDD_ALGN_DIR_PATH,
                  'cdd_master_alignment_feature.csv')
-
-
-NUM_PCA_COMPONENT = 1024
-ALGN_VALUE = ['seq_identity', 'bitscore', 'e_value'][0]
 
 
 # read the identification metadata of CDs for PSSM <-> accession translation
