@@ -1,0 +1,35 @@
+#Post-RPSBLAST Processing Utility
+
+#Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2283/conserved_domains/AXOD01000131.ans
+#Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2283/conserved_domains/AXOD01000131.txt
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#E-Value cutoff:	0.01
+#Redundancy:	Full
+#Data requested:	Domain hits and site annotations
+#Output format -- tab-delimited table
+#Show superfamilies: YES
+#DATA
+#SESSION	<session-ordinal>	<program>	<database>	<score-matrix>	<evalue-threshold>
+#QUERY	<query-id>	<seq-type>	<seq-length>	<definition-line>
+#DOMAINS
+#<session-ordinal>	<query-id[readingframe]>	<hit-type>	<PSSM-ID>	<from>	<to>	<E-Value>	<bitscore>	<accession>	<short-name>	<incomplete>	<superfamily PSSM-ID>
+#more such lines......
+#ENDDOMAINS
+#SITES
+#<session-ordinal>	<query-id[readingframe]>	<annot-type>	<title>	<residue(coordinates)>	<complete-size>	<mapped-size>	<source-domain>
+#more such lines......
+#ENDSITES
+#MOTIFS
+#<session-ordinal>	<query-id[readingframe]>	<title>	<from>	<to>	<source-domain>
+#more such lines......
+#ENDMOTIFS
+#ENDQUERY	<query-id>
+#more query sections..
+#ENDSESSION	<session-ordinal>
+#more session sections..
+#ENDDATA
+#=====================================================================
+DATA
+SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+ENDSESSION	1
+ENDDATA

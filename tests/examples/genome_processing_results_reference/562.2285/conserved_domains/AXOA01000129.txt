@@ -1,0 +1,76 @@
+#Post-RPSBLAST Processing Utility
+
+#Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000129.ans
+#Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000129.txt
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#E-Value cutoff:	0.01
+#Redundancy:	Full
+#Data requested:	Domain hits and site annotations
+#Output format -- tab-delimited table
+#Show superfamilies: YES
+#DATA
+#SESSION	<session-ordinal>	<program>	<database>	<score-matrix>	<evalue-threshold>
+#QUERY	<query-id>	<seq-type>	<seq-length>	<definition-line>
+#DOMAINS
+#<session-ordinal>	<query-id[readingframe]>	<hit-type>	<PSSM-ID>	<from>	<to>	<E-Value>	<bitscore>	<accession>	<short-name>	<incomplete>	<superfamily PSSM-ID>
+#more such lines......
+#ENDDOMAINS
+#SITES
+#<session-ordinal>	<query-id[readingframe]>	<annot-type>	<title>	<residue(coordinates)>	<complete-size>	<mapped-size>	<source-domain>
+#more such lines......
+#ENDSITES
+#MOTIFS
+#<session-ordinal>	<query-id[readingframe]>	<title>	<from>	<to>	<source-domain>
+#more such lines......
+#ENDMOTIFS
+#ENDQUERY	<query-id>
+#more query sections..
+#ENDSESSION	<session-ordinal>
+#more session sections..
+#ENDDATA
+#=====================================================================
+DATA
+SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+QUERY	Query_1	Nucleotide	2346	AXOA01000129   Escherichia coli GSK202B contig129, whole genome shotgun sequence.   [Escherichia coli GSK202B | 562.2285]
+DOMAINS
+1	Query_1[-1]	Specific	234723	955	1740	6.06922e-158	459.144	PRK00311	panB	-	391965
+1	Query_1[-1]	Specific	272969	955	1743	1.83599e-153	447.714	TIGR00222	panB	-	389746
+1	Query_1[-1]	Specific	223490	955	1740	7.93575e-149	435.861	COG0413	PanB	-	389746
+1	Query_1[-1]	Specific	376814	970	1740	4.39641e-145	425.976	pfam02548	Pantoate_transf	-	389746
+1	Query_1[-1]	Specific	119342	976	1731	3.91461e-142	417.976	cd06557	KPHMT-like	-	391965
+1	Query_1[-1]	Non-specific	119341	1012	1722	3.86653e-114	345.367	cd06556	ICL_KPHMT	-	391965
+1	Query_1[-1]	Non-specific	236617	1861	2346	8.97879e-98	309.794	PRK09723	PRK09723	N	382530
+1	Query_1[-1]	Non-specific	215233	961	1734	1.09468e-75	248.493	PLN02424	PLN02424	-	389746
+1	Query_1[-1]	Non-specific	185205	1864	2343	5.34049e-10	61.585	PRK15305	PRK15305	N	382530
+1	Query_1[-1]	Specific	226069	1861	2295	4.5849e-07	50.6065	COG3539	FimA	N	382530
+1	Query_1[-1]	Non-specific	366088	1861	2295	4.93107e-07	49.741	pfam00419	Fimbrial	-	382530
+1	Query_1[-1]	Non-specific	234891	1006	1563	2.53559e-05	46.4834	PRK01033	PRK01033	-	389746
+1	Query_1[-3]	Specific	234741	92	934	1.26258e-161	469.212	PRK00380	panC	-	381756
+1	Query_1[-3]	Specific	185673	110	937	4.07183e-160	465.085	cd00560	PanC	-	381756
+1	Query_1[-3]	Specific	376824	110	934	1.85664e-155	453.021	pfam02569	Pantoate_ligase	-	381756
+1	Query_1[-3]	Specific	223491	92	937	3.09035e-155	452.837	COG0414	PanC	-	381756
+1	Query_1[-3]	Specific	272857	101	940	1.13917e-153	448.83	TIGR00018	panC	-	381756
+1	Query_1[-3]	Non-specific	178266	95	934	1.02365e-102	317.37	PLN02660	PLN02660	-	381756
+1	Query_1[-3]	Non-specific	237393	110	940	4.05989e-97	311.044	PRK13477	PRK13477	C	45
+1	Query_1[-3]	Non-specific	185678	359	871	5.4363e-22	92.5033	cd02039	cytidylyltransferase_like	-	381756
+1	Query_1[-3]	Non-specific	173912	371	871	3.21436e-21	89.135	cd02156	nt_trans	-	381756
+1	Query_1[-3]	Non-specific	272920	740	874	0.000242724	39.5977	TIGR00125	cyt_tran_rel	C	381756
+ENDDOMAINS
+SUPERFAMILIES
+1	Query_1	Superfamily	389746	955	1743	1.83599e-153	447.714	cl21457	TIM	-	-
+1	Query_1	Superfamily	391965	955	1740	6.06922e-158	459.144	cl29015	ICL_KPHMT	-	-
+1	Query_1	Superfamily	382530	1861	2346	8.97879e-98	309.794	cl01416	Fimbrial	N	-
+1	Query_1	Superfamily	381756	92	934	1.26258e-161	469.212	cl00015	nt_trans	-	-
+ENDSUPERFAMILIES
+SITES
+1	Query_1[-1]	Specific	active site	T1680-1678,L1623-1621,G1617-1615,D1614-1612,S1611-1609,D1497-1495,K1413-1411,H1341-1339,P1326-1324,E1206-1204,I1113-1111,V1107-1105	12	0	119342
+1	Query_1[-1]	Specific	metal binding site	D1614-1612,D1497-1495,K1413-1411	3	0	119342
+1	Query_1[-1]	Specific	oligomerization interface	I1731-1729,A1728-1726,D1671-1669,Y1668-1666,S1665-1663,F1662-1660,L1653-1651,L1608-1606,M1602-1600,T1599-1597,V1596-1594,Q1593-1591,G1590-1588,H1587-1585,L1575-1573,P1572-1570,D1557-1555,Y1548-1546,H1545-1543,A1536-1534,R1527-1525,F1488-1486,M1485-1483,F1458-1456,A1446-1444,M1437-1435,R1434-1432,N1422-1420,T1368-1366,E1365-1363,R1362-1360,A1359-1357,V1356-1354,P1353-1351,Q1323-1321,S1320-1318,N1314-1312,I1311-1309,F1308-1306,G1305-1303,Q1221-1219,H1101-1099,F1092-1090,G1089-1087,L1047-1045,T1038-1036,G1035-1033,D1032-1030,I1029-1027,R1026-1024	50	0	119342
+1	Query_1[-3]	Specific	active site	P859-857,T856-854,M853-851,G850-848,H841-839,G835-833,H832-830,L823-821,N769-767,Q760-758,Y730-728,V553-551,I544-542,V541-539,F499-497,G496-494,K490-488,D487-485,Q478-476,P415-413,I412-410,M409-407,L385-383,S382-380,S379-377,R376-374	26	0	185673
+1	Query_1[-3]	Specific	pantoate-binding site	P859-857,M853-851,N769-767,Q760-758,I544-542,V541-539,L532-530,Q478-476	8	0	185673
+1	Query_1[-3]	Specific	ATP-binding site	P859-857,T856-854,M853-851,H841-839,H832-830,L823-821,Q760-758,I544-542,V541-539,F499-497,G496-494,K490-488,D487-485,Q478-476,I412-410,M409-407,A388-386,L385-383	18	0	185673
+1	Query_1[-3]	Specific	HXXH motif	H841-839,D838-836,G835-833,H832-830	4	0	185673
+ENDSITES
+ENDQUERY
+ENDSESSION	1
+ENDDATA

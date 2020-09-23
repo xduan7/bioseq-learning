@@ -1,0 +1,6 @@
+hit_type,reading_frame,short_name,accession,pssm_id,start,end,e_value,bitscore,incomplete,superfamily_short_name,superfamily_accession,superfamily_pssm_id
+Non-specific,2,MobA_MobL,pfam03389,367473,593,1120,9.392109999999999e-64,209.44299999999998,-,-,-,-
+Non-specific,2,TraA_Ti,TIGR02768,274289,539,1336,1.76031e-53,195.41,C,-,-,-
+Non-specific,2,PRK13889,PRK13889,237546,539,1120,4.56392e-47,178.345,C,-,-,-
+Non-specific,2,PRK13826,PRK13826,237524,539,1297,4.6314e-26,114.10700000000001,C,-,-,-
+Non-specific,2,RecD,COG0507,223581,743,1177,0.000143207,44.7889,C,-,-,-

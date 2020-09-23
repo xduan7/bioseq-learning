@@ -1,0 +1,52 @@
+#Post-RPSBLAST Processing Utility
+
+#Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000131.ans
+#Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000131.txt
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#E-Value cutoff:	0.01
+#Redundancy:	Full
+#Data requested:	Domain hits and site annotations
+#Output format -- tab-delimited table
+#Show superfamilies: YES
+#DATA
+#SESSION	<session-ordinal>	<program>	<database>	<score-matrix>	<evalue-threshold>
+#QUERY	<query-id>	<seq-type>	<seq-length>	<definition-line>
+#DOMAINS
+#<session-ordinal>	<query-id[readingframe]>	<hit-type>	<PSSM-ID>	<from>	<to>	<E-Value>	<bitscore>	<accession>	<short-name>	<incomplete>	<superfamily PSSM-ID>
+#more such lines......
+#ENDDOMAINS
+#SITES
+#<session-ordinal>	<query-id[readingframe]>	<annot-type>	<title>	<residue(coordinates)>	<complete-size>	<mapped-size>	<source-domain>
+#more such lines......
+#ENDSITES
+#MOTIFS
+#<session-ordinal>	<query-id[readingframe]>	<title>	<from>	<to>	<source-domain>
+#more such lines......
+#ENDMOTIFS
+#ENDQUERY	<query-id>
+#more query sections..
+#ENDSESSION	<session-ordinal>
+#more session sections..
+#ENDDATA
+#=====================================================================
+DATA
+SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+QUERY	Query_1	Nucleotide	2251	AXOA01000131   Escherichia coli GSK202B contig131, whole genome shotgun sequence.   [Escherichia coli GSK202B | 562.2285]
+DOMAINS
+1	Query_1[1]	Specific	225027	1246	2031	2.64637e-79	254.885	COG2116	FocA	-	382287
+1	Query_1[1]	Specific	376497	1285	1998	8.86843e-51	177.288	pfam01226	Form_Nir_trans	-	382287
+1	Query_1[1]	Non-specific	273269	1342	1992	1.40651e-09	58.841	TIGR00790	fnt	-	382287
+1	Query_1[1]	Non-specific	274951	1459	1992	1.41181e-06	50.4389	TIGR04060	formate_focA	N	382287
+1	Query_1[1]	Non-specific	236741	1	54	0.000975954	42.0057	PRK10716	PRK10716	N	389765
+1	Query_1[-1]	Specific	185047	122	874	0	559.308	PRK15091	PRK15091	-	382364
+1	Query_1[-1]	Specific	225409	122	868	1.70592e-114	345.841	COG2853	VacJ	-	382364
+1	Query_1[-1]	Specific	377309	206	793	1.80828e-90	281.293	pfam04333	MlaA	-	382364
+ENDDOMAINS
+SUPERFAMILIES
+1	Query_1	Superfamily	382287	1246	2031	2.64637e-79	254.885	cl00927	Form_Nir_trans	-	-
+1	Query_1	Superfamily	389765	1	54	0.000975954	42.0057	cl21487	OM_channels	N	-
+1	Query_1	Superfamily	382364	122	874	0	559.308	cl01073	MlaA	-	-
+ENDSUPERFAMILIES
+ENDQUERY
+ENDSESSION	1
+ENDDATA

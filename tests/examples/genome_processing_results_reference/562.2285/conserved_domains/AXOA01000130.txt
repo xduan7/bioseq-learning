@@ -1,0 +1,86 @@
+#Post-RPSBLAST Processing Utility
+
+#Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000130.ans
+#Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000130.txt
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#E-Value cutoff:	0.01
+#Redundancy:	Full
+#Data requested:	Domain hits and site annotations
+#Output format -- tab-delimited table
+#Show superfamilies: YES
+#DATA
+#SESSION	<session-ordinal>	<program>	<database>	<score-matrix>	<evalue-threshold>
+#QUERY	<query-id>	<seq-type>	<seq-length>	<definition-line>
+#DOMAINS
+#<session-ordinal>	<query-id[readingframe]>	<hit-type>	<PSSM-ID>	<from>	<to>	<E-Value>	<bitscore>	<accession>	<short-name>	<incomplete>	<superfamily PSSM-ID>
+#more such lines......
+#ENDDOMAINS
+#SITES
+#<session-ordinal>	<query-id[readingframe]>	<annot-type>	<title>	<residue(coordinates)>	<complete-size>	<mapped-size>	<source-domain>
+#more such lines......
+#ENDSITES
+#MOTIFS
+#<session-ordinal>	<query-id[readingframe]>	<title>	<from>	<to>	<source-domain>
+#more such lines......
+#ENDMOTIFS
+#ENDQUERY	<query-id>
+#more query sections..
+#ENDSESSION	<session-ordinal>
+#more session sections..
+#ENDDATA
+#=====================================================================
+DATA
+SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+QUERY	Query_1	Nucleotide	2260	AXOA01000130   Escherichia coli GSK202B contig130, whole genome shotgun sequence.   [Escherichia coli GSK202B | 562.2285]
+DOMAINS
+1	Query_1[1]	Specific	183194	277	1521	0	798.231	PRK11556	PRK11556	-	45
+1	Query_1[1]	Non-specific	273776	460	1449	8.85604e-75	244.917	TIGR01730	RND_mfp	-	45
+1	Query_1[1]	Specific	223914	442	1458	2.11791e-50	180.676	COG0845	AcrA	-	45
+1	Query_1[1]	Non-specific	169982	424	1473	8.86892e-41	153.796	PRK09578	PRK09578	-	45
+1	Query_1[1]	Non-specific	184990	391	1479	2.06519e-39	150.25	PRK15030	PRK15030	-	45
+1	Query_1[1]	Non-specific	137559	544	1479	2.46342e-38	146.784	PRK09859	PRK09859	-	45
+1	Query_1[1]	Specific	366149	469	1401	1.93046e-32	128.305	pfam00529	HlyD	-	45
+1	Query_1[1]	Non-specific	380145	514	1479	1.60457e-31	126.874	NF000247	MexA	-	45
+1	Query_1[1]	Non-specific	183211	514	1404	1.83176e-22	99.8487	PRK11578	PRK11578	-	45
+1	Query_1[1]	Non-specific	273386	592	1422	2.51797e-21	94.4284	TIGR00999	8a0102	-	45
+1	Query_1[1]	Non-specific	224482	526	969	4.99262e-20	92.392	COG1566	EmrA	C	45
+1	Query_1[1]	Non-specific	273385	526	1038	5.32313e-17	82.9197	TIGR00998	8a0101	C	45
+1	Query_1[1]	Non-specific	235136	535	978	2.54397e-15	77.6949	PRK03598	PRK03598	C	45
+1	Query_1[1]	Non-specific	182488	529	1008	2.77474e-15	77.7596	PRK10476	PRK10476	C	45
+1	Query_1[1]	Non-specific	372628	532	681	1.53783e-11	59.4769	pfam13533	Biotin_lipoyl_2	-	386102
+1	Query_1[1]	Non-specific	182548	526	1020	3.27132e-11	65.1474	PRK10559	PRK10559	C	45
+1	Query_1[1]	Non-specific	185090	526	936	3.68768e-11	65.4858	PRK15136	PRK15136	C	45
+1	Query_1[1]	Non-specific	236625	343	1413	6.68081e-07	52.1773	PRK09783	PRK09783	-	45
+1	Query_1[1]	Non-specific	379862	496	1203	3.64624e-06	48.2645	pfam16576	HlyD_D23	-	45
+1	Query_1[1]	Non-specific	379183	865	1185	5.04085e-05	42.7337	pfam13437	HlyD_3	-	386102
+1	Query_1[1]	Non-specific	130902	652	957	0.00011254	45.0006	TIGR01843	type_I_hlyD	NC	45
+1	Query_1[1]	Non-specific	130902	520	744	0.000127064	45.0006	TIGR01843	type_I_hlyD	C	45
+1	Query_1[1]	Non-specific	130902	616	858	0.000211896	44.2302	TIGR01843	type_I_hlyD	NC	45
+1	Query_1[1]	Non-specific	133459	541	630	0.000279167	39.7068	cd06850	biotinyl_domain	N	386102
+1	Query_1[1]	Non-specific	213754	598	1038	0.000349619	43.2767	TIGR02971	heterocyst_DevB	NC	45
+1	Query_1[1]	Non-specific	379183	541	690	0.00178786	38.4965	pfam13437	HlyD_3	C	386102
+1	Query_1[1]	Non-specific	237263	541	636	0.00626682	40.1218	PRK12999	PRK12999	N	393452
+1	Query_1[1]	Non-specific	274787	490	828	0.00636527	39.4423	TIGR03794	NHLM_micro_HlyD	C	45
+1	Query_1[1]	Non-specific	133458	535	630	0.00874767	35.4579	cd06849	lipoyl_domain	N	386102
+1	Query_1[3]	Non-specific	182501	1524	2258	2.38116e-165	504.264	PRK10503	PRK10503	C	45
+1	Query_1[3]	Non-specific	334294	1557	2258	8.60787e-82	281.107	pfam00873	ACR_tran	C	45
+1	Query_1[3]	Specific	223911	1560	2258	1.81917e-78	271.79	COG0841	AcrB	C	45
+1	Query_1[3]	Non-specific	182589	1566	2258	7.93184e-66	236.162	PRK10614	PRK10614	C	45
+1	Query_1[3]	Non-specific	273335	1560	2216	1.43831e-29	125.997	TIGR00915	2A0602	C	45
+1	Query_1[3]	Non-specific	182544	1560	2252	3.0746e-23	105.682	PRK10555	PRK10555	C	45
+1	Query_1[3]	Non-specific	185081	1560	2216	1.37888e-21	100.363	PRK15127	PRK15127	C	45
+1	Query_1[3]	Non-specific	169981	1560	2186	1.40133e-19	94.1488	PRK09577	PRK09577	C	45
+1	Query_1[3]	Non-specific	169983	1566	2258	5.42437e-19	92.2048	PRK09579	PRK09579	C	45
+1	Query_1[3]	Non-specific	226220	1599	2219	8.73308e-18	88.1196	COG3696	CusA	C	45
+1	Query_1[3]	Non-specific	129992	1596	2213	1.05077e-08	58.619	TIGR00914	2A0601	C	45
+1	Query_1[3]	Non-specific	223911	1578	2192	2.24291e-05	47.9888	COG0841	AcrB	NC	45
+ENDDOMAINS
+SUPERFAMILIES
+1	Query_1	Superfamily	386102	532	681	1.53783e-11	59.4769	cl11404	Biotinyl_lipoyl_domains	-	-
+1	Query_1	Superfamily	393452	541	636	0.00626682	40.1218	cl39082	PycA	N	-
+ENDSUPERFAMILIES
+SITES
+ENDSITES
+ENDQUERY
+ENDSESSION	1
+ENDDATA

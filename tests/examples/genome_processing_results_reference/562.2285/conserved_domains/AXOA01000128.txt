@@ -1,0 +1,68 @@
+#Post-RPSBLAST Processing Utility
+
+#Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000128.ans
+#Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000128.txt
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#E-Value cutoff:	0.01
+#Redundancy:	Full
+#Data requested:	Domain hits and site annotations
+#Output format -- tab-delimited table
+#Show superfamilies: YES
+#DATA
+#SESSION	<session-ordinal>	<program>	<database>	<score-matrix>	<evalue-threshold>
+#QUERY	<query-id>	<seq-type>	<seq-length>	<definition-line>
+#DOMAINS
+#<session-ordinal>	<query-id[readingframe]>	<hit-type>	<PSSM-ID>	<from>	<to>	<E-Value>	<bitscore>	<accession>	<short-name>	<incomplete>	<superfamily PSSM-ID>
+#more such lines......
+#ENDDOMAINS
+#SITES
+#<session-ordinal>	<query-id[readingframe]>	<annot-type>	<title>	<residue(coordinates)>	<complete-size>	<mapped-size>	<source-domain>
+#more such lines......
+#ENDSITES
+#MOTIFS
+#<session-ordinal>	<query-id[readingframe]>	<title>	<from>	<to>	<source-domain>
+#more such lines......
+#ENDMOTIFS
+#ENDQUERY	<query-id>
+#more query sections..
+#ENDSESSION	<session-ordinal>
+#more session sections..
+#ENDDATA
+#=====================================================================
+DATA
+SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+QUERY	Query_1	Nucleotide	2540	AXOA01000128   Escherichia coli GSK202B contig128, whole genome shotgun sequence.   [Escherichia coli GSK202B | 562.2285]
+DOMAINS
+1	Query_1[1]	Non-specific	274542	250	1785	0	673.145	TIGR03361	VI_Rhs_Vgr	-	45
+1	Query_1[1]	Specific	226032	241	1848	0	583.137	COG3501	VgrG	-	45
+1	Query_1[1]	Non-specific	273730	286	1731	1.03608e-133	407.245	TIGR01646	vgr_GE	-	45
+1	Query_1[1]	Specific	368682	328	1218	8.77174e-76	248.752	pfam05954	Phage_GPD	-	387678
+1	Query_1[1]	Non-specific	380263	1	168	1.5485e-27	106.594	NF033420	T6SS_PAAR_dom	N	45
+1	Query_1[1]	Specific	269822	1	168	7.98536e-21	87.7206	cd14737	PAAR_1	N	389773
+1	Query_1[1]	Non-specific	269821	1	168	6.48558e-14	67.349	cd14671	PAAR_like	N	389773
+1	Query_1[1]	Non-specific	269827	1	168	7.41064e-12	61.8364	cd14742	PAAR_RHS	N	389773
+1	Query_1[1]	Specific	377514	1	168	3.57166e-11	59.0693	pfam05488	PAAR_motif	N	389773
+1	Query_1[1]	Non-specific	226589	7	168	2.88002e-10	57.8032	COG4104	PAAR	N	45
+1	Query_1[1]	Non-specific	269823	1	159	6.95831e-09	53.79	cd14738	PAAR_2	N	389773
+1	Query_1[1]	Non-specific	269826	1	168	4.15273e-07	48.5426	cd14741	PAAR_5	N	389773
+1	Query_1[1]	Non-specific	269825	1	156	1.31763e-05	45.1123	cd14740	PAAR_4	N	389773
+1	Query_1[1]	Non-specific	222900	1867	2238	1.97283e-05	48.2127	PHA02596	5	N	45
+1	Query_1[1]	Non-specific	222900	1879	2133	2.40318e-05	47.8275	PHA02596	5	N	45
+1	Query_1[1]	Non-specific	269828	1	168	0.000124014	41.1332	cd14743	PAAR_CT_1	N	389773
+1	Query_1[1]	Non-specific	269828	28	168	0.000210564	40.3628	cd14743	PAAR_CT_1	C	389773
+1	Query_1[1]	Non-specific	269829	1	168	0.000603433	39.0747	cd14744	PAAR_CT_2	N	389773
+1	Query_1[1]	Non-specific	269824	1	168	0.000672788	39.264	cd14739	PAAR_3	N	389773
+1	Query_1[1]	Non-specific	269827	28	168	0.000751142	39.1096	cd14742	PAAR_RHS	C	389773
+1	Query_1[1]	Non-specific	269821	28	168	0.000806352	38.8443	cd14671	PAAR_like	C	389773
+1	Query_1[1]	Non-specific	380263	31	162	0.00213286	38.028	NF033420	T6SS_PAAR_dom	C	45
+1	Query_1[1]	Non-specific	269822	28	162	0.00421818	37.2594	cd14737	PAAR_1	C	389773
+ENDDOMAINS
+SUPERFAMILIES
+1	Query_1	Superfamily	387678	328	1218	8.77174e-76	248.752	cl15796	Phage_GPD	-	-
+1	Query_1	Superfamily	389773	1	168	7.98536e-21	87.7206	cl21497	PAAR_like	N	-
+ENDSUPERFAMILIES
+SITES
+ENDSITES
+ENDQUERY
+ENDSESSION	1
+ENDDATA

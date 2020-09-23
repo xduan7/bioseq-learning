@@ -1,0 +1,17 @@
+hit_type,reading_frame,short_name,accession,pssm_id,start,end,e_value,bitscore,incomplete,superfamily_short_name,superfamily_accession,superfamily_pssm_id
+Specific,1,Col_Im_like,cd16363,319897,964,1230,3.4815899999999996e-27,104.90100000000001,-,Col_Im_like,cl03164,383264
+Specific,1,Col_Im_like,cd16363,319897,964,1230,3.4815899999999996e-27,104.90100000000001,-,Col_Im_like,cl03164,383264
+Non-specific,1,Colicin_Pyocin,pfam01320,366573,961,1230,1.0416299999999998e-22,92.37,-,Col_Im_like,cl03164,383264
+Non-specific,1,Colicin_Pyocin,pfam01320,366573,961,1230,1.0416299999999998e-22,92.37,-,Col_Im_like,cl03164,383264
+Specific,2,Col_Im_like,cd16363,319897,269,535,2.76438e-33,122.235,-,Col_Im_like,cl03164,383264
+Specific,2,Col_Im_like,cd16363,319897,269,535,2.76438e-33,122.235,-,Col_Im_like,cl03164,383264
+Non-specific,2,Colicin_Pyocin,pfam01320,366573,266,535,8.12981e-27,103.926,-,Col_Im_like,cl03164,383264
+Non-specific,2,Colicin_Pyocin,pfam01320,366573,266,535,8.12981e-27,103.926,-,Col_Im_like,cl03164,383264
+Non-specific,1,PHA02517,PHA02517,222853,1999,2112,1.47253e-12,68.3528,C,-,-,-
+Specific,2,InsE,COG2963,225511,1619,1966,1.70455e-06,47.2245,-,-,-,-
+Superfamily,-,Col_Im_like,cl03164,383264,964,1230,3.4815899999999996e-27,104.90100000000001,-,-,-,-
+Superfamily,-,Col_Im_like,cl03164,383264,269,535,2.76438e-33,122.235,-,-,-,-
+Superfamily,-,HTH,cl21459,389747,1616,1876,4.7352200000000004e-05,41.9532,-,-,-,-
+Superfamily,-,HNHc,cl00083,381794,114,248,1.34203e-05,42.843999999999994,N,-,-,-
+Non-specific,2,HTH_Tnp_1,pfam01527,366690,1616,1876,4.7352200000000004e-05,41.9532,-,HTH,cl21459,389747
+Specific,3,HNHc,cd00085,238038,114,248,1.34203e-05,42.843999999999994,N,HNHc,cl00083,381794

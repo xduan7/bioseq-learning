@@ -1,0 +1,12 @@
+hit_type,reading_frame,short_name,accession,pssm_id,start,end,e_value,bitscore,incomplete,superfamily_short_name,superfamily_accession,superfamily_pssm_id
+Specific,1,FocA,COG2116,225027,1246,2031,2.6463699999999996e-79,254.885,-,Form_Nir_trans,cl00927,382287
+Specific,1,Form_Nir_trans,pfam01226,376497,1285,1998,8.868429999999999e-51,177.28799999999998,-,Form_Nir_trans,cl00927,382287
+Non-specific,1,fnt,TIGR00790,273269,1342,1992,1.40651e-09,58.841,-,Form_Nir_trans,cl00927,382287
+Non-specific,1,formate_focA,TIGR04060,274951,1459,1992,1.41181e-06,50.4389,N,Form_Nir_trans,cl00927,382287
+Non-specific,1,PRK10716,PRK10716,236741,1,54,0.0009759539999999999,42.0057,N,OM_channels,cl21487,389765
+Specific,-1,PRK15091,PRK15091,185047,122,874,0.0,559.308,-,MlaA,cl01073,382364
+Specific,-1,VacJ,COG2853,225409,122,868,1.70592e-114,345.841,-,MlaA,cl01073,382364
+Specific,-1,MlaA,pfam04333,377309,206,793,1.8082799999999998e-90,281.293,-,MlaA,cl01073,382364
+Superfamily,-,Form_Nir_trans,cl00927,382287,1246,2031,2.6463699999999996e-79,254.885,-,-,-,-
+Superfamily,-,OM_channels,cl21487,389765,1,54,0.0009759539999999999,42.0057,N,-,-,-
+Superfamily,-,MlaA,cl01073,382364,122,874,0.0,559.308,-,-,-,-

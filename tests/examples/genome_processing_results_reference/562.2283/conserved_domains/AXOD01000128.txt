@@ -1,0 +1,58 @@
+#Post-RPSBLAST Processing Utility
+
+#Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2283/conserved_domains/AXOD01000128.ans
+#Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2283/conserved_domains/AXOD01000128.txt
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#E-Value cutoff:	0.01
+#Redundancy:	Full
+#Data requested:	Domain hits and site annotations
+#Output format -- tab-delimited table
+#Show superfamilies: YES
+#DATA
+#SESSION	<session-ordinal>	<program>	<database>	<score-matrix>	<evalue-threshold>
+#QUERY	<query-id>	<seq-type>	<seq-length>	<definition-line>
+#DOMAINS
+#<session-ordinal>	<query-id[readingframe]>	<hit-type>	<PSSM-ID>	<from>	<to>	<E-Value>	<bitscore>	<accession>	<short-name>	<incomplete>	<superfamily PSSM-ID>
+#more such lines......
+#ENDDOMAINS
+#SITES
+#<session-ordinal>	<query-id[readingframe]>	<annot-type>	<title>	<residue(coordinates)>	<complete-size>	<mapped-size>	<source-domain>
+#more such lines......
+#ENDSITES
+#MOTIFS
+#<session-ordinal>	<query-id[readingframe]>	<title>	<from>	<to>	<source-domain>
+#more such lines......
+#ENDMOTIFS
+#ENDQUERY	<query-id>
+#more query sections..
+#ENDSESSION	<session-ordinal>
+#more session sections..
+#ENDDATA
+#=====================================================================
+DATA
+SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+QUERY	Query_1	Nucleotide	2114	AXOD01000128   Escherichia coli GSK2023 contig128, whole genome shotgun sequence.   [Escherichia coli GSK2023 | 562.2283]
+DOMAINS
+1	Query_1[1]	Specific	319897	964	1230	3.48159e-27	104.901	cd16363	Col_Im_like	-	383264
+1	Query_1[1]	Non-specific	366573	961	1230	1.04163e-22	92.37	pfam01320	Colicin_Pyocin	-	383264
+1	Query_1[1]	Non-specific	222853	1999	2112	1.47253e-12	68.3528	PHA02517	PHA02517	C	45
+1	Query_1[2]	Specific	319897	269	535	2.76438e-33	122.235	cd16363	Col_Im_like	-	383264
+1	Query_1[2]	Non-specific	366573	266	535	8.12981e-27	103.926	pfam01320	Colicin_Pyocin	-	383264
+1	Query_1[2]	Specific	225511	1619	1966	1.70455e-06	47.2245	COG2963	InsE	-	45
+1	Query_1[2]	Non-specific	366690	1616	1876	4.73522e-05	41.9532	pfam01527	HTH_Tnp_1	-	389747
+1	Query_1[3]	Specific	238038	114	248	1.34203e-05	42.844	cd00085	HNHc	N	381794
+ENDDOMAINS
+SUPERFAMILIES
+1	Query_1	Superfamily	383264	964	1230	3.48159e-27	104.901	cl03164	Col_Im_like	-	-
+1	Query_1	Superfamily	383264	269	535	2.76438e-33	122.235	cl03164	Col_Im_like	-	-
+1	Query_1	Superfamily	389747	1616	1876	4.73522e-05	41.9532	cl21459	HTH	-	-
+1	Query_1	Superfamily	381794	114	248	1.34203e-05	42.844	cl00083	HNHc	N	-
+ENDSUPERFAMILIES
+SITES
+1	Query_1[1]	Specific	heterodimer interface	T1021-1023,N1024-1026,D1066-1068,W1075-1077,D1078-1080,E1087-1089,E1090-1092,T1099-1101,L1120-1122,M1123-1125,S1126-1128,D1129-1131,I1135-1137,Y1138-1140,Y1141-1143,P1144-1146,D1162-1164	17	0	319897
+1	Query_1[2]	Specific	heterodimer interface	R326-328,S329-331,E371-373,W380-382,D383-385,V392-394,D395-397,I404-406,S425-427,G428-430,S431-433,D434-436,I440-442,F443-445,Y446-448,P449-451,D467-469	17	0	319897
+1	Query_1[3]	Specific	active site	Q153-155,H159-161,H162-164,R165-167,A171-173,N207-209,L210-212,T222-224,P225-227,H234-236,H246-248	11	0	238038
+ENDSITES
+ENDQUERY
+ENDSESSION	1
+ENDDATA

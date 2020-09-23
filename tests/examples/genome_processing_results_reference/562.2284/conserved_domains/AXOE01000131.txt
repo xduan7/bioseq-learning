@@ -1,0 +1,74 @@
+#Post-RPSBLAST Processing Utility
+
+#Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2284/conserved_domains/AXOE01000131.ans
+#Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2284/conserved_domains/AXOE01000131.txt
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#E-Value cutoff:	0.01
+#Redundancy:	Full
+#Data requested:	Domain hits and site annotations
+#Output format -- tab-delimited table
+#Show superfamilies: YES
+#DATA
+#SESSION	<session-ordinal>	<program>	<database>	<score-matrix>	<evalue-threshold>
+#QUERY	<query-id>	<seq-type>	<seq-length>	<definition-line>
+#DOMAINS
+#<session-ordinal>	<query-id[readingframe]>	<hit-type>	<PSSM-ID>	<from>	<to>	<E-Value>	<bitscore>	<accession>	<short-name>	<incomplete>	<superfamily PSSM-ID>
+#more such lines......
+#ENDDOMAINS
+#SITES
+#<session-ordinal>	<query-id[readingframe]>	<annot-type>	<title>	<residue(coordinates)>	<complete-size>	<mapped-size>	<source-domain>
+#more such lines......
+#ENDSITES
+#MOTIFS
+#<session-ordinal>	<query-id[readingframe]>	<title>	<from>	<to>	<source-domain>
+#more such lines......
+#ENDMOTIFS
+#ENDQUERY	<query-id>
+#more query sections..
+#ENDSESSION	<session-ordinal>
+#more session sections..
+#ENDDATA
+#=====================================================================
+DATA
+SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+QUERY	Query_1	Nucleotide	1873	AXOE01000131   Escherichia coli GSK2024 contig131, whole genome shotgun sequence.   [Escherichia coli GSK2024 | 562.2284]
+DOMAINS
+1	Query_1[-1]	Specific	273805	2	1801	3.23156e-148	443.392	TIGR01783	TonB-siderophor	-	389765
+1	Query_1[-1]	Specific	238657	11	1789	8.26678e-78	259.306	cd01347	ligand_gated_channel	-	389765
+1	Query_1[-1]	Specific	224544	5	1873	3.41948e-45	171.609	COG1629	CirA	-	45
+1	Query_1[-1]	Non-specific	273808	26	1846	5.32936e-27	116.358	TIGR01786	TonB-hemlactrns	-	45
+1	Query_1[-1]	Non-specific	273807	2	1846	2.98616e-26	113.641	TIGR01785	TonB-hemin	-	45
+1	Query_1[-1]	Specific	366183	2	1162	5.53114e-18	86.6831	pfam00593	TonB_dep_Rec	-	389765
+1	Query_1[-1]	Non-specific	369481	1499	1807	1.89964e-15	72.3034	pfam07715	Plug	-	390131
+1	Query_1[-1]	Non-specific	226664	1232	1873	2.40956e-15	79.3917	COG4206	BtuB	C	389765
+1	Query_1[-1]	Non-specific	227113	227	1780	6.71575e-15	78.2461	COG4772	FecA	C	45
+1	Query_1[-1]	Non-specific	273802	596	1846	2.10399e-14	76.4425	TIGR01779	TonB-B12	C	45
+1	Query_1[-1]	Non-specific	227112	1076	1873	1.35829e-12	70.5138	COG4771	FepA	C	45
+1	Query_1[-1]	Non-specific	236646	1349	1873	4.04702e-12	69.143	PRK10064	PRK10064	C	45
+1	Query_1[-1]	Non-specific	236730	1430	1864	1.8705e-09	60.3912	PRK10641	btuB	C	45
+1	Query_1[-1]	Non-specific	184080	1436	1873	3.55743e-09	59.7889	PRK13483	PRK13483	C	45
+1	Query_1[-1]	Non-specific	236643	1409	1759	5.08251e-08	55.9207	PRK10044	PRK10044	C	45
+1	Query_1[-1]	Non-specific	237595	1370	1576	2.18608e-07	54.0366	PRK14050	PRK14050	NC	45
+1	Query_1[-1]	Non-specific	139606	1475	1849	4.78329e-07	52.7166	PRK13486	PRK13486	C	45
+1	Query_1[-1]	Non-specific	184104	1436	1873	6.12586e-07	52.4628	PRK13513	PRK13513	C	45
+1	Query_1[-1]	Non-specific	139605	1460	1864	4.25519e-06	49.6203	PRK13484	PRK13484	C	45
+1	Query_1[-1]	Non-specific	227115	1325	1870	1.01885e-05	48.679	COG4774	Fiu	C	45
+1	Query_1[-1]	Non-specific	237410	1298	1711	1.13122e-05	48.4872	PRK13524	PRK13524	C	45
+1	Query_1[-1]	Non-specific	273804	5	1423	1.13779e-05	48.4849	TIGR01782	TonB-Xanth-Caul	N	45
+1	Query_1[-1]	Non-specific	227114	1313	1801	2.92023e-05	47.0475	COG4773	FhuE	C	389765
+1	Query_1[-1]	Non-specific	182105	1415	1834	0.000172405	44.412	PRK09840	PRK09840	C	45
+1	Query_1[-1]	Non-specific	274948	1469	1744	0.000615251	42.9625	TIGR04056	OMP_RagA_SusC	C	45
+1	Query_1[-1]	Non-specific	237413	1475	1711	0.00194134	41.2804	PRK13528	PRK13528	C	45
+1	Query_1[-1]	Non-specific	367457	350	679	0.00334136	40.0561	pfam03349	Toluene_X	NC	389765
+ENDDOMAINS
+SUPERFAMILIES
+1	Query_1	Superfamily	389765	2	1801	3.23156e-148	443.392	cl21487	OM_channels	-	-
+1	Query_1	Superfamily	390131	1499	1807	1.89964e-15	72.3034	cl23850	Plug	-	-
+ENDSUPERFAMILIES
+SITES
+1	Query_1[-1]	Specific	N-terminal plug	T1789-1787,T1786-1784,W1783-1781,V1780-1778,I1777-1775,E1774-1772,N1771-1769,A1768-1766,E1765-1763,L1762-1760,D1726-1724,A1723-1721,L1720-1718,A1717-1715,Q1714-1712,I1708-1706,P1705-1703,G1702-1700,L1699-1697,D1696-1694,M1663-1661,N1660-1658,V1657-1655,R1654-1652,G1651-1649,R1648-1646,V1636-1634,L1633-1631,V1630-1628,D1627-1625,G1624-1622,V1621-1619,R1618-1616,L1615-1613,P1570-1568,F1567-1565,N1564-1562,I1561-1559,D1558-1556,H1555-1553,I1552-1550,E1549-1547,V1546-1544,I1543-1541,S1540-1538,T1507-1505,G1504-1502,G1501-1499,L1498-1496,I1495-1493,N1492-1490,I1489-1487,V1486-1484,T1483-1481	54	0	238657
+1	Query_1[-1]	Specific	ligand-binding site	L976-974,Q910-908	2	0	238657
+ENDSITES
+ENDQUERY
+ENDSESSION	1
+ENDDATA

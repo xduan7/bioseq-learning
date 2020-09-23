@@ -1,0 +1,73 @@
+#Post-RPSBLAST Processing Utility
+
+#Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2284/conserved_domains/AXOE01000128.ans
+#Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2284/conserved_domains/AXOE01000128.txt
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#E-Value cutoff:	0.01
+#Redundancy:	Full
+#Data requested:	Domain hits and site annotations
+#Output format -- tab-delimited table
+#Show superfamilies: YES
+#DATA
+#SESSION	<session-ordinal>	<program>	<database>	<score-matrix>	<evalue-threshold>
+#QUERY	<query-id>	<seq-type>	<seq-length>	<definition-line>
+#DOMAINS
+#<session-ordinal>	<query-id[readingframe]>	<hit-type>	<PSSM-ID>	<from>	<to>	<E-Value>	<bitscore>	<accession>	<short-name>	<incomplete>	<superfamily PSSM-ID>
+#more such lines......
+#ENDDOMAINS
+#SITES
+#<session-ordinal>	<query-id[readingframe]>	<annot-type>	<title>	<residue(coordinates)>	<complete-size>	<mapped-size>	<source-domain>
+#more such lines......
+#ENDSITES
+#MOTIFS
+#<session-ordinal>	<query-id[readingframe]>	<title>	<from>	<to>	<source-domain>
+#more such lines......
+#ENDMOTIFS
+#ENDQUERY	<query-id>
+#more query sections..
+#ENDSESSION	<session-ordinal>
+#more session sections..
+#ENDDATA
+#=====================================================================
+DATA
+SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+QUERY	Query_1	Nucleotide	2160	AXOE01000128   Escherichia coli GSK2024 contig128, whole genome shotgun sequence.   [Escherichia coli GSK2024 | 562.2284]
+DOMAINS
+1	Query_1[2]	Specific	182810	929	2152	0	822.563	PRK10885	cca	-	45
+1	Query_1[2]	Non-specific	237338	929	2143	0	533.154	PRK13298	PRK13298	-	45
+1	Query_1[2]	Specific	182809	242	859	3.69306e-131	385.931	PRK10884	PRK10884	-	45
+1	Query_1[2]	Specific	223690	914	2110	2.21912e-130	392.156	COG0617	PcnB	-	45
+1	Query_1[2]	Non-specific	139469	920	1942	1.51798e-93	294.981	PRK13297	PRK13297	-	45
+1	Query_1[2]	Non-specific	106256	926	1576	1.63512e-86	276.481	PRK13296	PRK13296	C	45
+1	Query_1[2]	Specific	225645	242	856	9.78383e-82	258.095	COG3103	YgiM	-	45
+1	Query_1[2]	Specific	275056	320	769	2.3351e-38	140.914	TIGR04211	SH3_and_anchor	-	45
+1	Query_1[2]	Non-specific	237339	935	1639	4.46667e-38	146.138	PRK13299	PRK13299	C	45
+1	Query_1[2]	Non-specific	131739	923	1858	9.82468e-35	137.935	TIGR02692	tRNA_CCA_actino	C	45
+1	Query_1[2]	Specific	143388	923	1279	5.57594e-30	114.997	cd05398	NT_ClassII-CCAase	-	386233
+1	Query_1[2]	Non-specific	130997	923	1897	2.69046e-27	114.895	TIGR01942	pcnB	-	45
+1	Query_1[2]	Non-specific	366784	932	1291	6.7662e-20	85.789	pfam01743	PolyA_pol	-	389839
+1	Query_1[2]	Non-specific	236939	923	1567	5.32074e-15	77.8682	PRK11623	pcnB	C	45
+1	Query_1[2]	Non-specific	378892	1373	1567	6.24092e-14	66.7206	pfam12627	PolyA_pol_RNAbd	-	45
+1	Query_1[2]	Specific	214600	308	484	1.70429e-09	54.2612	smart00287	SH3b	-	388381
+1	Query_1[2]	Non-specific	366867	1607	1912	7.35082e-08	51.0803	pfam01966	HD	-	389754
+1	Query_1[2]	Specific	377965	338	499	4.00074e-07	47.2318	pfam08239	SH3_3	-	388381
+1	Query_1[2]	Non-specific	238032	1604	1954	9.48964e-07	48.8749	cd00077	HDc	-	389754
+1	Query_1[2]	Non-specific	273761	1304	1966	5.09972e-06	49.7166	TIGR01693	UTase_glnD	NC	45
+1	Query_1[2]	Non-specific	225400	1223	1969	1.75465e-05	48.1262	COG2844	GlnD	NC	45
+1	Query_1[2]	Specific	214679	1607	1909	2.19975e-05	44.2094	smart00471	HDc	-	389754
+1	Query_1[2]	Non-specific	272994	1616	1813	0.0021161	37.3151	TIGR00277	HDIG	-	389754
+ENDDOMAINS
+SUPERFAMILIES
+1	Query_1	Superfamily	386233	923	1279	5.57594e-30	114.997	cl11966	NT_Pol-beta-like	-	-
+1	Query_1	Superfamily	389754	1607	1912	7.35082e-08	51.0803	cl21469	HDc	-	-
+1	Query_1	Superfamily	389839	932	1291	6.7662e-20	85.789	cl21612	PolyA_pol	-	-
+1	Query_1	Superfamily	388381	308	484	1.70429e-09	54.2612	cl17036	SH3	-	-
+ENDSUPERFAMILIES
+SITES
+1	Query_1[2]	Specific	active site	G944-946,G947-949,R956-958,D959-961,D986-988,D992-994,P1079-1081,E1094-1096,R1109-1111,R1193-1195,R1196-1198,D1199-1201,L1202-1204,N1211-1213	14	0	143388
+1	Query_1[2]	Specific	metal binding triad	D986-988,D992-994,E1094-1096	3	0	143388
+1	Query_1[2]	Specific	NTP binding site	G944-946,G947-949,R956-958,D986-988,D992-994,R1193-1195,R1196-1198,D1199-1201,N1211-1213	9	0	143388
+ENDSITES
+ENDQUERY
+ENDSESSION	1
+ENDDATA

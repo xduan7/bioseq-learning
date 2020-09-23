@@ -1,0 +1,46 @@
+#Post-RPSBLAST Processing Utility
+
+#Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2284/conserved_domains/AXOE01000130.ans
+#Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2284/conserved_domains/AXOE01000130.txt
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#E-Value cutoff:	0.01
+#Redundancy:	Full
+#Data requested:	Domain hits and site annotations
+#Output format -- tab-delimited table
+#Show superfamilies: YES
+#DATA
+#SESSION	<session-ordinal>	<program>	<database>	<score-matrix>	<evalue-threshold>
+#QUERY	<query-id>	<seq-type>	<seq-length>	<definition-line>
+#DOMAINS
+#<session-ordinal>	<query-id[readingframe]>	<hit-type>	<PSSM-ID>	<from>	<to>	<E-Value>	<bitscore>	<accession>	<short-name>	<incomplete>	<superfamily PSSM-ID>
+#more such lines......
+#ENDDOMAINS
+#SITES
+#<session-ordinal>	<query-id[readingframe]>	<annot-type>	<title>	<residue(coordinates)>	<complete-size>	<mapped-size>	<source-domain>
+#more such lines......
+#ENDSITES
+#MOTIFS
+#<session-ordinal>	<query-id[readingframe]>	<title>	<from>	<to>	<source-domain>
+#more such lines......
+#ENDMOTIFS
+#ENDQUERY	<query-id>
+#more query sections..
+#ENDSESSION	<session-ordinal>
+#more session sections..
+#ENDDATA
+#=====================================================================
+DATA
+SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+QUERY	Query_1	Nucleotide	1894	AXOE01000130   Escherichia coli GSK2024 contig130, whole genome shotgun sequence.   [Escherichia coli GSK2024 | 562.2284]
+DOMAINS
+1	Query_1[2]	Non-specific	367473	593	1120	9.39211e-64	209.443	pfam03389	MobA_MobL	-	45
+1	Query_1[2]	Non-specific	274289	539	1336	1.76031e-53	195.41	TIGR02768	TraA_Ti	C	45
+1	Query_1[2]	Non-specific	237546	539	1120	4.56392e-47	178.345	PRK13889	PRK13889	C	45
+1	Query_1[2]	Non-specific	237524	539	1297	4.6314e-26	114.107	PRK13826	PRK13826	C	45
+1	Query_1[2]	Non-specific	223581	743	1177	0.000143207	44.7889	COG0507	RecD	C	45
+ENDDOMAINS
+SUPERFAMILIES
+ENDSUPERFAMILIES
+ENDQUERY
+ENDSESSION	1
+ENDDATA
