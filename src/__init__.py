@@ -35,11 +35,14 @@ SRC_DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 RAW_DATA_DIR_PATH = os.path.join(SRC_DIR_PATH, '../data/raw')
 INTERIM_DATA_DIR_PATH = os.path.join(SRC_DIR_PATH, '../data/interim')
 PROCESSED_DATA_DIR_PATH = os.path.join(SRC_DIR_PATH, '../data/processed')
+DOC_DIR_PATH = os.path.join(SRC_DIR_PATH, '../docs')
 LOG_DIR_PATH = os.path.join(SRC_DIR_PATH, '../logs')
 MODEL_DIR_PATH = os.path.join(SRC_DIR_PATH, '../models')
-# conserved domain database location, ended with Cdd as required by rpsblast
-CDD_DIR_PATH = os.path.abspath(os.path.join(INTERIM_DATA_DIR_PATH, 'CDD/Cdd'))
 
+# conserved domain database location, ended with Cdd as required by rpsblast
+CDD_DIR_PATH = os.path.join(INTERIM_DATA_DIR_PATH, 'CDD/Cdd')
+# conserved domain metadata location, required by rpsbproc
+CDD_DATA_DIR_PATH = os.path.join(INTERIM_DATA_DIR_PATH, 'CDD_metadata')
 
 logging.basicConfig(
     # filename=... (could use config['experiment_name'])

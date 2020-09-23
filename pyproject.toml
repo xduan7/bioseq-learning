@@ -16,7 +16,6 @@ pytest = "^6.0.1"
 biopython = "^1.78"
 jupyterlab = "^2.2.8"
 sklearn = "^0.0"
-# note that 1.2.0 and earlier versions of pands will cause int32 overflown error during pivot_table
 pandas = "^1.1.2"
 seaborn = "^0.11.0"
 umap-learn = "^0.4.6"

@@ -13,8 +13,9 @@ import pandas as pd
 from Bio import SeqIO
 from sklearn.decomposition import PCA
 
-from src import INTERIM_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH
 from src.utilities import create_directory
+from src import INTERIM_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH
+
 
 
 NUM_PCA_COMPONENT = 1024

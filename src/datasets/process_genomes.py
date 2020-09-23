@@ -118,10 +118,16 @@ def process_genome(
             os.path.join(conserved_domain_dir_path, f'{_contig_id}.ans')
         _contig_cd_xml_path: str = \
             os.path.join(conserved_domain_dir_path, f'{_contig_id}.xml')
+        _contig_cd_txt_path: str = \
+            os.path.join(conserved_domain_dir_path, f'{_contig_id}.txt')
+        _contig_cd_csv_path: str = \
+            os.path.join(conserved_domain_dir_path, f'{_contig_id}.csv')
         conserved_domain_search(
             nucleotide_seq_path=_contig_seq_path,
             cd_ans_path=_contig_cd_ans_path,
             cd_xml_path=_contig_cd_xml_path,
+            cd_txt_path=_contig_cd_txt_path,
+            cd_csv_path=_contig_cd_csv_path,
         )
 
     # save the genome information in json format
