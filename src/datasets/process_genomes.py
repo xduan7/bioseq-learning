@@ -27,6 +27,7 @@ def process_genome(
         genome_dir_path: str,
         output_dir_path: Optional[str] = None,
         genome_id: Optional[str] = None,
+        no_cd_search: bool = False,
 ):
     """process a PATRIC genome
 
@@ -44,6 +45,9 @@ def process_genome(
     :param genome_id: optional ID for genome ID; using the genome
     directory name if not given
     :type genome_id: str
+    :param no_cd_search: indicator for disabling conserved domain search,
+    which means parsing the contig and genome information only
+    :type no_cd_search: bool
     :return: None
     """
 
@@ -111,24 +115,25 @@ def process_genome(
             _feature_by_accession_path, index=None, sep='\t')
 
     # iterate through all the contigs again for conserved domain search
-    for _contig_id in contig_info_dict.keys():
-        _contig_seq_path: str = \
-            os.path.join(contig_dir_path, f'{_contig_id}.fna')
-        _contig_cd_ans_path: str = \
-            os.path.join(conserved_domain_dir_path, f'{_contig_id}.ans')
-        _contig_cd_xml_path: str = \
-            os.path.join(conserved_domain_dir_path, f'{_contig_id}.xml')
-        _contig_cd_txt_path: str = \
-            os.path.join(conserved_domain_dir_path, f'{_contig_id}.txt')
-        _contig_cd_csv_path: str = \
-            os.path.join(conserved_domain_dir_path, f'{_contig_id}.csv')
-        conserved_domain_search(
-            nucleotide_seq_path=_contig_seq_path,
-            cd_ans_path=_contig_cd_ans_path,
-            cd_xml_path=_contig_cd_xml_path,
-            cd_txt_path=_contig_cd_txt_path,
-            cd_csv_path=_contig_cd_csv_path,
-        )
+    if not no_cd_search:
+        for _contig_id in contig_info_dict.keys():
+            _contig_seq_path: str = \
+                os.path.join(contig_dir_path, f'{_contig_id}.fna')
+            _contig_cd_ans_path: str = \
+                os.path.join(conserved_domain_dir_path, f'{_contig_id}.ans')
+            _contig_cd_xml_path: str = \
+                os.path.join(conserved_domain_dir_path, f'{_contig_id}.xml')
+            _contig_cd_txt_path: str = \
+                os.path.join(conserved_domain_dir_path, f'{_contig_id}.txt')
+            _contig_cd_csv_path: str = \
+                os.path.join(conserved_domain_dir_path, f'{_contig_id}.csv')
+            conserved_domain_search(
+                nucleotide_seq_path=_contig_seq_path,
+                cd_ans_path=_contig_cd_ans_path,
+                cd_xml_path=_contig_cd_xml_path,
+                cd_txt_path=_contig_cd_txt_path,
+                cd_csv_path=_contig_cd_csv_path,
+            )
 
     # save the genome information in json format
     genome_info_path: str = os.path.join(output_dir_path, 'info.json')
@@ -155,6 +160,7 @@ def __process_genome(arg):
 def process_genomes(
         genome_parent_dir_path: str,
         output_parent_dir_path: Optional[str] = None,
+        no_cd_search: bool = False,
         num_workers: int = 1,
 ):
     """process PATRIC genomes in the given parent directory in parallel
@@ -174,7 +180,7 @@ def process_genomes(
     num_workers: int = max(1, min(num_workers, os.cpu_count()))
 
     # get all the paths to genomes, and output paths if possible
-    process_genome_arguments: List[Tuple[str, Optional[str], str]] = []
+    process_genome_arguments: List[Tuple[str, Optional[str], str, bool]] = []
     for _genome_id in os.listdir(genome_parent_dir_path):
         _genome_dir_path: str = \
             os.path.join(genome_parent_dir_path, _genome_id)
@@ -183,7 +189,7 @@ def process_genomes(
                 os.path.join(output_parent_dir_path, _genome_id) \
                 if output_parent_dir_path else None
             process_genome_arguments.append(
-                (_genome_dir_path, _output_dir_path, _genome_id))
+                (_genome_dir_path, _output_dir_path, _genome_id, no_cd_search))
 
     # parallel genome processing with pool
     with Pool(num_workers) as _pool:
@@ -216,6 +222,9 @@ if __name__ == '__main__':
         '-t', '--num_workers', type=int, default=1,
         help='number of workers for parallelization',
     )
+    parser.add_argument(
+        '-n', '--no_cd_search', action='store_true',
+        help='disable the conserved domain searching')
     args = parser.parse_args()
 
     # usage example
