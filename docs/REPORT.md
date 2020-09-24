@@ -61,9 +61,9 @@ I'm sticking with nucleotide sequences for the following reasons:
 ### Visualization and Data Analysis
 -   [ ] conserved domain space visualization (and potentially classification) with PCA, t-SNE, or UMAP 
     -   [ ] featurize conserved domain with statistical distances
-        -   [ ] psiblast/blastp the FASTA of CD sequence representatives
-        -   [x] RSAT compare-matrices (not accepting PSSM format)
-        -   [x] MEME-Tomtom motif comparison (not working because PSSMs have no motif)
+        -   [x] psiblast/blastp the FASTA of CD representatives or master sequences
+        -   [x] ~~RSAT compare-matrices (not accepting PSSM format)~~
+        -   [x] ~~MEME-Tomtom motif comparison (not working because PSSMs have no motif)~~
     -   [ ] featurize conserved domain with descriptors
 -   [ ] genome contigs and genes length histogram (pangenome)
 -   [ ] conserved domain occurrence histogram

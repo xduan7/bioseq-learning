@@ -17,10 +17,8 @@ from src.utilities import create_directory
 from src import INTERIM_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH
 
 
-
 NUM_PCA_COMPONENT = 1024
 ALGN_VALUE = ['seq_identity', 'bitscore', 'e_value'][0]
-
 
 CDD_ID_PATH = os.path.join(INTERIM_DATA_DIR_PATH, 'CDD_metadata/cddid.tbl')
 

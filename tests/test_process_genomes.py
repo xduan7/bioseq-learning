@@ -20,10 +20,8 @@ _GENOME_PARENT_DIR_PATH: str = \
 _OUTPUT_PARENT_DIR_PATH: str = \
     os.path.join(_TEST_EXAMPLES_DIR_PATH, 'genome_processing_results')
 _REFERENCE_OUTPUT_PARENT_DIR_PATH: str = \
-    os.path.join(
-        _TEST_EXAMPLES_DIR_PATH,
-        'genome_processing_results_reference',
-    )
+    os.path.join(_TEST_EXAMPLES_DIR_PATH,
+                 'genome_processing_results_reference')
 
 
 class TestProcessGenomes(unittest.TestCase):
