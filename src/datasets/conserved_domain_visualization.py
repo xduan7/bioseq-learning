@@ -6,6 +6,7 @@ File Description:
 
 """
 import os
+import logging
 
 import numpy as np
 import pandas as pd
@@ -21,12 +22,6 @@ from src import INTERIM_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH, DOC_DIR_PATH
 
 MIN_SUPERFAMILY_SIZE = 128
 
-PCA_N_COMPONENTS_RANGE = list(range(2, 51))
-UMAP_N_NEIGHBORS_RANGE = [
-    (2 ** _i) for _i in range(1, int(np.ceil(np.log2(55000 / 4))))]
-UMAP_MIN_DIST_RANGE = list(np.arange(0.09, 1, 0.1))
-
-
 CDD_SUPERFAMILY_PATH = os.path.join(
     INTERIM_DATA_DIR_PATH, 'CDD_metadata/family_superfamily_links')
 CDD_MASTER_PROCESSED_ALGN_FEAT_PATH = os.path.join(
@@ -35,6 +30,11 @@ CDD_MASTER_PROCESSED_ALGN_FEAT_PATH = os.path.join(
 CDD_TSNE_IMAGE_DIR_PATH = os.path.join(DOC_DIR_PATH, 'images/cdd_tsne')
 CDD_UMAP_IMAGE_DIR_PATH = os.path.join(DOC_DIR_PATH, 'images/cdd_umap')
 
+
+numba_logger = logging.getLogger('numba')
+numba_logger.setLevel(logging.WARNING)
+matplotlib_logger = logging.getLogger('matplotlib')
+matplotlib_logger.setLevel(logging.WARNING)
 
 create_directory(CDD_TSNE_IMAGE_DIR_PATH)
 create_directory(CDD_UMAP_IMAGE_DIR_PATH)
@@ -77,7 +77,9 @@ def visualize_conserved_domains(
         cdd_master_seq_algn_coord = tsne.fit_transform(pca.fit_transform(
             cdd_master_seq_algn_feat_df))
     else:
-        umap = UMAP(**kwargs)
+        # if init option is not specified, it's 'spectral' by default
+        # will throw 'graph is not fully connected' warning and hang
+        umap = UMAP(**kwargs, init='random')
         cdd_master_seq_algn_coord = umap.fit_transform(cdd_master_seq_algn_feat_df)
 
     cdd_master_seq_algn_coord_df = pd.DataFrame(
@@ -112,20 +114,41 @@ def visualize_conserved_domains(
     plt.savefig(os.path.join(
         CDD_TSNE_IMAGE_DIR_PATH if method == 'tsne'
         else CDD_UMAP_IMAGE_DIR_PATH,
-        f'{str(kwargs).replace(" ", "_").replace(":", "_")}.png',
+        f'{str(kwargs).replace(",", "_").replace(":", "_")}.png',
     ))
     plt.cla()
 
+# TODO: add histogram for conserved domains over all (selected) e coli genomes
+# note that 'hit types' should be specified
+# - specific hits
+# - specific/superfamily (superfamily or specific without superfamily) hits
+# - all (specific + non-specific) hits
+# make a table of cols = [specific, specific/superfamily, all]
 
-for _pca_n_components in PCA_N_COMPONENTS_RANGE:
-    visualize_conserved_domains('pca', {'n_components': _pca_n_components})
 
-for _umap_n_neighbors in UMAP_N_NEIGHBORS_RANGE:
-    for _umap_min_dist in UMAP_MIN_DIST_RANGE:
+# script (executable) conserved domain visualization
+if __name__ == '__main__':
+
+    # plot the 2D space of conserved domains with t-SNE
+    PCA_N_COMPONENTS_RANGE = list(range(2, 51))
+    for _pca_n_components in PCA_N_COMPONENTS_RANGE:
         visualize_conserved_domains(
-            'tsne', {
-                'n_neighbors': _umap_n_neighbors,
-                'min_dist': _umap_min_dist,
+            'tsne',
+            {
+                'n_components': _pca_n_components,
             }
         )
 
+    # plot the 2D space of conserved domains with UMAP
+    UMAP_N_NEIGHBORS_RANGE = [
+        (2 ** _i) for _i in
+        range(1, int(np.ceil(np.log2(len(cdd_master_seq_algn_feat_df) / 4))))]
+    UMAP_MIN_DIST_RANGE = list(np.arange(0.09, 1, 0.1))
+    for _umap_n_neighbors in UMAP_N_NEIGHBORS_RANGE:
+        for _umap_min_dist in UMAP_MIN_DIST_RANGE:
+            visualize_conserved_domains(
+                'umap', {
+                    'n_neighbors': _umap_n_neighbors,
+                    'min_dist': _umap_min_dist,
+                }
+            )
