@@ -10,6 +10,7 @@ import random
 import logging
 from typing import Tuple, List, Set, Dict, Union
 
+import torch
 import numpy as np
 from Bio import SeqIO, SeqRecord
 from torch.utils.data import Dataset
@@ -17,7 +18,21 @@ from torch.utils.data import Dataset
 
 MASK_CHAR: str = '*'
 PADDING_CHAR: str = '-'
-NUCLEOTIDE_CHAR_SET: Set[str] = {'a', 't', 'g', 'c', 'A', 'T', 'G', 'C'}
+NUCLEOTIDE_CHAR_SET: Set[str] = {
+    'a', 'A',
+    't', 'T',
+    'g', 'G',
+    'c', 'C',
+}
+NUCLEOTIDE_CHAR_INDEX_DICT: Dict[str, int] = {
+    MASK_CHAR: 5,
+    PADDING_CHAR: 0,
+    'a': 1, 'A': 1,
+    't': 2, 'T': 2,
+    'g': 3, 'G': 3,
+    'c': 4, 'C': 4,
+}
+NUCLEOTIDE_CHAR_VOCAB_SIZE = 6
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -114,14 +129,22 @@ class MaskedGenomeDataset(Dataset):
         _seq: str = _genome_contig_seq[_pos: _pos + self._seq_len]
         _seq_char_list: List[str] = list(_seq)
 
-        # mask the nucleotide dynamically
+        # mask the nucleotide randomly
         _nucleotide_indices = [
             _i for _i, _c in enumerate(_seq_char_list)
             if _c in NUCLEOTIDE_CHAR_SET]
         _masked_indices: List[int] = \
             random.sample(_nucleotide_indices, self._num_masks)
-        for _i in _masked_indices:
-            _seq_char_list[_i] = MASK_CHAR
-        _masked_seq = ''.join(_seq_char_list)
 
-        return _masked_seq
+        # # masked the (not indexed) sequence
+        # for _i in _masked_indices:
+        #     _seq_char_list[_i] = MASK_CHAR
+        # _masked_seq = ''.join(_seq_char_list)
+
+        _indexed_seq = torch.LongTensor(
+            list(map(NUCLEOTIDE_CHAR_INDEX_DICT.get, _seq)))
+
+        _mask = torch.zeros_like(_indexed_seq, dtype=torch.float)
+        _mask.scatter_(0, torch.LongTensor(_masked_indices), float('-inf'))
+
+        return _indexed_seq, _mask

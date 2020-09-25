@@ -31,9 +31,16 @@ class TestMaskedGenomeDataset(unittest.TestCase):
             max_num_paddings=10,
         )
 
-        print(masked_genome_dataset[0])
-        print(masked_genome_dataset[0])
-        print(masked_genome_dataset[1])
+        # TODO: write better test cases if necessary
+        _indexed_seq, _mask = masked_genome_dataset[0]
+        print(_indexed_seq)
+        print(_mask)
+        _indexed_seq, _mask = masked_genome_dataset[0]
+        print(_indexed_seq)
+        print(_mask)
+        _indexed_seq, _mask = masked_genome_dataset[1]
+        print(_indexed_seq)
+        print(_mask)
 
 
 if __name__ == '__main__':
