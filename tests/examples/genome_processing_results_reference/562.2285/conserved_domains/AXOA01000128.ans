@@ -50,8 +50,8 @@ AD86A8CDB9E88924968C25E0AEAE9DBFBAD353D2AA6E84DB6A58034B743269ACB5AA196B9699E4
           }
         }
       },
-      subject database "/Users/xduan7/projects/bioseq-learning/data/interim/CD
-D/Cdd",
+      subject database "/home/xduan7/projects/bioseq-learning/data/interim/CDD
+/Cdd",
       algorithm-options {
         {
           name "EvalueThreshold",
@@ -1881,7 +1881,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 64855787107152, 10, -27 }
+            value real { 648557871071518, 10, -28 }
           },
           {
             id str "bit_score",
@@ -1997,7 +1997,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 806351698377383, 10, -18 }
+            value real { 806351698377384, 10, -18 }
           },
           {
             id str "bit_score",
@@ -2162,7 +2162,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 741064499371652, 10, -26 }
+            value real { 741064499371651, 10, -26 }
           },
           {
             id str "bit_score",
@@ -2278,7 +2278,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 751141510989101, 10, -18 }
+            value real { 751141510989102, 10, -18 }
           },
           {
             id str "bit_score",
@@ -2443,7 +2443,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 357166306029829, 10, -25 }
+            value real { 357166306029828, 10, -25 }
           },
           {
             id str "bit_score",
@@ -2724,7 +2724,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 695830614710569, 10, -23 }
+            value real { 69583061471057, 10, -22 }
           },
           {
             id str "bit_score",
@@ -3799,7 +3799,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 672787686704597, 10, -18 }
+            value real { 672787686704598, 10, -18 }
           },
           {
             id str "bit_score",
@@ -3908,7 +3908,7 @@ D/Cdd",
       {
         lambda { 316903381237961, 10, -15 },
         k { 136031074142982, 10, -15 },
-        h { 413008791961634, 10, -15 },
+        h { 413008791961633, 10, -15 },
         gapped FALSE
       },
       {

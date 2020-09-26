@@ -48,8 +48,8 @@ AE3CCF8E17A7CF95EAE114544DBEDAF7BE035DCDEBBF06919E47A263F4DE95FE47171FC9AA04DE
           }
         }
       },
-      subject database "/Users/xduan7/projects/bioseq-learning/data/interim/CD
-D/Cdd",
+      subject database "/home/xduan7/projects/bioseq-learning/data/interim/CDD
+/Cdd",
       algorithm-options {
         {
           name "EvalueThreshold",
@@ -1219,7 +1219,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 886842544053713, 10, -65 }
+            value real { 886842544053714, 10, -65 }
           },
           {
             id str "bit_score",

@@ -2,7 +2,7 @@
 
 #Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000131.ans
 #Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000131.txt
-#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/data/interim/CDD_metadata
 #E-Value cutoff:	0.01
 #Redundancy:	Full
 #Data requested:	Domain hits and site annotations
@@ -30,7 +30,7 @@
 #ENDDATA
 #=====================================================================
 DATA
-SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+SESSION	1	tblastn	2.10.1+	/home/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
 QUERY	Query_1	Nucleotide	2251	AXOA01000131   Escherichia coli GSK202B contig131, whole genome shotgun sequence.   [Escherichia coli GSK202B | 562.2285]
 DOMAINS
 1	Query_1[1]	Specific	225027	1246	2031	2.64637e-79	254.885	COG2116	FocA	-	382287

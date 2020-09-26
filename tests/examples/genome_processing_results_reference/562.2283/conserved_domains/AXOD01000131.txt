@@ -2,7 +2,7 @@
 
 #Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2283/conserved_domains/AXOD01000131.ans
 #Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2283/conserved_domains/AXOD01000131.txt
-#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/data/interim/CDD_metadata
 #E-Value cutoff:	0.01
 #Redundancy:	Full
 #Data requested:	Domain hits and site annotations
@@ -30,6 +30,6 @@
 #ENDDATA
 #=====================================================================
 DATA
-SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+SESSION	1	tblastn	2.10.1+	/home/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
 ENDSESSION	1
 ENDDATA

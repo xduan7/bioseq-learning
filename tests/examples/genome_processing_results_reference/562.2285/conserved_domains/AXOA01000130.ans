@@ -48,8 +48,8 @@ AE6D2F347F12F52704F967A3B6589282E4A598F06798505E7162637970565AFC4902E056923516
           }
         }
       },
-      subject database "/Users/xduan7/projects/bioseq-learning/data/interim/CD
-D/Cdd",
+      subject database "/home/xduan7/projects/bioseq-learning/data/interim/CDD
+/Cdd",
       algorithm-options {
         {
           name "EvalueThreshold",
@@ -1157,7 +1157,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 793183668139298, 10, -80 }
+            value real { 793183668139299, 10, -80 }
           },
           {
             id str "bit_score",
@@ -1683,7 +1683,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 886891564705652, 10, -55 }
+            value real { 886891564705654, 10, -55 }
           },
           {
             id str "bit_score",
@@ -2093,7 +2093,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 206519270565448, 10, -53 }
+            value real { 206519270565449, 10, -53 }
           },
           {
             id str "bit_score",
@@ -2668,7 +2668,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 193045873887219, 10, -46 }
+            value real { 19304587388722, 10, -45 }
           },
           {
             id str "bit_score",
@@ -6822,7 +6822,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 277473862746296, 10, -29 }
+            value real { 277473862746295, 10, -29 }
           },
           {
             id str "bit_score",
@@ -9710,7 +9710,7 @@ D/Cdd",
           },
           {
             id str "e_value",
-            value real { 178785526837103, 10, -17 }
+            value real { 178785526837104, 10, -17 }
           },
           {
             id str "bit_score",

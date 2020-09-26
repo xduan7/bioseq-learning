@@ -30,7 +30,12 @@ class TestProcessGenomes(unittest.TestCase):
     def test_process_genomes(self):
         """test 'process_genomes' function
         """
-        process_genomes(_GENOME_PARENT_DIR_PATH, _OUTPUT_PARENT_DIR_PATH, 2)
+        process_genomes(
+            genome_parent_dir_path=_GENOME_PARENT_DIR_PATH,
+            output_parent_dir_path=_OUTPUT_PARENT_DIR_PATH,
+            no_cd_search=False,
+            num_workers=2,
+        )
 
         # compare the output with the reference
         # this comparison is flawed because the blast output contains some

@@ -2,7 +2,7 @@
 
 #Input data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000128.ans
 #Output data file:	/home/xduan7/projects/bioseq-learning/tests/examples/genome_processing_results/562.2285/conserved_domains/AXOA01000128.txt
-#Annotation data at:	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD_metadata
+#Annotation data at:	/home/xduan7/projects/bioseq-learning/data/interim/CDD_metadata
 #E-Value cutoff:	0.01
 #Redundancy:	Full
 #Data requested:	Domain hits and site annotations
@@ -30,7 +30,7 @@
 #ENDDATA
 #=====================================================================
 DATA
-SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+SESSION	1	tblastn	2.10.1+	/home/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
 QUERY	Query_1	Nucleotide	2540	AXOA01000128   Escherichia coli GSK202B contig128, whole genome shotgun sequence.   [Escherichia coli GSK202B | 562.2285]
 DOMAINS
 1	Query_1[1]	Non-specific	274542	250	1785	0	673.145	TIGR03361	VI_Rhs_Vgr	-	45

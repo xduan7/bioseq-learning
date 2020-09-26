@@ -9,6 +9,7 @@ import os
 import re
 from io import StringIO
 from typing import Optional
+from subprocess import Popen, PIPE
 
 import pandas as pd
 from Bio.Blast.Applications import \
@@ -164,7 +165,6 @@ def conserved_domain_search(
 
     # return of the result BLAST archive (ASN.1) already exists
     if not os.path.exists(cd_ans_path):
-
         rpstblastn_cmd = NcbirpstblastnCommandline(
             query=nucleotide_seq_path,
             **RPSTBLASTN_KWARGS,
@@ -178,7 +178,6 @@ def conserved_domain_search(
 
     # translate ANS to XML format for easier Biopython parsing
     if cd_xml_path and (not os.path.exists(cd_xml_path)):
-
         formatter_cmd = NcbiblastformatterCommandline(
             archive=cd_ans_path,
             out=cd_xml_path,
@@ -188,17 +187,22 @@ def conserved_domain_search(
 
     # post-rpsblast processing with rpsbproc and store in text format
     if cd_txt_path and (not os.path.exists(cd_txt_path)):
-        rpsbproc_cmd = os.popen(
-            f'rpsbproc '
-            f'--infile {cd_ans_path} '
-            f'--outfile {cd_txt_path} '
-            f'--data-path {CDD_DATA_DIR_PATH} '
-            f'--data-mode full '
-            f'--evalue {RPSTBLASTN_KWARGS["evalue"]} '
-            # f'--show-families '
+        rpsbproc_cmd = Popen(
+            [
+                f'rpsbproc',
+                f'--infile', f'{cd_ans_path}',
+                f'--outfile', f'{cd_txt_path}',
+                f'--data-path', f'{CDD_DATA_DIR_PATH}',
+                f'--data-mode', 'full',
+                f'--evalue', f'{RPSTBLASTN_KWARGS["evalue"]}',
+                f'--show-families',
+                f'--quiet',
+            ],
+            stdout=PIPE,
+            stderr=PIPE,
+            stdin=PIPE,
         )
-        _ = rpsbproc_cmd.read()
-        rpsbproc_cmd.close()
+        rpsbproc_cmd.communicate()
 
     # parse the post-rpsblast processing results and store in CSV format
     if cd_csv_path and (not os.path.exists(cd_csv_path)):

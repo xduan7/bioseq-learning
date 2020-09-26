@@ -30,7 +30,7 @@
 #ENDDATA
 #=====================================================================
 DATA
-SESSION	1	tblastn	2.10.1+	/Users/xduan7/projects/bioseq-learning/data/interim/CDD/Cdd	BLOSUM62	0.01
+SESSION	1	tblastn	2.10.1+	/home/xduan7/projects/bioseq-learning/src/../data/interim/CDD/Cdd	BLOSUM62	0.01
 QUERY	Query_1	Nucleotide	2114	AXOD01000128   Escherichia coli GSK2023 contig128, whole genome shotgun sequence.   [Escherichia coli GSK2023 | 562.2283]
 DOMAINS
 1	Query_1[1]	Specific	319897	964	1230	3.48159e-27	104.901	cd16363	Col_Im_like	-	383264
