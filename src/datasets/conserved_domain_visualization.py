@@ -20,12 +20,12 @@ from src.utilities import create_directory
 from src import INTERIM_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH, DOC_DIR_PATH
 
 
-MIN_SUPERFAMILY_SIZE = 128
+MIN_SUPERFAMILY_SIZE = 100
 
 CDD_SUPERFAMILY_PATH = os.path.join(
     INTERIM_DATA_DIR_PATH, 'CDD_metadata/family_superfamily_links')
-CDD_MASTER_PROCESSED_ALGN_FEAT_PATH = os.path.join(
-    PROCESSED_DATA_DIR_PATH, 'CDD_alignment/cdd_master_alignment_feature.csv')
+CDD_MASTER_PROCESSED_PAIRWISE_ALGN_PATH = os.path.join(
+    PROCESSED_DATA_DIR_PATH, 'CDD_alignment/cdd_master_pairwise_alignment.npy')
 
 CDD_TSNE_IMAGE_DIR_PATH = os.path.join(DOC_DIR_PATH, 'images/cdd_tsne')
 CDD_UMAP_IMAGE_DIR_PATH = os.path.join(DOC_DIR_PATH, 'images/cdd_umap')
@@ -51,9 +51,13 @@ cdd_superfamily_df = pd.read_table(
     ],
 )
 
-cdd_master_seq_algn_feat_df = pd.read_csv(
-    CDD_MASTER_PROCESSED_ALGN_FEAT_PATH,
-    index_col=0,
+with open(CDD_MASTER_PROCESSED_PAIRWISE_ALGN_PATH, 'rb') as _fh:
+    accession_arr = np.load(_fh)
+    cdd_master_seq_algn_mat = np.load(_fh)
+
+cdd_master_seq_algn_feat_df = pd.DataFrame(
+    cdd_master_seq_algn_mat,
+    index=accession_arr,
 )
 
 cdd_superfamily_value_counts = \
@@ -74,13 +78,28 @@ def visualize_conserved_domains(
     if method == 'tsne':
         pca = PCA(**kwargs)
         tsne = TSNE(n_components=2)
-        cdd_master_seq_algn_coord = tsne.fit_transform(pca.fit_transform(
-            cdd_master_seq_algn_feat_df))
-    else:
+        cdd_master_seq_algn_coord = \
+            tsne.fit_transform(pca.fit_transform(cdd_master_seq_algn_feat_df))
+    elif method == 'umap':
         # if init option is not specified, it's 'spectral' by default
         # will throw 'graph is not fully connected' warning and hang
         umap = UMAP(**kwargs, init='random')
-        cdd_master_seq_algn_coord = umap.fit_transform(cdd_master_seq_algn_feat_df)
+        cdd_master_seq_algn_coord = \
+            umap.fit_transform(cdd_master_seq_algn_feat_df)
+    else:
+        raise ValueError(f'Unknown visualization method: {method}')
+
+    if method == 'tsne':
+        fig_name = \
+            f'pca_n_components_{kwargs["n_components"]:03d}_' \
+            f'tsne_n_components_2.png'
+    else:
+        fig_name = \
+            f'umap_n_neighbors_{kwargs["n_neighbors"]:06d}_' \
+            f'umap_min_dist_{kwargs["min_dist"]:.3f}.png'
+    fig_dir_path = CDD_TSNE_IMAGE_DIR_PATH \
+        if method == 'tsne' else CDD_UMAP_IMAGE_DIR_PATH
+    fig_path = os.path.join(fig_dir_path, fig_name)
 
     cdd_master_seq_algn_coord_df = pd.DataFrame(
         cdd_master_seq_algn_coord,
@@ -109,14 +128,15 @@ def visualize_conserved_domains(
         legend='brief',
     )
     plt.legend(loc='upper right', ncol=3)
-    plt.title(f'{method} ({kwargs}) visualization of conserved domains')
+    plt_title = \
+        f'{"t-SNE" if method == "tsne" else "UMAP"} visualization of ' \
+        f'conserved domains, with bigger (>= {MIN_SUPERFAMILY_SIZE} ' \
+        f'members) superfamilies colored'
+    plt.title(plt_title)
     plt.tight_layout()
-    plt.savefig(os.path.join(
-        CDD_TSNE_IMAGE_DIR_PATH if method == 'tsne'
-        else CDD_UMAP_IMAGE_DIR_PATH,
-        f'{str(kwargs).replace(",", "_").replace(":", "_")}.png',
-    ))
+    plt.savefig(fig_path)
     plt.cla()
+    print(f'finished {fig_path}.')
 
 # TODO: add histogram for conserved domains over all (selected) e coli genomes
 # note that 'hit types' should be specified
@@ -142,8 +162,9 @@ if __name__ == '__main__':
     # plot the 2D space of conserved domains with UMAP
     UMAP_N_NEIGHBORS_RANGE = [
         (2 ** _i) for _i in
-        range(1, int(np.ceil(np.log2(len(cdd_master_seq_algn_feat_df) / 4))))]
-    UMAP_MIN_DIST_RANGE = list(np.arange(0.09, 1, 0.1))
+        range(1, int(np.ceil(np.log2(len(cdd_master_seq_algn_feat_df) / 4))))
+    ]
+    UMAP_MIN_DIST_RANGE = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]
     for _umap_n_neighbors in UMAP_N_NEIGHBORS_RANGE:
         for _umap_min_dist in UMAP_MIN_DIST_RANGE:
             visualize_conserved_domains(

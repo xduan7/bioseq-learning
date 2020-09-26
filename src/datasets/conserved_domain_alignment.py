@@ -39,9 +39,9 @@ create_directory(PROCESSED_CDD_ALGN_DIR_PATH)
 
 CDD_MASTER_PROCESSED_ALGN_PATH = \
     os.path.join(PROCESSED_CDD_ALGN_DIR_PATH, 'cdd_master_alignment.csv')
-CDD_MASTER_PROCESSED_ALGN_FEAT_PATH = \
+CDD_MASTER_PROCESSED_PAIRWISE_ALGN_PATH = \
     os.path.join(PROCESSED_CDD_ALGN_DIR_PATH,
-                 'cdd_master_alignment_feature.csv')
+                 'cdd_master_pairwise_alignment.npy')
 
 
 # read the identification metadata of CDs for PSSM <-> accession translation
@@ -161,33 +161,48 @@ else:
 #     fill_value=0.,
 #
 
-accessions = list(set(
-    list(cdd_master_seq_algn_df['query_accession'].unique()) +
-    list(cdd_master_seq_algn_df['target_accession'].unique())
-))
+if not os.path.exists(CDD_MASTER_PROCESSED_PAIRWISE_ALGN_PATH):
+    accessions_list = list(set(
+        list(cdd_master_seq_algn_df['query_accession'].unique()) +
+        list(cdd_master_seq_algn_df['target_accession'].unique())
+    ))
 
-accession_index_dict = {
-    _accession: _i for _i, _accession in enumerate(accessions)
-}
+    accession_index_dict = {
+        _accession: _i for _i, _accession in enumerate(accessions_list)
+    }
 
-cdd_master_seq_algn_mat = np.zeros(
-    shape=(len(accession_index_dict), len(accession_index_dict)),
-    dtype=np.float32,
-)
+    cdd_master_seq_algn_mat = np.zeros(
+        shape=(len(accession_index_dict), len(accession_index_dict)),
+        dtype=np.float32,
+    )
 
-for _row in cdd_master_seq_algn_df.itertuples():
+    for _row in cdd_master_seq_algn_df.itertuples():
 
-    _query_index = accession_index_dict[_row.query_accession]
-    _target_index = accession_index_dict[_row.target_accession]
-    _algn_value = _row._asdict()[ALGN_VALUE]
+        _query_index = accession_index_dict[_row.query_accession]
+        _target_index = accession_index_dict[_row.target_accession]
+        _algn_value = _row._asdict()[ALGN_VALUE]
 
-    cdd_master_seq_algn_mat[_query_index, _target_index] = _algn_value
-    cdd_master_seq_algn_mat[_target_index, _query_index] = _algn_value
+        cdd_master_seq_algn_mat[_query_index, _target_index] = _algn_value
+        cdd_master_seq_algn_mat[_target_index, _query_index] = _algn_value
 
+    # saving the pair-wise alignment matrix to CSV is extremely expensive
+    # # reduce the dimensionality and save for visualization
+    # pca = PCA(n_components=NUM_PCA_COMPONENT)
+    # pd.DataFrame(
+    #     pca.fit_transform(cdd_master_seq_algn_mat),
+    #     index=accessions,
+    # ).to_csv(CDD_MASTER_PROCESSED_ALGN_FEAT_PATH)
+    # pd.DataFrame(
+    #     cdd_master_seq_algn_mat,
+    #     index=accessions,
+    # ).to_csv(CDD_MASTER_PROCESSED_ALGN_FEAT_PATH)
 
-# reduce the dimensionality and save for visualization
-pca = PCA(n_components=NUM_PCA_COMPONENT)
-pd.DataFrame(
-    pca.fit_transform(cdd_master_seq_algn_mat),
-    index=accessions,
-).to_csv(CDD_MASTER_PROCESSED_ALGN_FEAT_PATH)
+    # numpy save and load saves a huge lot of time
+    with open(CDD_MASTER_PROCESSED_PAIRWISE_ALGN_PATH, 'wb') as _fh:
+        np.save(_fh, np.array(accessions_list))
+        np.save(_fh, cdd_master_seq_algn_mat)
+
+    # to load the pair-wise alignment data:
+    # with open('cdd_master_pairwise_alignment.npy', 'rb') as _fh:
+    #     accession_arr = np.load(_fh)
+    #     cdd_master_seq_algn_mat = np.load(_fh)
