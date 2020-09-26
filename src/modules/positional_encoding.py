@@ -20,8 +20,8 @@ import torch
 import torch.nn as nn
 
 
-class PositionalEncoder(nn.Module):
-    """positional encoder module proposed in "Attention Is All You Need"
+class PositionalEncoding(nn.Module):
+    """positional encoding module proposed in "Attention Is All You Need"
     """
 
     def __init__(
@@ -32,7 +32,7 @@ class PositionalEncoder(nn.Module):
             emb_scale: float = 1.0,
 
     ):
-        """constructor for positional encoder
+        """constructor for positional encoding
 
         Create a positional encoding matrix that contains the information
         about the relative or absolute position of the tokens in the
@@ -55,7 +55,7 @@ class PositionalEncoder(nn.Module):
         :type emb_scale: float
         :return: None
         """
-        super(PositionalEncoder, self).__init__()
+        super(PositionalEncoding, self).__init__()
 
         # scaling embedded vector to prevent it from getting diminished after
         # adding positional encoding

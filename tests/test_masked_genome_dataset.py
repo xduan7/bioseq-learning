@@ -7,15 +7,24 @@ File Description:
 """
 import os
 import unittest
+from typing import List
 
 from src.datasets import MaskedGenomeDataset
 
 
 _TEST_EXAMPLES_DIR_PATH: str = \
     os.path.join(os.path.dirname(os.path.realpath(__file__)), 'examples')
-_REFERENCE_OUTPUT_PARENT_DIR_PATH: str = \
-    os.path.join(_TEST_EXAMPLES_DIR_PATH,
-                 'genome_processing_results_reference')
+# _REFERENCE_OUTPUT_PARENT_DIR_PATH: str = \
+#     os.path.join(_TEST_EXAMPLES_DIR_PATH,
+#                  'genome_processing_results_reference')
+
+_TEST_GENOME_DIR_PATHS: List[str] = [
+    os.path.join(
+        _TEST_EXAMPLES_DIR_PATH,
+        'genome_processing_results_reference',
+        '562.2283'
+    )
+]
 
 
 class TestMaskedGenomeDataset(unittest.TestCase):
@@ -25,7 +34,7 @@ class TestMaskedGenomeDataset(unittest.TestCase):
         """test 'masked_genome_dataset' class
         """
         masked_genome_dataset = MaskedGenomeDataset(
-            genome_parent_dir_path=_REFERENCE_OUTPUT_PARENT_DIR_PATH,
+            genome_dir_paths=_TEST_GENOME_DIR_PATHS,
             seq_len=100,
             num_masks=0.05,
             max_num_paddings=10,

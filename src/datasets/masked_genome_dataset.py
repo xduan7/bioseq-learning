@@ -8,7 +8,7 @@ File Description:
 import os
 import random
 import logging
-from typing import Tuple, List, Set, Dict, Union
+from typing import Tuple, List, Set, Dict, Iterable, Union
 
 import torch
 import numpy as np
@@ -18,38 +18,45 @@ from torch.utils.data import Dataset
 
 MASK_CHAR: str = '*'
 PADDING_CHAR: str = '-'
-NUCLEOTIDE_CHAR_SET: Set[str] = {
-    'a', 'A',
-    't', 'T',
-    'g', 'G',
-    'c', 'C',
-}
+NUCLEOTIDE_CHAR_SET: Set[str] = {'a', 't', 'g', 'c'}
 NUCLEOTIDE_CHAR_INDEX_DICT: Dict[str, int] = {
     MASK_CHAR: 5,
     PADDING_CHAR: 0,
-    'a': 1, 'A': 1,
-    't': 2, 'T': 2,
-    'g': 3, 'G': 3,
-    'c': 4, 'C': 4,
+    'a': 1,
+    't': 2,
+    'g': 3,
+    'c': 4,
 }
-NUCLEOTIDE_CHAR_VOCAB_SIZE = 6
+NUCLEOTIDE_CHAR_VOCAB_SIZE: int = len(NUCLEOTIDE_CHAR_INDEX_DICT)
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class MaskedGenomeDataset(Dataset):
+    """basic genome dataset for (dynamic) masked language model training
     """
-    Basic genome dataset for (dynamic) masked language model training
-
-    """
-
     def __init__(
             self,
-            genome_parent_dir_path: str,
+            genome_dir_paths: Iterable[str],
             seq_len: int,
             num_masks: Union[int, float],
             max_num_paddings: int,
+
     ):
+        """
+        :param genome_dir_paths: an iterable of paths to individual genomes
+        that are processed (check process_genome.py for details)
+        :type genome_dir_paths: iterable of strings
+        :param seq_len: the length of genome sequences of the dataset after
+        segmentation and padding
+        :type seq_len: int
+        :param num_masks: number or percentage of masks in applied in a
+        genome sequence; note that paddings are not applicable for masking
+        :type num_masks: int or float
+        :param max_num_paddings: maximum number of padding characters in a
+        genome sequence
+        :type max_num_paddings: int
+        """
 
         # get the actual number of masks if the argument is given as a float
         num_masks: int = int(np.round(num_masks * seq_len)) \
@@ -66,40 +73,40 @@ class MaskedGenomeDataset(Dataset):
 
         # dict that maps (genome id + contig id) to contig sequence
         self._genome_contig_seq_dict: Dict[str, str] = {}
-        for _genome_id in os.listdir(genome_parent_dir_path):
-            _genome_dir_path: str = \
-                os.path.join(genome_parent_dir_path, _genome_id)
-            if os.path.isdir(_genome_dir_path):
-                _genome_contig_seq_dir_path: str = os.path.join(
-                    _genome_dir_path, 'contigs')
-                # _genome_feature_dir_path: str = os.path.join(
-                #     _genome_dir_path, 'features')
-                for _contig_seq_file_name in \
-                        os.listdir(_genome_contig_seq_dir_path):
-                    _contig_seq_path = os.path.join(
-                        _genome_contig_seq_dir_path,
-                        _contig_seq_file_name,
-                    )
-                    with open(_contig_seq_path, 'r') as _fh:
-                        _contig_seq_rec: SeqRecord = \
-                            next(SeqIO.parse(_fh, 'fasta'))
-                    _genome_contig_id: str = \
-                        f'{_genome_id}/{_contig_seq_rec.id}'
-                    # note that this does not work for really short contigs
-                    # e.g. when seq_len > len(contig). in this case,
-                    # the number of paddings will exceed the given maximum
-                    if len(_contig_seq_rec.seq) < self._seq_len:
-                        _warning_msg = \
-                            f'The length of contig {_contig_seq_rec.id} ' \
-                            f'from genome {_genome_id} is ' \
-                            f'{len(_contig_seq_rec.seq)}, smaller compared ' \
-                            f'to the intended dataset sequence length ' \
-                            f'{self._seq_len}. Ignoring the contig ...'
-                        _LOGGER.warning(_warning_msg)
-                    self._genome_contig_seq_dict[_genome_contig_id] = \
-                        max_num_paddings * PADDING_CHAR + \
-                        str(_contig_seq_rec.seq) + \
-                        max_num_paddings * PADDING_CHAR
+
+        for _genome_dir_path in genome_dir_paths:
+            _genome_id: str = os.path.basename(_genome_dir_path.rstrip('/'))
+            _genome_contig_seq_dir_path: str = os.path.join(
+                _genome_dir_path, 'contigs')
+            # _genome_feature_dir_path: str = os.path.join(
+            #     _genome_dir_path, 'features')
+            for _contig_seq_file_name in \
+                    os.listdir(_genome_contig_seq_dir_path):
+                _contig_seq_path = os.path.join(
+                    _genome_contig_seq_dir_path,
+                    _contig_seq_file_name,
+                )
+                with open(_contig_seq_path, 'r') as _fh:
+                    _contig_seq_rec: SeqRecord = \
+                        next(SeqIO.parse(_fh, 'fasta'))
+                _genome_contig_id: str = \
+                    f'{_genome_id}/{_contig_seq_rec.id}'
+                # note that this does not work for really short contigs
+                # e.g. when seq_len > len(contig). in this case,
+                # the number of paddings will exceed the given maximum
+                _contig_seq_len: int = len(_contig_seq_rec.seq)
+                if _contig_seq_len < self._seq_len:
+                    _warning_msg = \
+                        f'The length of contig {_contig_seq_rec.id} from ' \
+                        f'genome {_genome_id} is {_contig_seq_len}, ' \
+                        f'smaller compared to the intended dataset ' \
+                        f'sequence length {self._seq_len}. ' \
+                        f'Ignoring the contig ...'
+                    _LOGGER.warning(_warning_msg)
+                self._genome_contig_seq_dict[_genome_contig_id] = \
+                    max_num_paddings * PADDING_CHAR + \
+                    str(_contig_seq_rec.seq).lower() + \
+                    max_num_paddings * PADDING_CHAR
 
         # dict that maps dataset index (accessible from dataloader) to
         # genome id + contig id, and the starting position of the sequence
@@ -122,6 +129,14 @@ class MaskedGenomeDataset(Dataset):
             self,
             index: int,
     ):
+        """
+        :param index: index to the genome sequence in [0, len(self)]
+        :type index: int
+        :return: a tuple that contains a indexed genome sequence in
+        LongTensor amd a mask tensor of the same size, but in FloatTensor
+        where float('-inf') represents a mask
+        :rtype: tuple of tensors
+        """
         _genome_contig_id, _pos = \
             self._index_genome_contig_id_pos_dict[index]
         _genome_contig_seq: str = \
