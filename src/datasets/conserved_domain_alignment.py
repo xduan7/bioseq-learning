@@ -11,9 +11,7 @@ import subprocess
 import numpy as np
 import pandas as pd
 from Bio import SeqIO
-from sklearn.decomposition import PCA
 
-from src.utilities import create_directory
 from src import INTERIM_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH
 
 
@@ -24,7 +22,7 @@ CDD_ID_PATH = os.path.join(INTERIM_DATA_DIR_PATH, 'CDD_metadata/cddid.tbl')
 
 INTERIM_CDD_ALGN_DIR_PATH = \
     os.path.join(INTERIM_DATA_DIR_PATH, 'CDD_alignment')
-create_directory(INTERIM_CDD_ALGN_DIR_PATH)
+os.makedirs(INTERIM_CDD_ALGN_DIR_PATH, exist_ok=True)
 
 CDD_MASTER_SEQ_PATH = \
     os.path.join(INTERIM_CDD_ALGN_DIR_PATH, 'cdd_masters.fa')
@@ -35,7 +33,7 @@ CDD_MASTER_INTERIM_ALGN_PATH = \
 
 PROCESSED_CDD_ALGN_DIR_PATH = \
     os.path.join(PROCESSED_DATA_DIR_PATH, 'CDD_alignment')
-create_directory(PROCESSED_CDD_ALGN_DIR_PATH)
+os.makedirs(PROCESSED_CDD_ALGN_DIR_PATH, exist_ok=True)
 
 CDD_MASTER_PROCESSED_ALGN_PATH = \
     os.path.join(PROCESSED_CDD_ALGN_DIR_PATH, 'cdd_master_alignment.csv')

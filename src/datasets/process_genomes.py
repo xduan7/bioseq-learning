@@ -16,7 +16,6 @@ import pandas as pd
 from tqdm import tqdm
 from Bio import SeqIO, SeqRecord
 
-from src.utilities import create_directory
 from src.datasets import conserved_domain_search
 
 
@@ -79,10 +78,11 @@ def process_genome(
     feature_dir_path: str = os.path.join(output_dir_path, 'features')
     conserved_domain_dir_path: str = \
         os.path.join(output_dir_path, 'conserved_domains')
-    create_directory(output_dir_path)
-    create_directory(contig_dir_path)
-    create_directory(feature_dir_path)
-    create_directory(conserved_domain_dir_path)
+    os.makedirs(output_dir_path, exist_ok=True)
+    os.makedirs(contig_dir_path, exist_ok=True)
+    os.makedirs(feature_dir_path, exist_ok=True)
+    os.makedirs(conserved_domain_dir_path, exist_ok=True)
+
 
     # read the entire genome into list of contig sequences
     contig_seq_record_iter: Iterator[SeqRecord] = \

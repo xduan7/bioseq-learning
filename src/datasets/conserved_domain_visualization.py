@@ -16,7 +16,6 @@ from umap import UMAP
 from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 
-from src.utilities import create_directory
 from src import INTERIM_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH, DOC_DIR_PATH
 
 
@@ -36,8 +35,8 @@ numba_logger.setLevel(logging.WARNING)
 matplotlib_logger = logging.getLogger('matplotlib')
 matplotlib_logger.setLevel(logging.WARNING)
 
-create_directory(CDD_TSNE_IMAGE_DIR_PATH)
-create_directory(CDD_UMAP_IMAGE_DIR_PATH)
+os.makedirs(CDD_TSNE_IMAGE_DIR_PATH, exist_ok=True)
+os.makedirs(CDD_UMAP_IMAGE_DIR_PATH, exist_ok=True)
 
 cdd_superfamily_df = pd.read_table(
     CDD_SUPERFAMILY_PATH,
