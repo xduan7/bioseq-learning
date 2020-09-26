@@ -237,4 +237,5 @@ if __name__ == '__main__':
         genome_parent_dir_path=args.genome_parent_dir_path,
         output_parent_dir_path=args.output_parent_dir_path,
         num_workers=args.num_workers,
+        no_cd_search=args.no_cd_search,
     )
