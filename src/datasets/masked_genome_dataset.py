@@ -70,10 +70,13 @@ class MaskedGenomeDataset(Dataset):
         self._seq_len: int = seq_len
         self._num_masks: int = num_masks
         self._max_num_paddings: int = max_num_paddings
+        self.__len = 0
 
         # dict that maps (genome id + contig id) to contig sequence
         self._genome_contig_seq_dict: Dict[str, str] = {}
-
+        # data structure that stores a iterable of tuples that contains
+        # (genome id + contig id, number of samples/segmented sequences)
+        _genome_contig_num_seqs_list: List[Tuple[str, int]] = []
         for _genome_dir_path in genome_dir_paths:
             _genome_id: str = os.path.basename(_genome_dir_path.rstrip('/'))
             _genome_contig_seq_dir_path: str = os.path.join(
@@ -91,36 +94,31 @@ class MaskedGenomeDataset(Dataset):
                         next(SeqIO.parse(_fh, 'fasta'))
                 _genome_contig_id: str = \
                     f'{_genome_id}/{_contig_seq_rec.id}'
-                # note that this does not work for really short contigs
-                # e.g. when seq_len > len(contig). in this case,
-                # the number of paddings will exceed the given maximum
-                _contig_seq_len: int = len(_contig_seq_rec.seq)
-                if _contig_seq_len < self._seq_len:
-                    _warning_msg = \
-                        f'The length of contig {_contig_seq_rec.id} from ' \
-                        f'genome {_genome_id} is {_contig_seq_len}, ' \
-                        f'smaller compared to the intended dataset ' \
-                        f'sequence length {self._seq_len}. ' \
-                        f'Ignoring the contig ...'
-                    _LOGGER.warning(_warning_msg)
-                self._genome_contig_seq_dict[_genome_contig_id] = \
+                _padded_seq: str = \
                     max_num_paddings * PADDING_CHAR + \
                     str(_contig_seq_rec.seq).lower() + \
                     max_num_paddings * PADDING_CHAR
+                # note that this does not work for really short contigs
+                # e.g. when 'seq_len + paddings > len(contig)'. in this case,
+                # the number of paddings will exceed the given maximum
+                if len(_padded_seq) < self._seq_len:
+                    _warning_msg = \
+                        f'The length of contig {_contig_seq_rec.id} from ' \
+                        f'genome {_genome_id} is {len(_padded_seq)} with ' \
+                        f'paddings on both ends, smaller compared to the ' \
+                        f'intended dataset sequence length {self._seq_len}' \
+                        f'. Ignoring the contig ...'
+                    _LOGGER.warning(_warning_msg)
+                self._genome_contig_seq_dict[_genome_contig_id] = _padded_seq
+                _num_seqs: int = len(_padded_seq) - self._seq_len + 1
+                _genome_contig_num_seqs_list.append(
+                    (_genome_contig_id, _num_seqs))
+                self.__len += _num_seqs
 
-        # dict that maps dataset index (accessible from dataloader) to
-        # genome id + contig id, and the starting position of the sequence
-        # check __getitem__ function for the usage details
-        _index_counter = 0
-        self._index_genome_contig_id_pos_dict: Dict[int, Tuple[str, int]] = {}
-        for _genome_contig_id, _padded_contig_seq in \
-                self._genome_contig_seq_dict.items():
-            for _pos in range(len(_padded_contig_seq) - self._seq_len + 1):
-                self._index_genome_contig_id_pos_dict[_index_counter] = \
-                    (_genome_contig_id, _pos)
-                _index_counter += 1
+        # convert list to tuple for faster access
+        self._genome_contig_num_seqs_tuple: Tuple[Tuple[str, int], ...] = \
+            tuple(_genome_contig_num_seqs_list)
 
-        self.__len = len(self._index_genome_contig_id_pos_dict)
 
     def __len__(self) -> int:
         return self.__len
@@ -137,29 +135,28 @@ class MaskedGenomeDataset(Dataset):
         where float('-inf') represents a mask
         :rtype: tuple of tensors
         """
-        _genome_contig_id, _pos = \
-            self._index_genome_contig_id_pos_dict[index]
-        _genome_contig_seq: str = \
-            self._genome_contig_seq_dict[_genome_contig_id]
-        _seq: str = _genome_contig_seq[_pos: _pos + self._seq_len]
-        _seq_char_list: List[str] = list(_seq)
+        _seq, _seq_char_list = '', []
+        for _genome_contig_id, _num_seqs in self._genome_contig_num_seqs_tuple:
+            if index >= _num_seqs:
+                index = index - _num_seqs
+            else:
+                _genome_contig_seq: str = \
+                    self._genome_contig_seq_dict[_genome_contig_id]
+                _seq: str = _genome_contig_seq[index: index + self._seq_len]
+                _seq_char_list: List[str] = list(_seq)
+                break
 
-        # mask the nucleotide randomly
+        # convert the nucleotide sequence to the indexed (numeric) sequence
+        _indexed_seq = torch.LongTensor(
+            list(map(NUCLEOTIDE_CHAR_INDEX_DICT.get, _seq)))
+
+        # mask the nucleotide at random location (not on paddings though)
         _nucleotide_indices = [
             _i for _i, _c in enumerate(_seq_char_list)
             if _c in NUCLEOTIDE_CHAR_SET]
         _masked_indices: List[int] = \
             random.sample(_nucleotide_indices, self._num_masks)
-
-        # # masked the (not indexed) sequence
-        # for _i in _masked_indices:
-        #     _seq_char_list[_i] = MASK_CHAR
-        # _masked_seq = ''.join(_seq_char_list)
-
-        _indexed_seq = torch.LongTensor(
-            list(map(NUCLEOTIDE_CHAR_INDEX_DICT.get, _seq)))
-
         _mask = torch.zeros_like(_indexed_seq, dtype=torch.float)
         _mask.scatter_(0, torch.LongTensor(_masked_indices), float('-inf'))
 
-        return _indexed_seq, _mask
+        return Sequence(_indexed_seq), _mask
