@@ -16,11 +16,11 @@ from Bio import SeqIO, SeqRecord
 from torch.utils.data import Dataset
 
 
-MASK_CHAR: str = '*'
+# MASK_CHAR: str = '*'
 PADDING_CHAR: str = '-'
 NUCLEOTIDE_CHAR_SET: Set[str] = {'a', 't', 'g', 'c'}
 NUCLEOTIDE_CHAR_INDEX_DICT: Dict[str, int] = {
-    MASK_CHAR: 5,
+    # MASK_CHAR: 5,
     PADDING_CHAR: 0,
     'a': 1,
     't': 2,
@@ -135,6 +135,9 @@ class MaskedGenomeDataset(Dataset):
         where float('-inf') represents a mask
         :rtype: tuple of tensors
         """
+        if index < 0:
+            index = index + self.__len
+
         _seq, _seq_char_list = '', []
         for _genome_contig_id, _num_seqs in self._genome_contig_num_seqs_tuple:
             if index >= _num_seqs:
@@ -159,4 +162,4 @@ class MaskedGenomeDataset(Dataset):
         _mask = torch.zeros_like(_indexed_seq, dtype=torch.float)
         _mask.scatter_(0, torch.LongTensor(_masked_indices), float('-inf'))
 
-        return Sequence(_indexed_seq), _mask
+        return _indexed_seq, _mask
