@@ -11,12 +11,13 @@ File Description:
 from .activation import get_torch_activation
 from .linear_block import LinearBlock
 from .residual_block import ResidualBlock
-from .positional_encoding import PositionalEncoder
-from .transformer import Transformer
+from .positional_encoding import PositionalEncoding
+from .transformer_encoder_model import TransformerEncoderModel
 
 __all__ = [
     'get_torch_activation',
     'LinearBlock',
     'ResidualBlock',
-    'PositionalEncoder',
+    'PositionalEncoding',
+    'TransformerEncoderModel',
 ]
