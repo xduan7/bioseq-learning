@@ -6,13 +6,12 @@ File Description:
 
 """
 import os
+import random
 import unittest
 from typing import List, Union
 
-import numpy as np
-
-from src.datasets import MaskedGenomeDataset
-from src.datasets.masked_genome_dataset import \
+from src.datasets import GenomeDataset
+from src.datasets.genome_dataset import \
     PADDING_CHAR, NUCLEOTIDE_CHAR_INDEX_DICT
 
 
@@ -28,40 +27,32 @@ _TEST_SEQ_LEN: int = 100
 _TEST_NUM_MASKS: int = 5
 _TEST_MAX_NUM_PADDINGS: int = 10
 _PADDING_INDEX: int = NUCLEOTIDE_CHAR_INDEX_DICT[PADDING_CHAR]
+_TEST_NUM_DATASET_SAMPLES: int = 100
 
 
-class TestMaskedGenomeDataset(unittest.TestCase):
+class TestGenomeDataset(unittest.TestCase):
     """unittest class for 'masked_genome_dataset' class
     """
-    def test_masked_genome_dataset(self):
+    def test_genome_dataset(self):
         """test 'masked_genome_dataset' class
         """
-        masked_genome_dataset = MaskedGenomeDataset(
+        masked_genome_dataset = GenomeDataset(
             genome_dir_paths=_TEST_GENOME_DIR_PATHS,
             seq_len=_TEST_SEQ_LEN,
-            num_masks=_TEST_NUM_MASKS,
             max_num_paddings=_TEST_MAX_NUM_PADDINGS,
         )
 
-        _indexed_seq, _mask = masked_genome_dataset[0]
-
-        # make sure that the number of masks (non-masks) is correct
-        _mask_unique_values, _mask_unique_value_counts = \
-            _mask.unique(return_counts=True)
-        _non_mask_unique_value_index = \
-            np.argwhere(_mask_unique_values.numpy() == 0.).flatten()[0]
-        assert _mask_unique_value_counts[_non_mask_unique_value_index].item() \
-               == (_TEST_SEQ_LEN - _TEST_NUM_MASKS)
-
-        # make sure that the paddings are correct
-        for _i in range(_TEST_MAX_NUM_PADDINGS):
-            assert _indexed_seq[_i].item() == _PADDING_INDEX
-
-        _indexed_seq, _mask = masked_genome_dataset[-1]
-
-        # make sure that the paddings are correct when paddings are at the end
-        for _i in range(_TEST_MAX_NUM_PADDINGS):
-            assert _indexed_seq[-(_i + 1)].item() == _PADDING_INDEX
+        # only test '_TEST_NUM_DATASET_SAMPLES' samples
+        for _i in random.sample(
+                range(len(masked_genome_dataset)),
+                _TEST_NUM_DATASET_SAMPLES,
+        ):
+            _indexed_seq, _padding_mask = masked_genome_dataset[_i]
+            # test if all the indexed values are in the index dict
+            assert set([_v.item() for _v in _indexed_seq.unique()]).issubset(
+                set(NUCLEOTIDE_CHAR_INDEX_DICT.values()))
+            # test if the number of paddings is valid (no bigger)
+            assert _padding_mask.sum().item() <= _TEST_MAX_NUM_PADDINGS
 
 
 if __name__ == '__main__':
