@@ -90,4 +90,4 @@ class PositionalEncoding(nn.Module):
         :return: torch.Tensor in the shape of (seq_len, batch_size, emb_dim)
         """
         x = x * self._emb_scale + self.positional_encoding[:x.size(0), :]
-        return self.dropout(x)
+        return self._dropout(x)

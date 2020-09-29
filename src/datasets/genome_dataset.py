@@ -15,7 +15,6 @@ from torch.utils.data import Dataset
 
 
 PADDING_CHAR: str = '-'
-NUCLEOTIDE_CHAR_SET: Set[str] = {PADDING_CHAR, 'a', 't', 'g', 'c'}
 NUCLEOTIDE_CHAR_INDEX_DICT: Dict[str, int] = {
     PADDING_CHAR: 0,
     'a': 1,
@@ -23,6 +22,7 @@ NUCLEOTIDE_CHAR_INDEX_DICT: Dict[str, int] = {
     'g': 3,
     'c': 4,
 }
+NUCLEOTIDE_CHAR_SET: Set[str] = set(NUCLEOTIDE_CHAR_INDEX_DICT.keys())
 NUCLEOTIDE_CHAR_VOCAB_SIZE: int = len(NUCLEOTIDE_CHAR_INDEX_DICT)
 PADDING_INDEX: int = NUCLEOTIDE_CHAR_INDEX_DICT[PADDING_CHAR]
 
@@ -127,7 +127,7 @@ class GenomeDataset(Dataset):
     def __getitem__(
             self,
             index: int,
-    ):
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         :param index: index to the genome sequence in [0, len(self)]
         :type index: int

@@ -6,6 +6,7 @@ File Description:
 
 """
 import random
+from typing import Tuple
 
 import torch
 import torch.nn as nn
@@ -79,7 +80,7 @@ class TransformerEncoderModel(nn.Module):
             src: torch.Tensor,
             num_masks: int,
             src_key_padding_mask: torch.Tensor,
-    ) -> torch.Tensor:
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
 
         # dynamically generate a mask of size (seq_len, seq_len)
         # indicates the accessibility of the tokens for the ith sample
@@ -93,13 +94,9 @@ class TransformerEncoderModel(nn.Module):
         if self._pos_enc:
             _tmp = self._pos_enc(_tmp)
 
-        print(_tmp.shape)
-        print(_mask.shape)
-        print(src_key_padding_mask.shape)
-
         _tmp = self._xfmr_enc(
             src=_tmp,
             mask=_mask,
             src_key_padding_mask=src_key_padding_mask,
         )
-        return self._dec(_tmp)
+        return self._dec(_tmp), _mask[0]
