@@ -15,7 +15,7 @@ from torch.utils.data import Dataset
 
 
 PADDING_CHAR: str = '-'
-NUCLEOTIDE_CHAR_SET: Set[str] = {'a', 't', 'g', 'c'}
+NUCLEOTIDE_CHAR_SET: Set[str] = {PADDING_CHAR, 'a', 't', 'g', 'c'}
 NUCLEOTIDE_CHAR_INDEX_DICT: Dict[str, int] = {
     PADDING_CHAR: 0,
     'a': 1,
@@ -83,6 +83,7 @@ class GenomeDataset(Dataset):
                 _padded_seq: str = \
                     str(_contig_seq_rec.seq).lower() + \
                     max_num_paddings * PADDING_CHAR
+
                 # note that this does not work for really short contigs
                 # e.g. when 'seq_len + paddings > len(contig)'. in this case,
                 # the number of paddings will exceed the given maximum
@@ -91,9 +92,23 @@ class GenomeDataset(Dataset):
                         f'The length of contig {_contig_seq_rec.id} from ' \
                         f'genome {_genome_id} is {len(_padded_seq)} with ' \
                         f'paddings at the end, smaller compared to the ' \
-                        f'intended dataset sequence length {self._seq_len}' \
+                        f'intended dataset sequence length ' \
+                        f'{self._seq_len}. Ignoring the contig ...'
+                    _LOGGER.warning(_warning_msg)
+                    continue
+
+                # note that there are sequences with letters are not atgc
+                # e.g. genome/contig ID: 562.54941/CP047077
+                if not set(_padded_seq).issubset(NUCLEOTIDE_CHAR_SET):
+                    _warning_msg = \
+                        f'The contig {_contig_seq_rec.id} from genome ' \
+                        f'{_genome_id} contains the following letters that ' \
+                        f'are not normal nucleotide bases: ' \
+                        f'{set(_padded_seq) - NUCLEOTIDE_CHAR_SET}' \
                         f'. Ignoring the contig ...'
                     _LOGGER.warning(_warning_msg)
+                    continue
+
                 self._genome_contig_seq_dict[_genome_contig_id] = \
                     _padded_seq
                 _num_seqs: int = len(_padded_seq) - self._seq_len + 1
@@ -120,18 +135,16 @@ class GenomeDataset(Dataset):
         LongTensor and a mask tensor of the same size for padding in boolean
         :rtype: tuple of two tensors
         """
-        if index < 0:
-            index = index + self.__len
+        _index: int = (index + self.__len) if index < 0 else index
 
         _seq, _seq_char_list = '', []
         for _genome_contig_id, _num_seqs in self._genome_contig_num_seqs_tuple:
-            if index >= _num_seqs:
-                index = index - _num_seqs
+            if _index >= _num_seqs:
+                _index = _index - _num_seqs
             else:
                 _genome_contig_seq: str = \
                     self._genome_contig_seq_dict[_genome_contig_id]
-                _seq: str = _genome_contig_seq[index: index + self._seq_len]
-                break
+                _seq: str = _genome_contig_seq[_index: _index + self._seq_len]
 
         # convert the nucleotide sequence to the indexed (numeric) sequence
         _indexed_seq = torch.LongTensor(
