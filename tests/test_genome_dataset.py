@@ -27,7 +27,6 @@ _TEST_SEQ_LEN: int = 100
 _TEST_NUM_MASKS: int = 5
 _TEST_MAX_NUM_PADDINGS: int = 10
 _PADDING_INDEX: int = NUCLEOTIDE_CHAR_INDEX_DICT[PADDING_CHAR]
-_TEST_NUM_DATASET_SAMPLES: int = 100
 
 
 class TestGenomeDataset(unittest.TestCase):
@@ -42,11 +41,7 @@ class TestGenomeDataset(unittest.TestCase):
             max_num_paddings=_TEST_MAX_NUM_PADDINGS,
         )
 
-        # only test '_TEST_NUM_DATASET_SAMPLES' samples
-        for _i in random.sample(
-                range(len(masked_genome_dataset)),
-                _TEST_NUM_DATASET_SAMPLES,
-        ):
+        for _i in range(len(masked_genome_dataset)):
             _indexed_seq, _padding_mask = masked_genome_dataset[_i]
             # test if all the indexed values are in the index dict
             assert set([_v.item() for _v in _indexed_seq.unique()]).issubset(
