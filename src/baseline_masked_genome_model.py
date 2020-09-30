@@ -11,6 +11,7 @@ File Description:
 """
 import copy
 import time
+import logging
 
 import numpy as np
 import torch
@@ -28,6 +29,8 @@ from src.utilities import set_random_seed, get_computation_devices
 from src.configs.baseline_masked_genome_model_config import config
 
 
+_LOGGER = logging.getLogger(__name__)
+
 set_random_seed(
     random_seed=config['random_seed'],
     deterministic_cudnn_flag=config['deterministic_cudnn_flag'],
@@ -37,10 +40,23 @@ device = get_computation_devices(
     preferred_gpu_list=config['preferred_gpu_list'],
     multi_gpu_flag=config['multi_gpu_flag'],
 )[0]
+# specify the cuda devices explicitly so that apex won't use cuda: 0
+torch.cuda.set_device(device)
 dry_run: bool = config['dry_run']
 if dry_run:
     print('Performing dry-run with smaller training set and '
           'virtually no validation and test sets ...')
+
+nvidia_amp_opt: bool = config['nvidia_amp_opt']
+if config['nvidia_amp_opt']:
+    try:
+        from apex import amp
+    except ImportError:
+        _warning_msg = \
+            f'Cannot import NVIDIA-apex. ' \
+            f'Ignoring mixed-precision training/inference ... '
+        _LOGGER.warning(_warning_msg)
+        nvidia_amp_opt = False
 
 
 ###############################################################################
@@ -134,6 +150,11 @@ optimizer = get_torch_optimizer(
     parameters=model.parameters(),
     optimizer_kwargs=config['optimizer_kwargs'],
 )
+if nvidia_amp_opt:
+    print(f'Using Nvida-apex mixed-precision model. Configurations: ')
+    model, optimizer = amp.initialize(
+        model, optimizer, opt_level=config['nvidia_amp_opt_level'])
+
 lr_scheduler = get_torch_lr_scheduler(
     lr_scheduler=config['lr_scheduler'],
     optimizer=optimizer,
@@ -166,17 +187,18 @@ def train(cur_epoch: int):
         _indexed_seqs = _batch[0].transpose(0, 1).to(device)
         _key_padding_mask = _batch[1].to(device)
 
-        model.zero_grad()
+        # model.zero_grad()
+        optimizer.zero_grad()
+
         _output, _ = \
             model(_indexed_seqs, num_masks, _key_padding_mask)
         _output = _output.view(-1, num_tokens)
         _target = _indexed_seqs.contiguous().view(-1)
         _loss = criterion(input=_output, target=_target)
 
-        optimizer.zero_grad()
         _loss.backward()
-        optimizer.step()
         _total_loss += _loss.item()
+        optimizer.step()
 
         if (_batch_index + 1) % _trn_log_interval == 0:
 
@@ -185,10 +207,10 @@ def train(cur_epoch: int):
                 (time.time() - _start_time) * 1000 / _trn_log_interval
             print(
                 f'| epoch {cur_epoch:3d} '
-                f'| {(_batch_index + 1):6d} / {_num_trn_batches:6d} batches '
-                f'| learning_rate {optimizer.param_groups[0]["lr"]:1.1E} '
+                f'| {(_batch_index + 1):6d} / {_num_trn_batches:<d} batches '
+                f'| learning rate {optimizer.param_groups[0]["lr"]:1.2E} '
                 f'| loss {_avg_batch_loss:5.4f} '
-                f'| {_avg_batch_time_in_ms:5.1f} ms/batch  |'
+                f'| {_avg_batch_time_in_ms:5.1f} ms/batch |'
             )
             _total_loss = 0.
             _start_time = time.time()
@@ -223,23 +245,32 @@ def evaluate(_dataloader, test=False):
             _total_loss += _loss.item()
 
             _mask = _mask.bool().repeat(config['dataloader_batch_size'])
-            _, _predictions = torch.max(_output, 1)
-            _num_total_predictions += len(_predictions[_mask])
-            _num_correct_predictions += \
-                (_predictions[_mask] == _target[_mask]).sum().item()
+            _, _prediction = torch.max(_output, 1)
 
-    _loss = _total_loss / \
-            min(len(_dataloader), config['max_num_vld_batches_per_epoch'])
+            _masked_target = _target[_mask]
+            _masked_prediction = _prediction[_mask]
+            _no_padding_masks = _masked_target != PADDING_INDEX
+
+            _num_total_predictions += _no_padding_masks.sum().item()
+            _num_correct_predictions += (
+                    _no_padding_masks &
+                    (_masked_prediction == _masked_target)
+            ).sum().item()
+
+    _num_batches: int = min(
+        len(_dataloader),
+        config['max_num_vld_batches_per_epoch'],
+    )
+    _loss = _total_loss / _num_batches
     _acc = _num_correct_predictions / _num_total_predictions
     return _loss, _acc
 
 
 # train the model over the epochs and evaluate on the validation set
-best_vld_loss = float('inf')
-best_model = None
-
+best_vld_loss, best_model = float('inf'), None
+print('=' * 80)
 try:
-    for epoch in range(1, 2 if dry_run else config['max_num_epochs']):
+    for epoch in range(1, 10 if dry_run else config['max_num_epochs']):
 
         epoch_start_time = time.time()
         train(epoch)
@@ -251,8 +282,8 @@ try:
         print(
             f'| end of epoch {epoch:3d} '
             f'| time {epoch_time_in_sec:5.1f} s '
-            f'| valid loss {epoch_vld_loss:5.4f} '
-            f'| valid accuracy {(epoch_vld_acc * 100):3.2f}% '
+            f'| validation loss {epoch_vld_loss:5.4f} '
+            f'| validation accuracy {(epoch_vld_acc * 100):3.3f}% '
         )
         print('-' * 80)
 
