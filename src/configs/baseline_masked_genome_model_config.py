@@ -6,7 +6,6 @@ File Description:
 
 """
 from math import sqrt
-from types import MappingProxyType
 from typing import Optional, List, Dict, Any
 
 
@@ -17,7 +16,7 @@ _experiment_name: str = \
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
-_dry_run: bool = False
+_dry_run: bool = True
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -53,19 +52,19 @@ _max_num_vld_batches_per_epoch: int = 10000
 _emb_dim: int = 4
 # boolean indicator for positional encoding
 _pos_enc: bool = True
-_pos_enc_dropout: float = 0.1
+_pos_enc_dropout: float = 0.0
 _pos_enc_emb_scale: float = sqrt(_emb_dim)
 # the number of attention heads must be a factor of the embedding dimension
 _xfmr_enc_layer_num_attn_heads: int = 2
 _xfmr_enc_layer_feedforward_dim: int = 1024
 _xfmr_enc_layer_activation: str = 'relu'
-_xfmr_enc_layer_dropout: float = 0.1
+_xfmr_enc_layer_dropout: float = 0.0
 _xfmr_enc_num_layers: int = 3
 _xfmr_enc_norm: bool = True
 
 
 # training configurations
-_max_num_epochs: int = 1000
+_max_num_epochs: int = 300
 _early_stopping_patience: int = 32
 _optimizer: str = 'SGD'
 _optimizer_kwargs: Dict[str, Any] = {
@@ -81,12 +80,12 @@ _lr_scheduler_kwargs: Dict[str, Any] = {
 _num_trn_logs: int = 10
 
 
-# read-only dictionary that maps names of each configuration to their object
+# dictionary that maps names of each configuration to their object
 # e.g. 'experiment_name': _experiment_name, 'random_state': _random_state, etc.
 # note that the local configuration variable names must start with '_', but
 # the underscores are stripped away in the CONFIG dictionary
-config: MappingProxyType = MappingProxyType({
+config: Dict[str, object] = {
     variable_name[1:]: variable
     for variable_name, variable in locals().items() if
     variable_name.startswith('_') and not variable_name.startswith('__')
-})
+}

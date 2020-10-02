@@ -42,10 +42,6 @@ device = get_computation_devices(
 )[0]
 # specify the cuda devices explicitly so that apex won't use cuda: 0
 torch.cuda.set_device(device)
-dry_run: bool = config['dry_run']
-if dry_run:
-    print('Performing dry-run with smaller training set and '
-          'virtually no validation and test sets ...')
 
 nvidia_amp_opt: bool = config['nvidia_amp_opt']
 if config['nvidia_amp_opt']:
@@ -57,6 +53,30 @@ if config['nvidia_amp_opt']:
             f'Ignoring mixed-precision training/inference ... '
         _LOGGER.warning(_warning_msg)
         nvidia_amp_opt = False
+
+# adjust configurations if it's a dry-run experiment
+dry_run: bool = config['dry_run']
+if dry_run:
+    print('Performing dry-run with smaller training set and '
+          'virtually no validation and test sets ...')
+    config['seq_len'] = int(config['seq_len'] / 10)
+    config['max_num_paddings'] = int(config['max_num_paddings'] / 10)
+    config['max_num_trn_batches_per_epoch'] = \
+        int(config['max_num_trn_batches_per_epoch'] / 10)
+    config['max_num_vld_batches_per_epoch'] = \
+        int(config['max_num_vld_batches_per_epoch'] / 10)
+    config['max_num_epochs'] = int(config['max_num_epochs'] / 10)
+    config['early_stopping_patience'] = \
+        int(config['early_stopping_patience'] / 10)
+
+# print out the configurations
+print('=' * 80)
+print('Configurations:')
+print('-' * 80)
+_config_key_max_len: int = max([len(_k) for _k in config.keys()])
+for _key, _value in config.items():
+    print(f'{_key:{_config_key_max_len + 4}s}: {_value}')
+print('=' * 80)
 
 
 ###############################################################################
@@ -267,10 +287,11 @@ def evaluate(_dataloader, test=False):
 
 
 # train the model over the epochs and evaluate on the validation set
-best_vld_loss, best_epoch, best_model = float('inf'), 0, None
+best_vld_loss, best_vld_acc, best_epoch, best_model = \
+    float('inf'), 0., 0, None
 print('=' * 80)
 try:
-    for epoch in range(1, 10 if dry_run else config['max_num_epochs']):
+    for epoch in range(1, config['max_num_epochs']):
 
         epoch_start_time = time.time()
         train(epoch)
@@ -287,8 +308,10 @@ try:
         )
         print('-' * 80)
 
-        if epoch_vld_loss < best_vld_loss:
+        # if epoch_vld_loss < best_vld_loss:
+        if epoch_vld_acc > best_vld_acc:
             best_vld_loss = epoch_vld_loss
+            best_vld_acc = epoch_vld_acc
             best_epoch = epoch
             best_model = copy.deepcopy(model)
         elif epoch - best_epoch >= config['early_stopping_patience']:
