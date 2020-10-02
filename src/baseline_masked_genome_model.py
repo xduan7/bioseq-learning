@@ -210,7 +210,7 @@ def train(cur_epoch: int):
                 f'| {(_batch_index + 1):6d} / {_num_trn_batches:<d} batches '
                 f'| learning rate {optimizer.param_groups[0]["lr"]:1.2E} '
                 f'| loss {_avg_batch_loss:5.4f} '
-                f'| {_avg_batch_time_in_ms:5.1f} ms/batch |'
+                f'| {_avg_batch_time_in_ms:>4.0f} ms/batch |'
             )
             _total_loss = 0.
             _start_time = time.time()
@@ -267,7 +267,7 @@ def evaluate(_dataloader, test=False):
 
 
 # train the model over the epochs and evaluate on the validation set
-best_vld_loss, best_model = float('inf'), None
+best_vld_loss, best_epoch, best_model = float('inf'), 0, None
 print('=' * 80)
 try:
     for epoch in range(1, 10 if dry_run else config['max_num_epochs']):
@@ -281,7 +281,7 @@ try:
         print('-' * 80)
         print(
             f'| end of epoch {epoch:3d} '
-            f'| time {epoch_time_in_sec:5.1f} s '
+            f'| time {epoch_time_in_sec:>5.0f} s '
             f'| validation loss {epoch_vld_loss:5.4f} '
             f'| validation accuracy {(epoch_vld_acc * 100):3.3f}% '
         )
@@ -289,11 +289,13 @@ try:
 
         if epoch_vld_loss < best_vld_loss:
             best_vld_loss = epoch_vld_loss
+            best_epoch = epoch
             best_model = copy.deepcopy(model)
+        elif epoch - best_epoch >= config['early_stopping_patience']:
+            print('exiting from training early for early stopping ... ')
 
 except KeyboardInterrupt:
     print('exiting from training early for KeyboardInterrupt ... ')
-    print('-' * 80)
 
 
 # evaluate the model on the test set

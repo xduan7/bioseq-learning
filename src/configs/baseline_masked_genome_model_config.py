@@ -66,15 +66,16 @@ _xfmr_enc_norm: bool = True
 
 # training configurations
 _max_num_epochs: int = 1000
+_early_stopping_patience: int = 32
 _optimizer: str = 'SGD'
 _optimizer_kwargs: Dict[str, Any] = {
-    'lr': 1e-5,
+    'lr': 1e-4,
     'momentum': 0.9,
 }
 _lr_scheduler: str = 'CosineAnnealingWarmRestarts'
 _lr_scheduler_kwargs: Dict[str, Any] = {
-    'T_0': 20,
-    'eta_min': 1e-7,
+    'T_0': 16,
+    'eta_min': 1e-6,
 }
 # logging configurations
 _num_trn_logs: int = 10
