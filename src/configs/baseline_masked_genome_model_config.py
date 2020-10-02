@@ -16,7 +16,7 @@ _experiment_name: str = \
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
-_dry_run: bool = True
+_dry_run: bool = False
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -38,7 +38,7 @@ _nvidia_amp_opt_level: str = 'O3'
 _vld_ratio: float = 0.1
 _tst_ratio: float = 0.1
 _seq_len: int = 2000
-_num_masks: float = 0.01
+_num_masks: float = 0.15
 _max_num_paddings: int = 500
 _dataloader_batch_size: int = 32
 _dataloader_num_workers: int = 20
@@ -47,7 +47,7 @@ _max_num_vld_batches_per_epoch: int = 10000
 
 
 # transformer and network module configurations
-# the embedding dimension for each "word"(A, T, G, C, <mask>, and <padding>)
+# the embedding dimension for each "word"(A, T, G, C, and <padding>)
 # must be dividable by the number of attention heads
 _emb_dim: int = 4
 # boolean indicator for positional encoding
@@ -64,7 +64,7 @@ _xfmr_enc_norm: bool = True
 
 
 # training configurations
-_max_num_epochs: int = 300
+_max_num_epochs: int = 500
 _early_stopping_patience: int = 32
 _optimizer: str = 'SGD'
 _optimizer_kwargs: Dict[str, Any] = {

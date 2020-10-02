@@ -22,7 +22,7 @@ from torch.utils.data import DataLoader
 from src import E_COLI_GENOME_PARENT_DIR_PATH
 from src.datasets import split_genome_dir_paths, GenomeDataset
 from src.datasets.genome_dataset import \
-    PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT
+    PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT, INDEX_NUCLEOTIDE_CHAR_DICT
 from src.modules import TransformerEncoderModel
 from src.optimization import get_torch_optimizer, get_torch_lr_scheduler
 from src.utilities import set_random_seed, get_computation_devices
@@ -266,6 +266,26 @@ def evaluate(_dataloader, test=False):
 
             _mask = _mask.bool().repeat(config['dataloader_batch_size'])
             _, _prediction = torch.max(_output, 1)
+
+            # TODO: turn this code segment into a printing function
+            # __mask = _mask[:config['seq_len']].view(-1).tolist()
+            # __target = _target[:config['seq_len']].view(-1).tolist()
+            # __prediction = _prediction[:config['seq_len']].view(-1).tolist()
+            #
+            # # print(__mask)
+            #
+            # for _i in range(len(__target)):
+            #     print(INDEX_NUCLEOTIDE_CHAR_DICT[__target[_i]], end='')
+            # print('')
+            # for _i in range(len(__mask)):
+            #     if __mask[_i]:
+            #         print('|', end='')
+            #     else:
+            #         print(' ', end='')
+            # print('')
+            # for _i in range(len(__prediction)):
+            #     print(INDEX_NUCLEOTIDE_CHAR_DICT[__prediction[_i]], end='')
+            # print('')
 
             _masked_target = _target[_mask]
             _masked_prediction = _prediction[_mask]

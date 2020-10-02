@@ -5,6 +5,7 @@ Project:            bioseq-learning
 File Description:
 
 """
+import copy
 import random
 from typing import Tuple
 
@@ -40,6 +41,7 @@ class TransformerEncoderModel(nn.Module):
 
         self._seq_len = seq_len
 
+        # TODO: add k-mer embedding option
         self._emb = nn.Embedding(
             num_embeddings=num_tokens,
             embedding_dim=emb_dim,
@@ -90,10 +92,11 @@ class TransformerEncoderModel(nn.Module):
         _mask = _mask.repeat(self._seq_len).view(-1, self._seq_len)
         _mask = _mask.to(src.device)
 
-        _tmp = self._emb(src)
+        _tmp = copy.deepcopy(src)
+        _tmp[_mask[0].bool()] = 0
+        _tmp = self._emb(_tmp)
         if self._pos_enc:
             _tmp = self._pos_enc(_tmp)
-
         _tmp = self._xfmr_enc(
             src=_tmp,
             mask=_mask,

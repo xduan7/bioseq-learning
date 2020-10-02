@@ -60,7 +60,7 @@ I'm sticking with nucleotide sequences for the following reasons:
 
 ### Visualization and Data Analysis
 -   [ ] conserved domain space visualization (and potentially classification) with PCA, t-SNE, or UMAP 
-    -   [ ] featurize conserved domain with statistical distances
+    -   [x] featurize conserved domain with statistical distances
         -   [x] psiblast/blastp the FASTA of CD representatives or master sequences
         -   [x] ~~RSAT compare-matrices (not accepting PSSM format)~~
         -   [x] ~~MEME-Tomtom motif comparison (not working because PSSMs have no motif)~~
@@ -98,21 +98,21 @@ then move on to something like the start and end of each and every CD.
 ---
 ## Learning Model
 
--   [ ] choose between the following NLP models
+-   [ ] choose between the following NLP models 
 
 * BERT
 * Transformer-XL
 * GPT/minGPT
+* ...
 
 
 ---
 ## Experiment Design
 
 before large-scale experiment:
--   [ ] learning with toy dataset (e.g. the ones used in [this paper](https://arxiv.org/pdf/1806.04342v1.pdf))?
--   [ ] learning solely on simple masked language model (without any annotation)
--   [ ] learning on a small fraction of genome
-    -   [ ] test with training set if necessary, to make sure that the loss could be trained to zero 
+-   [x] learning solely on simple masked language model (without any annotation)
+-   [x] learning on a small fraction of genome
+    -   [x] test with training set if necessary, to make sure that the loss could be trained to zero 
     
 parameters to tune:
 -   [ ] input length 

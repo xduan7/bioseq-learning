@@ -14,6 +14,7 @@ from Bio import SeqIO, SeqRecord
 from torch.utils.data import Dataset
 
 
+# MASKED_CHAR: str = '?'
 PADDING_CHAR: str = '-'
 NUCLEOTIDE_CHAR_INDEX_DICT: Dict[str, int] = {
     PADDING_CHAR: 0,
@@ -21,6 +22,10 @@ NUCLEOTIDE_CHAR_INDEX_DICT: Dict[str, int] = {
     't': 2,
     'g': 3,
     'c': 4,
+    # MASKED_CHAR: 5,
+}
+INDEX_NUCLEOTIDE_CHAR_DICT: Dict[int, str] = {
+    _index: _char for _char, _index in NUCLEOTIDE_CHAR_INDEX_DICT.items()
 }
 NUCLEOTIDE_CHAR_SET: Set[str] = set(NUCLEOTIDE_CHAR_INDEX_DICT.keys())
 NUCLEOTIDE_CHAR_VOCAB_SIZE: int = len(NUCLEOTIDE_CHAR_INDEX_DICT)
@@ -152,5 +157,7 @@ class GenomeDataset(Dataset):
 
         # get the paddings in seq as tensor of booleans
         _padding_mask = (_indexed_seq == PADDING_INDEX)
+
+        # TODO: add sequence mask here, instead of in the model forward func
 
         return _indexed_seq, _padding_mask
