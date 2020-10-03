@@ -5,8 +5,13 @@ Project:            bioseq-learning
 File Description:
 
 """
+import logging
 from math import sqrt
+from types import MappingProxyType
 from typing import Optional, List, Dict, Any
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 # experiment name associated with this set of configurations
@@ -16,7 +21,7 @@ _experiment_name: str = \
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
-_dry_run: bool = False
+_dry_run: bool = True
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -79,13 +84,30 @@ _lr_scheduler_kwargs: Dict[str, Any] = {
 # logging configurations
 _num_trn_logs: int = 10
 
+# adjust configurations if it's a dry run
+if _dry_run:
+
+    __dry_run_factor: int = 10
+    _warning_msg = \
+        f'reducing the data length (sequences and paddings), ' \
+        f'the number of training and validation batches, and ' \
+        f'the number of training and early stopping patience epochs ' \
+        f'by a factor of {__dry_run_factor} for dry run ... '
+
+    _seq_len //= __dry_run_factor
+    _max_num_paddings //= __dry_run_factor
+    _max_num_trn_batches_per_epoch //= __dry_run_factor
+    _max_num_vld_batches_per_epoch //= __dry_run_factor
+    _max_num_epochs //= __dry_run_factor
+    _early_stopping_patience //= __dry_run_factor
+
 
 # dictionary that maps names of each configuration to their object
 # e.g. 'experiment_name': _experiment_name, 'random_state': _random_state, etc.
 # note that the local configuration variable names must start with '_', but
 # the underscores are stripped away in the CONFIG dictionary
-config: Dict[str, object] = {
+config: MappingProxyType = MappingProxyType({
     variable_name[1:]: variable
     for variable_name, variable in locals().items() if
     variable_name.startswith('_') and not variable_name.startswith('__')
-}
+})

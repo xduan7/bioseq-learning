@@ -54,21 +54,6 @@ if config['nvidia_amp_opt']:
         _LOGGER.warning(_warning_msg)
         nvidia_amp_opt = False
 
-# adjust configurations if it's a dry-run experiment
-dry_run: bool = config['dry_run']
-if dry_run:
-    print('Performing dry-run with smaller training set and '
-          'virtually no validation and test sets ...')
-    config['seq_len'] = int(config['seq_len'] / 10)
-    config['max_num_paddings'] = int(config['max_num_paddings'] / 10)
-    config['max_num_trn_batches_per_epoch'] = \
-        int(config['max_num_trn_batches_per_epoch'] / 10)
-    config['max_num_vld_batches_per_epoch'] = \
-        int(config['max_num_vld_batches_per_epoch'] / 10)
-    config['max_num_epochs'] = int(config['max_num_epochs'] / 10)
-    config['early_stopping_patience'] = \
-        int(config['early_stopping_patience'] / 10)
-
 # print out the configurations
 print('=' * 80)
 print('Configurations:')
@@ -93,7 +78,7 @@ trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
 # genome, and setting validation/test sets to the same as the training one
 trn_genome_dir_paths = \
     trn_genome_dir_paths[0:1] \
-    if dry_run else trn_genome_dir_paths
+    if config['dry_run'] else trn_genome_dir_paths
 masked_genome_dataset_kwargs = {
     'seq_len': config['seq_len'],
     # 'num_masks': config['num_masks'],
@@ -105,7 +90,7 @@ trn_dataset = GenomeDataset(
     trn_genome_dir_paths,
     **masked_genome_dataset_kwargs,
 )
-if dry_run:
+if config['dry_run']:
     vld_dataset = trn_dataset
     tst_dataset = trn_dataset
 else:
