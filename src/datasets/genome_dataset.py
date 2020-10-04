@@ -8,7 +8,7 @@ File Description:
 import os
 import random
 import logging
-from typing import Tuple, List, Set, Dict, Iterable
+from typing import Tuple, List, Set, Dict, Iterable, Iterator
 
 import torch
 from Bio import SeqIO, SeqRecord
@@ -205,8 +205,28 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
             max_num_paddings=max_num_paddings,
         )
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator:
+        """initialize an iterator for the dataset
+
+        :return: iterable of the dataset
+        :rtype:
+        """
+        self._curr_pos: int = 0
+        self._shuffled_indices: List[int] = list(range(self._len))
+        random.shuffle(self._shuffled_indices)
         return self
 
-    def __next__(self):
-        return self[random.randrange(self._len)]
+    def __next__(self) -> Tuple[torch.LongTensor, torch.BoolTensor]:
+        """get the next sample from the dataset
+
+        :return: a tuple that contains a indexed genome sequence in
+        LongTensor and a mask tensor of the same size for padding in boolean
+        :rtype: tuple of two tensors
+        """
+        try:
+            _curr_index: int = self._shuffled_indices[self._curr_pos]
+            self._curr_pos = self._curr_pos + 1
+            return self[_curr_index]
+        except IndexError:
+            _error_msg = f'reached the end of the genome dataset'
+            raise StopIteration(_error_msg)
