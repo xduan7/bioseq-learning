@@ -6,12 +6,13 @@ File Description:
 
 """
 import os
+import random
 import logging
 from typing import Tuple, List, Set, Dict, Iterable
 
 import torch
 from Bio import SeqIO, SeqRecord
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, IterableDataset
 
 
 # MASKED_CHAR: str = '?'
@@ -42,9 +43,16 @@ class GenomeDataset(Dataset):
             genome_dir_paths: Iterable[str],
             seq_len: int,
             max_num_paddings: int,
-
     ):
-        """
+        """create a simple dataset of segmented genome sequences
+
+        The dataset will parse all the contigs under all given paths to
+        genomes. After checking if the contigs are legal (only includes ATGCs
+        for now), the dataset will cut them into given length with overlaps
+        and paddings. For example, a sequence of 'atgcatgc' will be
+        segmented into 'atgca', tgcat', 'gcatg', 'catgc','atgc-', 'tgc--'
+        when seq_len=5 and max_num_paddings=2.
+
         :param genome_dir_paths: an iterable of paths to individual genomes
         that are processed (check process_genome.py for details)
         :type genome_dir_paths: iterable of strings
@@ -55,13 +63,12 @@ class GenomeDataset(Dataset):
         genome sequence
         :type max_num_paddings: int
         """
-
         # sanity check for the sequence length and number of paddings
         assert 0 < max_num_paddings < seq_len
 
+        self._len: int = 0
         self._seq_len: int = seq_len
         self._max_num_paddings: int = max_num_paddings
-        self.__len = 0
 
         # dict that maps (genome id + contig id) to contig sequence
         self._genome_contig_seq_dict: Dict[str, str] = {}
@@ -119,20 +126,24 @@ class GenomeDataset(Dataset):
                 _num_seqs: int = len(_padded_seq) - self._seq_len + 1
                 _genome_contig_num_seqs_list.append(
                     (_genome_contig_id, _num_seqs))
-                self.__len += _num_seqs
+                self._len += _num_seqs
 
         # convert list to tuple for faster access
         self._genome_contig_num_seqs_tuple: Tuple[Tuple[str, int], ...] = \
             tuple(_genome_contig_num_seqs_list)
 
-
     def __len__(self) -> int:
-        return self.__len
+        """get the length of the dataset
+
+        :return: number of samples in total
+        :rtype: int
+        """
+        return self._len
 
     def __getitem__(
             self,
             index: int,
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
+    ) -> Tuple[torch.LongTensor, torch.BoolTensor]:
         """
         :param index: index to the genome sequence in [0, len(self)]
         :type index: int
@@ -140,7 +151,7 @@ class GenomeDataset(Dataset):
         LongTensor and a mask tensor of the same size for padding in boolean
         :rtype: tuple of two tensors
         """
-        _index: int = (index + self.__len) if index < 0 else index
+        _index: int = (index + self._len) if index < 0 else index
 
         _seq, _seq_char_list = '', []
         for _genome_contig_id, _num_seqs in self._genome_contig_num_seqs_tuple:
@@ -156,8 +167,46 @@ class GenomeDataset(Dataset):
             list(map(NUCLEOTIDE_CHAR_INDEX_DICT.get, _seq)))
 
         # get the paddings in seq as tensor of booleans
-        _padding_mask = (_indexed_seq == PADDING_INDEX)
-
-        # TODO: add sequence mask here, instead of in the model forward func
+        _padding_mask = torch.BoolTensor(_indexed_seq == PADDING_INDEX)
 
         return _indexed_seq, _padding_mask
+
+
+class GenomeIterDataset(IterableDataset, GenomeDataset):
+
+    def __init__(
+            self,
+            genome_dir_paths: Iterable[str],
+            seq_len: int,
+            max_num_paddings: int,
+    ):
+        """create a genome iterable dataset of segmented genome sequences
+
+        This dataset is pretty much the same as the base GenomeDataset,
+        except that it's iterable. When a PyTorch dataloader takes such
+        iterable dataset, it won't reach all the way to the end of the
+        dataset. Instead, each batch is generated with the __next__ method
+        on the fly. This could save us a ton of time during the
+        initialization of dataloader.
+
+        :param genome_dir_paths: an iterable of paths to individual genomes
+        that are processed (check process_genome.py for details)
+        :type genome_dir_paths: iterable of strings
+        :param seq_len: the length of genome sequences of the dataset after
+        segmentation and padding
+        :type seq_len: int
+        :param max_num_paddings: maximum number of padding characters in a
+        genome sequence
+        :type max_num_paddings: int
+        """
+        super(GenomeIterDataset, self).__init__(
+            genome_dir_paths=genome_dir_paths,
+            seq_len=seq_len,
+            max_num_paddings=max_num_paddings,
+        )
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return self[random.randrange(self._len)]
