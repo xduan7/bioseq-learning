@@ -18,11 +18,14 @@ import torch
 import torch.onnx
 import torch.nn as nn
 from torch.utils.data import DataLoader
+from torch.utils.data.dataloader import default_collate
 
 from src import E_COLI_GENOME_PARENT_DIR_PATH
-from src.datasets import split_genome_dir_paths, GenomeDataset
+from src.datasets import \
+    split_genome_dir_paths, print_masked_genome_predictions, \
+    SequenceMask, GenomeIterDataset
 from src.datasets.genome_dataset import \
-    PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT, INDEX_NUCLEOTIDE_CHAR_DICT
+    PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT
 from src.modules import TransformerEncoderModel
 from src.optimization import get_torch_optimizer, get_torch_lr_scheduler
 from src.utilities import set_random_seed, get_computation_devices
@@ -68,6 +71,12 @@ print('=' * 80)
 # Load data
 ###############################################################################
 
+# the number of masks in each padded sequence
+num_masks: int = int(np.round(config['num_masks'] * config['seq_len'])) \
+    if isinstance(config['num_masks'], float) else config['num_masks']
+# the number of tokens in the nucleotide char: index dict
+num_tokens: int = len(NUCLEOTIDE_CHAR_INDEX_DICT)
+
 trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
     split_genome_dir_paths(
         genome_parent_dir_path=E_COLI_GENOME_PARENT_DIR_PATH,
@@ -75,57 +84,62 @@ trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
         tst_ratio=config['tst_ratio']
     )
 # if experimental (dry-run) indicator is set to True, then use only one
-# genome, and setting validation/test sets to the same as the training one
-trn_genome_dir_paths = \
-    trn_genome_dir_paths[0:1] \
-    if config['dry_run'] else trn_genome_dir_paths
+# genome for training, validation and testing separately
+if config['dry_run']:
+    # could pick genome 1033813.3 for one-contig genome
+    trn_genome_dir_paths = trn_genome_dir_paths[0:1]
+    vld_genome_dir_paths = trn_genome_dir_paths[0:1]
+    tst_genome_dir_paths = trn_genome_dir_paths[0:1]
+
 masked_genome_dataset_kwargs = {
     'seq_len': config['seq_len'],
-    # 'num_masks': config['num_masks'],
     'max_num_paddings': config['max_num_paddings'],
 }
 print(f'Generating training dataset from '
       f'{len(trn_genome_dir_paths)} genomes ...')
-trn_dataset = GenomeDataset(
+trn_dataset = GenomeIterDataset(
     trn_genome_dir_paths,
     **masked_genome_dataset_kwargs,
 )
-if config['dry_run']:
-    vld_dataset = trn_dataset
-    tst_dataset = trn_dataset
-else:
-    print(f'Generating validation dataset from '
-          f'{len(vld_genome_dir_paths)} genomes ...')
-    vld_dataset = GenomeDataset(
-        vld_genome_dir_paths,
-        **masked_genome_dataset_kwargs,
-    )
-    print(f'Generating testing dataset from '
-          f'{len(tst_genome_dir_paths)} genomes ...')
-    tst_dataset = GenomeDataset(
-        tst_genome_dir_paths,
-        **masked_genome_dataset_kwargs,
-    )
+print(f'Generating validation dataset from '
+      f'{len(vld_genome_dir_paths)} genomes ...')
+vld_dataset = GenomeIterDataset(
+    vld_genome_dir_paths,
+    **masked_genome_dataset_kwargs,
+)
+print(f'Generating testing dataset from '
+      f'{len(tst_genome_dir_paths)} genomes ...')
+tst_dataset = GenomeIterDataset(
+    tst_genome_dir_paths,
+    **masked_genome_dataset_kwargs,
+)
+
+# modified collection function so that sequence shape is compatible with
+# transformer (sequence_length, batch_size)
+def __collate_fn(__batch):
+    __batch = default_collate(__batch)
+    __indexed_seqs = __batch[0].transpose(0, 1).contiguous()
+    __padding_mask = __batch[1]
+    return __indexed_seqs, __padding_mask
+
 
 dataloader_kwargs = {
     'batch_size': config['dataloader_batch_size'],
-    'shuffle': True,
     'num_workers': config['dataloader_num_workers'],
     'pin_memory': (device.type == 'cuda'),
     # layer normalization requires that the input tensor has the same size,
     # and therefore requires dropping the last batch that might often be of
     # some different shape
     'drop_last': config['xfmr_enc_norm'],
+    'collate_fn': __collate_fn,
 }
+
 trn_dataloader = DataLoader(trn_dataset, **dataloader_kwargs)
 vld_dataloader = DataLoader(vld_dataset, **dataloader_kwargs)
 tst_dataloader = DataLoader(tst_dataset, **dataloader_kwargs)
 
-# the number of masks in each padded sequence
-num_masks: int = int(np.round(config['num_masks'] * config['seq_len'])) \
-    if isinstance(config['num_masks'], float) else config['num_masks']
-# the number of tokens in the nucleotide char: index dict
-num_tokens: int = len(NUCLEOTIDE_CHAR_INDEX_DICT)
+# create a SequenceMask which generates the sequence and attention masks
+seq_mask = SequenceMask(seq_len=config['seq_len'], num_masks=num_masks)
 
 
 ###############################################################################
@@ -189,17 +203,29 @@ def train(cur_epoch: int):
         if _batch_index >= config['max_num_trn_batches_per_epoch']:
             break
 
-        _indexed_seqs = _batch[0].transpose(0, 1).to(device)
-        _key_padding_mask = _batch[1].to(device)
+        _indexed_seqs = _batch[0].to(device)
+        _padding_mask = _batch[1].to(device)
+
+        _attn_mask, _src_mask = seq_mask.update()
+        _attn_mask = _attn_mask.to(device)
+        _src_mask = _src_mask.to(device)
+
+        _masked_indexed_seqs = _indexed_seqs.clone()
+        _masked_indexed_seqs[_src_mask, :] = 0
 
         # model.zero_grad()
         optimizer.zero_grad()
 
-        _output, _ = \
-            model(_indexed_seqs, num_masks, _key_padding_mask)
-        _output = _output.view(-1, num_tokens)
-        _target = _indexed_seqs.contiguous().view(-1)
-        _loss = criterion(input=_output, target=_target)
+        # the model output has the shape of (seq_len, batch_size, num_tokens)
+        _output = model(
+            src=_masked_indexed_seqs,
+            attn_mask=_attn_mask,
+            padding_mask=_padding_mask,
+        )
+        _loss = criterion(
+            input=_output.view(-1, num_tokens),
+            target=_indexed_seqs.view(-1),
+        )
 
         _loss.backward()
         _total_loss += _loss.item()
@@ -229,7 +255,7 @@ def evaluate(_dataloader, test=False):
     _num_correct_predictions = 0
 
     with torch.no_grad():
-        for _batch_index, _batch in enumerate(trn_dataloader):
+        for _batch_index, _batch in enumerate(_dataloader):
 
             # stop this epoch if there has been too many batches already
             # this is only applicable for validation
@@ -237,50 +263,55 @@ def evaluate(_dataloader, test=False):
                     _batch_index >= config['max_num_vld_batches_per_epoch']:
                 break
 
-            _indexed_seqs = _batch[0].transpose(0, 1).to(device)
-            _key_padding_mask = _batch[1].to(device)
+            _indexed_seqs = _batch[0].to(device)
+            _padding_mask = _batch[1].to(device)
 
-            _output, _mask = \
-                model(_indexed_seqs, num_masks, _key_padding_mask)
+            _attn_mask, _src_mask = seq_mask.update()
+            _attn_mask = _attn_mask.to(device)
+            _src_mask = _src_mask.to(device)
+
+            _masked_indexed_seqs = _indexed_seqs.clone()
+            _masked_indexed_seqs[_src_mask, :] = 0
+
+            _output = model(
+                src=_masked_indexed_seqs,
+                attn_mask=_attn_mask,
+                padding_mask=_padding_mask,
+            )
+            _input = _masked_indexed_seqs.view(-1)
             _output = _output.view(-1, num_tokens)
-            _target = _indexed_seqs.contiguous().view(-1)
-            _loss = criterion(input=_output, target=_target)
+            _target = _indexed_seqs.view(-1)
 
-            # collect the metrics: loss and accuracy
+            # collect the loss
+            _loss = criterion(input=_output, target=_target)
             _total_loss += _loss.item()
 
-            _mask = _mask.bool().repeat(config['dataloader_batch_size'])
+            # collect the accuracy
             _, _prediction = torch.max(_output, 1)
 
-            # TODO: turn this code segment into a printing function
-            # __mask = _mask[:config['seq_len']].view(-1).tolist()
-            # __target = _target[:config['seq_len']].view(-1).tolist()
-            # __prediction = _prediction[:config['seq_len']].view(-1).tolist()
-            #
-            # # print(__mask)
-            #
-            # for _i in range(len(__target)):
-            #     print(INDEX_NUCLEOTIDE_CHAR_DICT[__target[_i]], end='')
-            # print('')
-            # for _i in range(len(__mask)):
-            #     if __mask[_i]:
-            #         print('|', end='')
-            #     else:
-            #         print(' ', end='')
-            # print('')
-            # for _i in range(len(__prediction)):
-            #     print(INDEX_NUCLEOTIDE_CHAR_DICT[__prediction[_i]], end='')
-            # print('')
+            # prediction masks over the whole batch is defined by where the
+            # input and target sequences differ; in this case, the masked
+            # padding is still a mask, therefore will not be counted
+            # note that here is how to get the prediction masks over the
+            # whole batch including the paddings:
+            # _batch_mask = _src_mask.repeat(config['dataloader_batch_size'])
+            # _batch_mask = _batch_mask.view(-1, config['seq_len'])
+            # _batch_mask = _batch_mask.transpose(1, 0).contiguous()
+            # _batch_mask = _batch_mask.view(-1)
+            _batch_mask: torch.BoolTensor = (_input != _target)
 
-            _masked_target = _target[_mask]
-            _masked_prediction = _prediction[_mask]
-            _no_padding_masks = _masked_target != PADDING_INDEX
+            _masked_target = _target[_batch_mask]
+            _masked_prediction = _prediction[_batch_mask]
+            _num_total_predictions += _batch_mask.sum().item()
+            _num_correct_predictions += \
+                (_masked_prediction == _masked_target).sum().item()
 
-            _num_total_predictions += _no_padding_masks.sum().item()
-            _num_correct_predictions += (
-                    _no_padding_masks &
-                    (_masked_prediction == _masked_target)
-            ).sum().item()
+            # print the predictions and the targets
+            print_masked_genome_predictions(
+                config['seq_len'],
+                config['dataloader_batch_size'],
+                _input, _target, _prediction,
+            )
 
     _num_batches: int = min(
         len(_dataloader),
@@ -321,6 +352,7 @@ try:
             best_model = copy.deepcopy(model)
         elif epoch - best_epoch >= config['early_stopping_patience']:
             print('exiting from training early for early stopping ... ')
+            break
 
 except KeyboardInterrupt:
     print('exiting from training early for KeyboardInterrupt ... ')

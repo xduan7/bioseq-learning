@@ -79,27 +79,28 @@ class TransformerEncoderModel(nn.Module):
 
     def forward(
             self,
-            src: torch.Tensor,
-            num_masks: int,
-            src_key_padding_mask: torch.Tensor,
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
+            src: torch.LongTensor,
+            attn_mask: torch.FloatTensor,
+            padding_mask: torch.BoolTensor,
+    ) -> torch.FloatTensor:
 
         # dynamically generate a mask of size (seq_len, seq_len)
         # indicates the accessibility of the tokens for the ith sample
-        _masked_indices = random.sample(range(self._seq_len), num_masks)
-        _mask = torch.zeros(size=(self._seq_len, ), dtype=torch.float)
-        _mask.scatter_(0, torch.LongTensor(_masked_indices), float('-inf'))
-        _mask = _mask.repeat(self._seq_len).view(-1, self._seq_len)
-        _mask = _mask.to(src.device)
+        # _masked_indices = random.sample(range(self._seq_len), num_masks)
+        # _mask = torch.zeros(size=(self._seq_len, ), dtype=torch.float)
+        # _mask.scatter_(0, torch.LongTensor(_masked_indices), float('-inf'))
+        # _mask = _mask.repeat(self._seq_len).view(-1, self._seq_len)
+        # _mask = _mask.to(src.device)
+        #
+        # _tmp = copy.deepcopy(src)
+        # _tmp[_mask[0].bool()] = 0
 
-        _tmp = copy.deepcopy(src)
-        _tmp[_mask[0].bool()] = 0
-        _tmp = self._emb(_tmp)
+        _tmp = self._emb(src)
         if self._pos_enc:
             _tmp = self._pos_enc(_tmp)
         _tmp = self._xfmr_enc(
             src=_tmp,
-            mask=_mask,
-            src_key_padding_mask=src_key_padding_mask,
+            mask=attn_mask,
+            src_key_padding_mask=padding_mask,
         )
-        return self._dec(_tmp), _mask[0]
+        return self._dec(_tmp)

@@ -21,7 +21,7 @@ _experiment_name: str = \
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
-_dry_run: bool = True
+_dry_run: bool = False
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -43,8 +43,8 @@ _nvidia_amp_opt_level: str = 'O3'
 _vld_ratio: float = 0.1
 _tst_ratio: float = 0.1
 _seq_len: int = 2000
-_num_masks: float = 0.15
-_max_num_paddings: int = 500
+_num_masks: float = 0.10
+_max_num_paddings: int = 1000
 _dataloader_batch_size: int = 32
 _dataloader_num_workers: int = 20
 _max_num_trn_batches_per_epoch: int = 10000
@@ -73,20 +73,19 @@ _max_num_epochs: int = 500
 _early_stopping_patience: int = 32
 _optimizer: str = 'SGD'
 _optimizer_kwargs: Dict[str, Any] = {
-    'lr': 1e-4,
+    'lr': 5e-3,
     'momentum': 0.9,
 }
 _lr_scheduler: str = 'CosineAnnealingWarmRestarts'
 _lr_scheduler_kwargs: Dict[str, Any] = {
     'T_0': 16,
-    'eta_min': 1e-6,
+    'eta_min': 5e-4,
 }
 # logging configurations
 _num_trn_logs: int = 10
 
 # adjust configurations if it's a dry run
 if _dry_run:
-
     __dry_run_factor: int = 10
     _warning_msg = \
         f'reducing the data length (sequences and paddings), ' \
