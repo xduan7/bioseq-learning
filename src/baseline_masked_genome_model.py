@@ -12,6 +12,7 @@ File Description:
 import copy
 import time
 import logging
+import traceback
 
 import numpy as np
 import torch
@@ -43,19 +44,23 @@ device = get_computation_devices(
     preferred_gpu_list=config['preferred_gpu_list'],
     multi_gpu_flag=config['multi_gpu_flag'],
 )[0]
-# specify the cuda devices explicitly so that apex won't use cuda: 0
-torch.cuda.set_device(device)
+if device.type == 'cuda':
+    # specify the cuda devices explicitly so that apex won't use cuda: 0
+    torch.cuda.set_device(device)
 
-nvidia_amp_opt: bool = config['nvidia_amp_opt']
-if config['nvidia_amp_opt']:
-    try:
-        from apex import amp
-    except ImportError:
-        _warning_msg = \
-            f'Cannot import NVIDIA-apex. ' \
-            f'Ignoring mixed-precision training/inference ... '
-        _LOGGER.warning(_warning_msg)
-        nvidia_amp_opt = False
+    nvidia_amp_opt: bool = config['nvidia_amp_opt']
+    if config['nvidia_amp_opt']:
+        try:
+            from apex import amp
+        except ImportError:
+            _warning_msg = \
+                f'Cannot import NVIDIA-apex. ' \
+                f'Ignoring mixed-precision training/inference ... '
+            _LOGGER.warning(_warning_msg)
+            nvidia_amp_opt = False
+else:
+    nvidia_amp_opt: bool = False
+
 
 # print out the configurations
 print('=' * 80)
@@ -87,9 +92,9 @@ trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
 # genome for training, validation and testing separately
 if config['dry_run']:
     # could pick genome 1033813.3 for one-contig genome
-    trn_genome_dir_paths = trn_genome_dir_paths[0:50]
-    vld_genome_dir_paths = vld_genome_dir_paths[0:50]
-    tst_genome_dir_paths = tst_genome_dir_paths[0:5]
+    trn_genome_dir_paths = trn_genome_dir_paths[0:10]
+    vld_genome_dir_paths = vld_genome_dir_paths[0:10]
+    tst_genome_dir_paths = tst_genome_dir_paths[0:1]
 
 masked_genome_dataset_kwargs = {
     'seq_len': config['seq_len'],
@@ -331,37 +336,44 @@ def evaluate(_dataloader, test=False):
 best_vld_loss, best_vld_acc, best_epoch, best_model = \
     float('inf'), 0., 0, None
 print('=' * 80)
-try:
-    for epoch in range(1, config['max_num_epochs']):
+while True:
+    try:
+        for epoch in range(1, config['max_num_epochs']):
 
-        epoch_start_time = time.time()
-        train(epoch)
-        epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
-        lr_scheduler.step()
-        epoch_time_in_sec = time.time() - epoch_start_time
+            epoch_start_time = time.time()
+            train(epoch)
+            epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
+            lr_scheduler.step()
+            epoch_time_in_sec = time.time() - epoch_start_time
 
-        print('-' * 80)
-        print(
-            f'| end of epoch {epoch:3d} '
-            f'| time {epoch_time_in_sec:>5.0f} s '
-            f'| validation loss {epoch_vld_loss:5.4f} '
-            f'| validation accuracy {(epoch_vld_acc * 100):3.3f}% '
-        )
-        print('-' * 80)
+            print('-' * 80)
+            print(
+                f'| end of epoch {epoch:3d} '
+                f'| time {epoch_time_in_sec:>5.0f} s '
+                f'| validation loss {epoch_vld_loss:5.4f} '
+                f'| validation accuracy {(epoch_vld_acc * 100):3.3f}% '
+            )
+            print('-' * 80)
 
-        # if epoch_vld_loss < best_vld_loss:
-        if epoch_vld_acc > best_vld_acc:
-            best_vld_loss = epoch_vld_loss
-            best_vld_acc = epoch_vld_acc
-            best_epoch = epoch
-            best_model = copy.deepcopy(model)
-        elif epoch - best_epoch >= config['early_stopping_patience']:
-            print('exiting from training early for early stopping ... ')
-            break
+            # if epoch_vld_loss < best_vld_loss:
+            if epoch_vld_acc > best_vld_acc:
+                best_vld_loss = epoch_vld_loss
+                best_vld_acc = epoch_vld_acc
+                best_epoch = epoch
+                best_model = copy.deepcopy(model)
+            elif epoch - best_epoch >= config['early_stopping_patience']:
+                print('exiting from training early for early stopping ... ')
+                break
+        break
 
-except KeyboardInterrupt:
-    print('exiting from training early for KeyboardInterrupt ... ')
+    except RuntimeError as e:
+        # CUDA memory or other errors from the training/evaluation process
+        traceback.print_exc()
+        exit(-1)
 
+    except KeyboardInterrupt:
+        print('exiting from training early for KeyboardInterrupt ... ')
+        break
 
 # evaluate the model on the test set
 if best_model:
