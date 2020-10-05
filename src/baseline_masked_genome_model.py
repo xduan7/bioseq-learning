@@ -87,9 +87,9 @@ trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
 # genome for training, validation and testing separately
 if config['dry_run']:
     # could pick genome 1033813.3 for one-contig genome
-    trn_genome_dir_paths = trn_genome_dir_paths[0:5]
-    vld_genome_dir_paths = trn_genome_dir_paths[0:1]
-    tst_genome_dir_paths = trn_genome_dir_paths[0:1]
+    trn_genome_dir_paths = trn_genome_dir_paths[0:50]
+    vld_genome_dir_paths = vld_genome_dir_paths[0:50]
+    tst_genome_dir_paths = tst_genome_dir_paths[0:5]
 
 masked_genome_dataset_kwargs = {
     'seq_len': config['seq_len'],
@@ -127,15 +127,13 @@ dataloader_kwargs = {
     'batch_size': config['dataloader_batch_size'],
     'num_workers': config['dataloader_num_workers'],
     'pin_memory': (device.type == 'cuda'),
-    # shuffle should be set to False for all cases:
+    # shuffle should be set to False for training adn validation:
     # (0) shuffling all the genome sequences takes extremely long and a good
     #     chunk of memory (> 150 G)
     # (1) training and validation sets are both iterable datasets,
     #     which requires no shuffling in the dataloader level
-    # (2) testing set ordering does not matter, since all the samples will
-    #     be iterated and evaluated (except for the last batch if drop_last
-    #     is set to True)
-    'shuffle': False,
+    # 'shuffle': False,
+    #
     # layer normalization requires that the input tensor has the same size
     # therefore requires dropping the last batch of data, which is often of
     # different shapes compared to previous batches
@@ -145,7 +143,7 @@ dataloader_kwargs = {
 
 trn_dataloader = DataLoader(trn_iter_dataset, **dataloader_kwargs)
 vld_dataloader = DataLoader(vld_iter_dataset, **dataloader_kwargs)
-tst_dataloader = DataLoader(tst_dataset, **dataloader_kwargs)
+tst_dataloader = DataLoader(tst_dataset, shuffle=True, **dataloader_kwargs)
 
 # create a SequenceMask which generates the sequence and attention masks
 seq_mask = SequenceMask(seq_len=config['seq_len'], num_masks=num_masks)
@@ -322,10 +320,8 @@ def evaluate(_dataloader, test=False):
             #     _input, _target, _prediction,
             # )
 
-    _num_batches: int = min(
-        len(_dataloader),
-        config['max_num_vld_batches_per_epoch'],
-    )
+    _num_batches: int = len(_dataloader) if test else \
+        min(len(_dataloader), config['max_num_vld_batches_per_epoch'])
     _loss = _total_loss / _num_batches
     _acc = _num_correct_predictions / _num_total_predictions
     return _loss, _acc
@@ -373,7 +369,7 @@ if best_model:
     tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
     print('=' * 80)
     print(
-        f'| End of training '
+        f'| end of training '
         f'| test loss {tst_loss:5.4f} '
         f'| test accuracy {(tst_acc * 100):3.2f}% '
     )
