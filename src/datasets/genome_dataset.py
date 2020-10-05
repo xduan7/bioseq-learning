@@ -179,6 +179,7 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
             genome_dir_paths: Iterable[str],
             seq_len: int,
             max_num_paddings: int,
+            strict_iteration: bool = False,
     ):
         """create a genome iterable dataset of segmented genome sequences
 
@@ -198,26 +199,36 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
         :param max_num_paddings: maximum number of padding characters in a
         genome sequence
         :type max_num_paddings: int
+        :param strict_iteration: indicator for strict iteration, which means
+        that for a single iteration, an index will not be traversed twice;
+        if set to False, the iterative dataset will randomly grab a sample
+        without any bookkeeping action; set to False by default
+        :type strict_iteration: bool
         """
         super(GenomeIterDataset, self).__init__(
             genome_dir_paths=genome_dir_paths,
             seq_len=seq_len,
             max_num_paddings=max_num_paddings,
         )
+        self._strict_iteration: bool = strict_iteration
+        if self._strict_iteration:
+            _warning_msg = \
+                f'PyTorch IterableDataset with strict iteration is ' \
+                f'functionally the same as Dataset, but slower due to the ' \
+                f'poor handling of shuffling. Use GenomeDataset and ' \
+                f'shuffle=True for its DataLoader if necessary.'
+            _LOGGER.warning(_warning_msg)
 
-    def __iter__(self) -> Iterator:
-        """initialize an iterator for the dataset
-
-        :return: iterable of the dataset
-        :rtype:
+    def __refresh_indices(self) -> None:
+        """refresh the shuffled indices for a new iteration
         """
         self._curr_pos: int = 0
         self._shuffled_indices: List[int] = list(range(self._len))
         random.shuffle(self._shuffled_indices)
-        return self
 
-    def __next__(self) -> Tuple[torch.LongTensor, torch.BoolTensor]:
-        """get the next sample from the dataset
+    def __strictly_next(self) -> Tuple[torch.LongTensor, torch.BoolTensor]:
+        """get the next sample from the dataset, which is indexed with a
+        shuffled list and a position pointer
 
         :return: a tuple that contains a indexed genome sequence in
         LongTensor and a mask tensor of the same size for padding in boolean
@@ -230,3 +241,35 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
         except IndexError:
             _error_msg = f'reached the end of the genome dataset'
             raise StopIteration(_error_msg)
+
+    def __randomly_next(self) -> Tuple[torch.LongTensor, torch.BoolTensor]:
+        """get the a random sample from the dataset
+
+        :return: a tuple that contains a indexed genome sequence in
+        LongTensor and a mask tensor of the same size for padding in boolean
+        :rtype: tuple of two tensors
+        """
+        return self[random.randint(0, len(self) - 1)]
+
+    def __iter__(self) -> Iterator:
+        """initialize an iterator for the dataset
+
+        :return: iterable of the dataset
+        :rtype: Iterator
+        """
+        if self._strict_iteration:
+            self.__refresh_indices()
+        return self
+
+    def __next__(self) -> Tuple[torch.LongTensor, torch.BoolTensor]:
+        """get the next sample from the dataset
+
+        :return: a tuple that contains a indexed genome sequence in
+        LongTensor and a mask tensor of the same size for padding in boolean
+        :rtype: tuple of two tensors
+        """
+        if self._strict_iteration:
+            return self.__strictly_next()
+        else:
+            return self.__randomly_next()
+

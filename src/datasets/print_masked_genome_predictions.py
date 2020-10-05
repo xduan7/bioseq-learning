@@ -41,6 +41,7 @@ def print_masked_genome_predictions(
 
         assert len(_input) == len(_target) == len(_prediction)
 
+        # TODO: reduce the complexity of the iterative printing loops
         # print predicted sequence with color
         print('pred: ', end='')
         for _j in range(len(_input)):

@@ -23,7 +23,7 @@ from torch.utils.data.dataloader import default_collate
 from src import E_COLI_GENOME_PARENT_DIR_PATH
 from src.datasets import \
     split_genome_dir_paths, print_masked_genome_predictions, \
-    SequenceMask, GenomeIterDataset
+    SequenceMask, GenomeDataset, GenomeIterDataset
 from src.datasets.genome_dataset import \
     PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT
 from src.modules import TransformerEncoderModel
@@ -87,7 +87,7 @@ trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
 # genome for training, validation and testing separately
 if config['dry_run']:
     # could pick genome 1033813.3 for one-contig genome
-    trn_genome_dir_paths = trn_genome_dir_paths[0:1]
+    trn_genome_dir_paths = trn_genome_dir_paths[0:5]
     vld_genome_dir_paths = trn_genome_dir_paths[0:1]
     tst_genome_dir_paths = trn_genome_dir_paths[0:1]
 
@@ -97,19 +97,19 @@ masked_genome_dataset_kwargs = {
 }
 print(f'Generating training dataset from '
       f'{len(trn_genome_dir_paths)} genomes ...')
-trn_dataset = GenomeIterDataset(
+trn_iter_dataset = GenomeIterDataset(
     trn_genome_dir_paths,
     **masked_genome_dataset_kwargs,
 )
 print(f'Generating validation dataset from '
       f'{len(vld_genome_dir_paths)} genomes ...')
-vld_dataset = GenomeIterDataset(
+vld_iter_dataset = GenomeIterDataset(
     vld_genome_dir_paths,
     **masked_genome_dataset_kwargs,
 )
 print(f'Generating testing dataset from '
       f'{len(tst_genome_dir_paths)} genomes ...')
-tst_dataset = GenomeIterDataset(
+tst_dataset = GenomeDataset(
     tst_genome_dir_paths,
     **masked_genome_dataset_kwargs,
 )
@@ -127,15 +127,24 @@ dataloader_kwargs = {
     'batch_size': config['dataloader_batch_size'],
     'num_workers': config['dataloader_num_workers'],
     'pin_memory': (device.type == 'cuda'),
-    # layer normalization requires that the input tensor has the same size,
-    # and therefore requires dropping the last batch that might often be of
-    # some different shape
+    # shuffle should be set to False for all cases:
+    # (0) shuffling all the genome sequences takes extremely long and a good
+    #     chunk of memory (> 150 G)
+    # (1) training and validation sets are both iterable datasets,
+    #     which requires no shuffling in the dataloader level
+    # (2) testing set ordering does not matter, since all the samples will
+    #     be iterated and evaluated (except for the last batch if drop_last
+    #     is set to True)
+    'shuffle': False,
+    # layer normalization requires that the input tensor has the same size
+    # therefore requires dropping the last batch of data, which is often of
+    # different shapes compared to previous batches
     'drop_last': config['xfmr_enc_norm'],
     'collate_fn': __collate_fn,
 }
 
-trn_dataloader = DataLoader(trn_dataset, **dataloader_kwargs)
-vld_dataloader = DataLoader(vld_dataset, **dataloader_kwargs)
+trn_dataloader = DataLoader(trn_iter_dataset, **dataloader_kwargs)
+vld_dataloader = DataLoader(vld_iter_dataset, **dataloader_kwargs)
 tst_dataloader = DataLoader(tst_dataset, **dataloader_kwargs)
 
 # create a SequenceMask which generates the sequence and attention masks
@@ -306,12 +315,12 @@ def evaluate(_dataloader, test=False):
             _num_correct_predictions += \
                 (_masked_prediction == _masked_target).sum().item()
 
-            # print the predictions and the targets
-            print_masked_genome_predictions(
-                config['seq_len'],
-                config['dataloader_batch_size'],
-                _input, _target, _prediction,
-            )
+            # # print the predictions and the targets
+            # print_masked_genome_predictions(
+            #     config['seq_len'],
+            #     config['dataloader_batch_size'],
+            #     _input, _target, _prediction,
+            # )
 
     _num_batches: int = min(
         len(_dataloader),

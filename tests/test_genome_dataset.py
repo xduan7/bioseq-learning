@@ -29,7 +29,11 @@ _TEST_NUM_MASKS: int = 5
 _TEST_MAX_NUM_PADDINGS: int = 10
 _TEST_BATCH_SIZE: int = 16
 _PADDING_INDEX: int = NUCLEOTIDE_CHAR_INDEX_DICT[PADDING_CHAR]
-
+_TEST_GENOME_DATASET_KWARGS = {
+    'genome_dir_paths': _TEST_GENOME_DIR_PATHS,
+    'seq_len': _TEST_SEQ_LEN,
+    'max_num_paddings': _TEST_MAX_NUM_PADDINGS,
+}
 
 class TestGenomeDataset(unittest.TestCase):
     """unittest class for 'genome_dataset' and 'genome_iter_dataset' classes
@@ -37,12 +41,7 @@ class TestGenomeDataset(unittest.TestCase):
     def test_genome_dataset(self):
         """test 'genome_dataset' class
         """
-        genome_dataset = GenomeDataset(
-            genome_dir_paths=_TEST_GENOME_DIR_PATHS,
-            seq_len=_TEST_SEQ_LEN,
-            max_num_paddings=_TEST_MAX_NUM_PADDINGS,
-        )
-
+        genome_dataset = GenomeDataset(**_TEST_GENOME_DATASET_KWARGS)
         for _i in range(len(genome_dataset)):
             _indexed_seq, _padding_mask = genome_dataset[_i]
             # test if all the indexed values are in the index dict
@@ -54,19 +53,42 @@ class TestGenomeDataset(unittest.TestCase):
     def test_genome_iter_dataset(self):
         """test 'genome_iter_dataset' class
         """
-        genome_iter_dataloader = DataLoader(
+        # test the strictly sampling dataloader
+        # make sure that the number of batches during an iteration only
+        # traverse all the samples once, and therefore the total number of
+        # batches should be the same as the length of the dataloader
+        genome_strict_iter_dataloader = DataLoader(
             GenomeIterDataset(
-                genome_dir_paths=_TEST_GENOME_DIR_PATHS,
-                seq_len=_TEST_SEQ_LEN,
-                max_num_paddings=_TEST_MAX_NUM_PADDINGS,
+                **_TEST_GENOME_DATASET_KWARGS,
+                strict_iteration=True,
             ),
             batch_size=_TEST_BATCH_SIZE,
+            drop_last=True,
         )
-
-        for _batch_data in genome_iter_dataloader:
+        _num_batches: int = 0
+        for _batch_data in genome_strict_iter_dataloader:
             assert _batch_data[0].shape == (_TEST_BATCH_SIZE, _TEST_SEQ_LEN)
             assert _batch_data[1].shape == (_TEST_BATCH_SIZE, _TEST_SEQ_LEN)
-            break
+            _num_batches += 1
+            assert _num_batches <= len(genome_strict_iter_dataloader)
+
+        # test the randomly sampling dataloader
+        # make sure that the random sampling goes beyond the length of the
+        # dataloader (can go on and on but with replacement)
+        genome_random_iter_dataloader = DataLoader(
+            GenomeIterDataset(**_TEST_GENOME_DATASET_KWARGS),
+            batch_size=_TEST_BATCH_SIZE,
+            drop_last=True,
+        )
+        _num_rand_batches: int = 0
+        for _batch_data in genome_random_iter_dataloader:
+            assert _batch_data[0].shape == (_TEST_BATCH_SIZE, _TEST_SEQ_LEN)
+            assert _batch_data[1].shape == (_TEST_BATCH_SIZE, _TEST_SEQ_LEN)
+            _num_rand_batches += 1
+
+            if _num_rand_batches > _num_batches:
+                return
+        assert False
 
 
 if __name__ == '__main__':
