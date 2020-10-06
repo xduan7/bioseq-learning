@@ -62,6 +62,7 @@ if default_config['nni_search']:
     #     multi_gpu_flag=config['multi_gpu_flag'],
     # )[0]
     device = torch.device(torch.cuda.current_device())
+    nni_search: bool = True
 else:
     config = default_config
     # TODO: multi-GPU model ...
@@ -69,6 +70,7 @@ else:
         preferred_gpu_list=config['preferred_gpu_list'],
         multi_gpu_flag=config['multi_gpu_flag'],
     )[0]
+    nni_search: bool = False
 
 set_random_seed(
     random_seed=config['random_seed'],
@@ -274,9 +276,6 @@ def train(cur_epoch: int):
 
         _trn_loss: float = _trn_loss.item()
         _total_trn_loss += _trn_loss
-        # nni.report_intermediate_result(
-        #     {'trn_loss': _trn_loss}
-        # )
 
         if (_batch_index + 1) % _trn_log_interval == 0:
 
@@ -293,9 +292,6 @@ def train(cur_epoch: int):
 
             _total_trn_loss = 0.
             _start_time = time.time()
-            # nni.report_intermediate_result(
-            #     {'trn_avg_loss': _trn_avg_loss}
-            # )
 
 
 def evaluate(_dataloader, test=False):
@@ -382,11 +378,12 @@ while True:
             epoch_start_time = time.time()
             train(epoch)
             epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
-            nni.report_intermediate_result({
-                'vld_avg_loss': epoch_vld_loss,
-                'vld_acc': epoch_vld_acc,
-                'default': epoch_vld_acc,
-            })
+            if nni_search:
+                nni.report_intermediate_result({
+                    'vld_avg_loss': epoch_vld_loss,
+                    'vld_acc': epoch_vld_acc,
+                    'default': epoch_vld_acc,
+                })
 
             lr_scheduler.step()
             epoch_time_in_sec = time.time() - epoch_start_time
@@ -413,14 +410,16 @@ while True:
             if math.isnan(epoch_vld_loss):
                 print('validation loss gets to NaN; exiting current '
                       'invalid trail ...')
-                nni.report_final_result({'default': 0})
+                if nni_search:
+                    nni.report_final_result({'default': 0})
                 sys.exit()
         break
 
     except RuntimeError as e:
         # CUDA memory or other errors from the training/evaluation process
         traceback.print_exc()
-        nni.report_final_result({'default': 0})
+        if nni_search:
+            nni.report_final_result({'default': 0})
         sys.exit()
 
     except KeyboardInterrupt:
@@ -431,11 +430,12 @@ while True:
 if best_model:
     model = best_model
     tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
-    nni.report_final_result({
-        'tst_loss': tst_loss,
-        'tst_acc': tst_acc,
-        'default': tst_acc,
-    })
+    if nni_search:
+        nni.report_final_result({
+            'tst_loss': tst_loss,
+            'tst_acc': tst_acc,
+            'default': tst_acc,
+        })
 
     print('=' * 80)
     print(
