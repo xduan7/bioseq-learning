@@ -55,6 +55,14 @@ class TestGenomeDataset(unittest.TestCase):
             # test if the number of paddings is valid (no bigger)
             assert _padding_mask.sum().item() <= _TEST_MAX_NUM_PADDINGS
 
+        # test if the dataset will raise out-of-bound error
+        try:
+            _indexed_seq, _padding_mask = genome_dataset[len(genome_dataset)]
+        except IndexError:
+            assert True
+        else:
+            assert False
+
     def test_genome_iter_dataset(self):
         """test 'genome_iter_dataset' class
         """

@@ -8,6 +8,7 @@ File Description:
 import os
 import random
 import logging
+from bisect import bisect
 from typing import Tuple, List, Set, Dict, Iterable, Iterator
 
 import torch
@@ -74,7 +75,7 @@ class GenomeDataset(Dataset):
         self._genome_contig_seq_dict: Dict[str, str] = {}
         # data structure that stores a iterable of tuples that contains
         # (genome id + contig id, number of samples/segmented sequences)
-        _genome_contig_num_seqs_list: List[Tuple[str, int]] = []
+        _genome_contig_id_num_seqs_list: List[Tuple[str, int]] = []
         for _genome_dir_path in genome_dir_paths:
             _genome_id: str = os.path.basename(_genome_dir_path.rstrip('/'))
             _genome_contig_seq_dir_path: str = os.path.join(
@@ -124,13 +125,35 @@ class GenomeDataset(Dataset):
                 self._genome_contig_seq_dict[_genome_contig_id] = \
                     _padded_seq
                 _num_seqs: int = len(_padded_seq) - self._seq_len + 1
-                _genome_contig_num_seqs_list.append(
+                _genome_contig_id_num_seqs_list.append(
                     (_genome_contig_id, _num_seqs))
                 self._len += _num_seqs
 
         # convert list to tuple for faster access
-        self._genome_contig_num_seqs_tuple: Tuple[Tuple[str, int], ...] = \
-            tuple(_genome_contig_num_seqs_list)
+        # self._genome_contig_num_seqs_tuple: Tuple[Tuple[str, int], ...] = \
+        #     tuple(_genome_contig_num_seqs_list)
+
+        # get the tuple of genome contig IDs, and the accumulative number of
+        # sequences of all the genome contigs; for example:
+        # genome_contig_tuple = (
+        #     'contig_0',
+        #     'contig_1', ...
+        # )
+        # acc_num_seqs_tuple = (
+        #     num seq of 'contig_0',
+        #     num seq of 'contig_0' + num seq of 'contig_1', ...
+        # )
+        _total_num_seqs: int = 0
+        _acc_num_seqs_list: List[int] = []
+        _genome_contig_id_list: List[str] = []
+        for _genome_contig_id, _num_seqs in _genome_contig_id_num_seqs_list:
+            _total_num_seqs += _num_seqs
+            _acc_num_seqs_list.append(_total_num_seqs)
+            _genome_contig_id_list.append(_genome_contig_id)
+        self._acc_num_seqs_tuple: Tuple[int, ...] = \
+            tuple(_acc_num_seqs_list)
+        self._genome_contig_id_tuple: Tuple[str, ...] = \
+            tuple(_genome_contig_id_list)
 
     def __len__(self) -> int:
         """get the length of the dataset
@@ -151,18 +174,30 @@ class GenomeDataset(Dataset):
         LongTensor and a mask tensor of the same size for padding in boolean
         :rtype: tuple of two tensors
         """
+        # for negative indexing that is probably not going to be used ...
         _index: int = (index + self._len) if index < 0 else index
 
-        _seq, _seq_char_list = '', []
-        for _genome_contig_id, _num_seqs in self._genome_contig_num_seqs_tuple:
-            if _index >= _num_seqs:
-                _index = _index - _num_seqs
-            else:
-                _genome_contig_seq: str = \
-                    self._genome_contig_seq_dict[_genome_contig_id]
-                _seq: str = _genome_contig_seq[_index: _index + self._seq_len]
+        # bisect searching reduce the time from 7.92 seconds per 10000
+        # samples to 0.45 seconds
+        # get the index for both tuples genome contig IDs and the
+        # accumulative numbers of the sequences, with bisect
+        _genome_contig_index: int = \
+            bisect(self._acc_num_seqs_tuple, _index)
+        # truncate the index to get the starting position of the sequence,
+        # which is then found with the tuple of genome contig IDs
+        # then the whole genome sequence, and finally segmented into the
+        # actual indexed sequence that we are looking for ...
+        _seq_start_pos: int = _index if _genome_contig_index == 0 else \
+            (_index - self._acc_num_seqs_tuple[_genome_contig_index - 1])
+        _genome_contig_id: str = \
+            self._genome_contig_id_tuple[_genome_contig_index]
+        _genome_contig_seq: str = \
+            self._genome_contig_seq_dict[_genome_contig_id]
+        _seq: str = _genome_contig_seq[
+            _seq_start_pos: _seq_start_pos + self._seq_len]
 
         # convert the nucleotide sequence to the indexed (numeric) sequence
+        # TODO: map the char-index dict during initialization
         _indexed_seq = torch.LongTensor(
             list(map(NUCLEOTIDE_CHAR_INDEX_DICT.get, _seq)))
 
