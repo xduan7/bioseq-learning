@@ -64,7 +64,7 @@ class GenomeDataset(Dataset):
         :type max_num_paddings: int
         """
         # sanity check for the sequence length and number of paddings
-        assert 0 < max_num_paddings < seq_len
+        assert 0 <= max_num_paddings < seq_len
 
         self._len: int = 0
         self._seq_len: int = seq_len

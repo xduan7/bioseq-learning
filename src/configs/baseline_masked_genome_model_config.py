@@ -11,13 +11,18 @@ from types import MappingProxyType
 from typing import Optional, List, Dict, Any
 
 
-_LOGGER = logging.getLogger(__name__)
+__LOGGER = logging.getLogger(__name__)
 
 
 # experiment name associated with this set of configurations
 # this could be used for various bookkeeping purposes
 _experiment_name: str = \
     'baseline masked genome model prediction with transformer'
+
+# indicator for Microsoft NNI hyper-parameter search
+# note that the searching parameters from NNI would replace some of the
+# parameters listed below in this file
+_nni_search: bool = True
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
@@ -42,11 +47,11 @@ _nvidia_amp_opt_level: str = 'O3'
 # dataset and dataloader parameters
 _vld_ratio: float = 0.1
 _tst_ratio: float = 0.1
-_seq_len: int = 2000
+_seq_len: int = 1000
 _num_masks: float = 0.10
-_max_num_paddings: int = 1000
+_max_num_paddings: int = 0
 _dataloader_batch_size: int = 32
-_dataloader_num_workers: int = 20
+_dataloader_num_workers: int = _dataloader_batch_size
 _max_num_trn_batches_per_epoch: int = 10000
 _max_num_vld_batches_per_epoch: int = 10000
 
@@ -65,7 +70,7 @@ _xfmr_enc_layer_feedforward_dim: int = 1024
 _xfmr_enc_layer_activation: str = 'relu'
 _xfmr_enc_layer_dropout: float = 0.0
 _xfmr_enc_num_layers: int = 3
-_xfmr_enc_norm: bool = True
+_xfmr_enc_norm: bool = False
 
 
 # training configurations
@@ -73,13 +78,13 @@ _max_num_epochs: int = 500
 _early_stopping_patience: int = 32
 _optimizer: str = 'SGD'
 _optimizer_kwargs: Dict[str, Any] = {
-    'lr': 5e-3,
+    'lr': 2e-3,
     'momentum': 0.9,
 }
 _lr_scheduler: str = 'CosineAnnealingWarmRestarts'
 _lr_scheduler_kwargs: Dict[str, Any] = {
     'T_0': 16,
-    'eta_min': 5e-4,
+    'eta_min': 1e-4,
 }
 # logging configurations
 _num_trn_logs: int = 10
@@ -92,6 +97,7 @@ if _dry_run:
         f'the number of training and validation batches, and ' \
         f'the number of training and early stopping patience epochs ' \
         f'by a factor of {__dry_run_factor} for dry run ... '
+    __LOGGER.warning(_warning_msg)
 
     _seq_len //= __dry_run_factor
     _max_num_paddings //= __dry_run_factor

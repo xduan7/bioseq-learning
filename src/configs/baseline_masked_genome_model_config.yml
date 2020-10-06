@@ -1,0 +1,16 @@
+authorName: "Xiaotian Duan"
+experimentName: "baseline masked genome model prediction with transformer"
+trialConcurrency: 4
+maxExecDuration: 999d
+maxTrialNum: 99999
+trainingServicePlatform: local
+searchSpacePath: "/home/xduan7/projects/bioseq-learning/src/configs/baseline_masked_genome_model_search_space.json"
+useAnnotation: false
+multiThread: false
+tuner:
+  builtinTunerName: GridSearch
+  # gpuIndices: "0,1,2,3"
+trial:
+  command: "export PYTHONPATH=/home/xduan7/projects/bioseq-learning:$PYTHONPATH && python ./src/baseline_masked_genome_model.py"
+  codeDir: "/home/xduan7/projects/bioseq-learning"
+  gpuNum: 1

@@ -9,7 +9,9 @@ File Description:
     https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb
 
 """
+import sys
 import copy
+import math
 import time
 import logging
 import traceback
@@ -30,20 +32,48 @@ from src.datasets.genome_dataset import \
 from src.modules import TransformerEncoderModel
 from src.optimization import get_torch_optimizer, get_torch_lr_scheduler
 from src.utilities import set_random_seed, get_computation_devices
-from src.configs.baseline_masked_genome_model_config import config
+from src.configs.baseline_masked_genome_model_config import config as \
+    default_config
 
 
 _LOGGER = logging.getLogger(__name__)
+
+
+# configure the trial parameters with given configuration and NNI settings
+if default_config['nni_search']:
+    import nni
+    # merge the configured hyper-parameters and the next tuning parameters
+    # TODO: better merge function
+    #  (1) matches dtype
+    #  (2) clarify which one is base
+    config = {**dict(default_config), **nni.get_next_parameter()}
+
+    # needs to do since NNI config cannot accept anything else other than
+    # numbers or strings, and therefore if there is hyper-param of any other
+    # type, one must manually convert the type
+    config['xfmr_enc_norm']: bool = config['xfmr_enc_norm'] if \
+        isinstance(config['xfmr_enc_norm'], bool) else \
+        (config['xfmr_enc_norm'].lower() == 'true')
+
+    # NNI will automatically configure the GPU(s) assigned to this trial
+    # TODO: get rid of the get_computation_devices in this case
+    # device = get_computation_devices(
+    #     preferred_gpu_list=config['preferred_gpu_list'],
+    #     multi_gpu_flag=config['multi_gpu_flag'],
+    # )[0]
+    device = torch.device(torch.cuda.current_device())
+else:
+    config = default_config
+    # TODO: multi-GPU model ...
+    device = get_computation_devices(
+        preferred_gpu_list=config['preferred_gpu_list'],
+        multi_gpu_flag=config['multi_gpu_flag'],
+    )[0]
 
 set_random_seed(
     random_seed=config['random_seed'],
     deterministic_cudnn_flag=config['deterministic_cudnn_flag'],
 )
-# TODO: multi-GPU model ...
-device = get_computation_devices(
-    preferred_gpu_list=config['preferred_gpu_list'],
-    multi_gpu_flag=config['multi_gpu_flag'],
-)[0]
 if device.type == 'cuda':
     # specify the cuda devices explicitly so that apex won't use cuda: 0
     torch.cuda.set_device(device)
@@ -206,7 +236,7 @@ _trn_log_interval: int = int(_num_trn_batches / config['num_trn_logs'])
 def train(cur_epoch: int):
 
     model.train()
-    _total_loss = 0.
+    _total_trn_loss = 0.
     _start_time = time.time()
 
     for _batch_index, _batch in enumerate(trn_dataloader):
@@ -234,29 +264,38 @@ def train(cur_epoch: int):
             attn_mask=_attn_mask,
             padding_mask=_padding_mask,
         )
-        _loss = criterion(
+        _trn_loss = criterion(
             input=_output.view(-1, num_tokens),
             target=_indexed_seqs.view(-1),
         )
 
-        _loss.backward()
-        _total_loss += _loss.item()
+        _trn_loss.backward()
         optimizer.step()
+
+        _trn_loss: float = _trn_loss.item()
+        _total_trn_loss += _trn_loss
+        # nni.report_intermediate_result(
+        #     {'trn_loss': _trn_loss}
+        # )
 
         if (_batch_index + 1) % _trn_log_interval == 0:
 
-            _avg_batch_loss: float = _total_loss / _trn_log_interval
-            _avg_batch_time_in_ms: float = \
+            _trn_avg_loss: float = _total_trn_loss / _trn_log_interval
+            _trn_avg_time_in_ms: float = \
                 (time.time() - _start_time) * 1000 / _trn_log_interval
             print(
                 f'| epoch {cur_epoch:3d} '
                 f'| {(_batch_index + 1):6d} / {_num_trn_batches:<d} batches '
                 f'| learning rate {optimizer.param_groups[0]["lr"]:1.2E} '
-                f'| loss {_avg_batch_loss:5.4f} '
-                f'| {_avg_batch_time_in_ms:>4.0f} ms/batch |'
+                f'| loss {_trn_avg_loss:5.4f} '
+                f'| {_trn_avg_time_in_ms:>4.0f} ms/batch |'
             )
-            _total_loss = 0.
+
+            _total_trn_loss = 0.
             _start_time = time.time()
+            # nni.report_intermediate_result(
+            #     {'trn_avg_loss': _trn_avg_loss}
+            # )
 
 
 def evaluate(_dataloader, test=False):
@@ -343,6 +382,12 @@ while True:
             epoch_start_time = time.time()
             train(epoch)
             epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
+            nni.report_intermediate_result({
+                'vld_avg_loss': epoch_vld_loss,
+                'vld_acc': epoch_vld_acc,
+                'default': epoch_vld_acc,
+            })
+
             lr_scheduler.step()
             epoch_time_in_sec = time.time() - epoch_start_time
 
@@ -364,12 +409,19 @@ while True:
             elif epoch - best_epoch >= config['early_stopping_patience']:
                 print('exiting from training early for early stopping ... ')
                 break
+
+            if math.isnan(epoch_vld_loss):
+                print('validation loss gets to NaN; exiting current '
+                      'invalid trail ...')
+                nni.report_final_result({'default': 0})
+                sys.exit()
         break
 
     except RuntimeError as e:
         # CUDA memory or other errors from the training/evaluation process
         traceback.print_exc()
-        exit(-1)
+        nni.report_final_result({'default': 0})
+        sys.exit()
 
     except KeyboardInterrupt:
         print('exiting from training early for KeyboardInterrupt ... ')
@@ -379,6 +431,12 @@ while True:
 if best_model:
     model = best_model
     tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
+    nni.report_final_result({
+        'tst_loss': tst_loss,
+        'tst_acc': tst_acc,
+        'default': tst_acc,
+    })
+
     print('=' * 80)
     print(
         f'| end of training '
