@@ -6,16 +6,21 @@ File Description:
 
 """
 import os
+import time
+import random
+import logging
 import unittest
 from typing import List
 
 from torch.utils.data import DataLoader
 
+from src import E_COLI_GENOME_PARENT_DIR_PATH
 from src.datasets import GenomeDataset, GenomeIterDataset
 from src.datasets.genome_dataset import \
     PADDING_CHAR, NUCLEOTIDE_CHAR_INDEX_DICT
 
 
+_PADDING_INDEX: int = NUCLEOTIDE_CHAR_INDEX_DICT[PADDING_CHAR]
 _TEST_EXAMPLES_DIR_PATH: str = \
     os.path.join(os.path.dirname(os.path.realpath(__file__)), 'examples')
 _TEST_GENOME_DIR_PATHS: List[str] = [
@@ -24,11 +29,11 @@ _TEST_GENOME_DIR_PATHS: List[str] = [
         'genome_processing_results_reference',
         '562.2283'
     )]
-_TEST_SEQ_LEN: int = 100
+_TEST_SEQ_LEN: int = 1000
 _TEST_NUM_MASKS: int = 5
-_TEST_MAX_NUM_PADDINGS: int = 10
+_TEST_MAX_NUM_PADDINGS: int = 500
 _TEST_BATCH_SIZE: int = 16
-_PADDING_INDEX: int = NUCLEOTIDE_CHAR_INDEX_DICT[PADDING_CHAR]
+_TEST_NUM_SAMPLES: int = 10000
 _TEST_GENOME_DATASET_KWARGS = {
     'genome_dir_paths': _TEST_GENOME_DIR_PATHS,
     'seq_len': _TEST_SEQ_LEN,
@@ -89,6 +94,29 @@ class TestGenomeDataset(unittest.TestCase):
             if _num_rand_batches > _num_batches:
                 return
         assert False
+
+    def test_genome_dataset_indexing_time(self):
+
+        _genome_parent_dir_path: str = E_COLI_GENOME_PARENT_DIR_PATH
+        _genome_dir_paths: List[str] = [
+            os.path.join(_genome_parent_dir_path, _genome_id)
+            for _genome_id in os.listdir(_genome_parent_dir_path)
+            if os.path.isdir(os.path.join(_genome_parent_dir_path, _genome_id))
+        ]
+        logging.getLogger('src.datasets').setLevel(logging.ERROR)
+        _genome_dataset = GenomeDataset(
+            _genome_dir_paths,
+            seq_len=_TEST_SEQ_LEN,
+            max_num_paddings=_TEST_MAX_NUM_PADDINGS,
+        )
+
+        _test_indices: List[int] = \
+            random.sample(range(len(_genome_dataset)), _TEST_NUM_SAMPLES)
+        _start_time = time.time()
+        for _i in _test_indices:
+            _genome_dataset[_i]
+        print(f'Indexing {_TEST_NUM_SAMPLES} samples from the dataset '
+              f'takes {time.time() - _start_time:.2f} seconds.')
 
 
 if __name__ == '__main__':
