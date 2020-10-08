@@ -40,6 +40,7 @@ _TEST_GENOME_DATASET_KWARGS = {
     'max_num_paddings': _TEST_MAX_NUM_PADDINGS,
 }
 
+
 class TestGenomeDataset(unittest.TestCase):
     """unittest class for 'genome_dataset' and 'genome_iter_dataset' classes
     """
@@ -105,24 +106,30 @@ class TestGenomeDataset(unittest.TestCase):
 
     def test_genome_dataset_indexing_time(self):
 
+        # measure the time for the construction of a genome dataset
+        # of all the e. coli genomes in the parent dir (1292)
         _genome_parent_dir_path: str = E_COLI_GENOME_PARENT_DIR_PATH
         _genome_dir_paths: List[str] = [
             os.path.join(_genome_parent_dir_path, _genome_id)
             for _genome_id in os.listdir(_genome_parent_dir_path)
             if os.path.isdir(os.path.join(_genome_parent_dir_path, _genome_id))
         ]
-        logging.getLogger('src.datasets').setLevel(logging.ERROR)
+        # logging.getLogger('src.datasets').setLevel(logging.ERROR)
+        _start_time = time.time()
         _genome_dataset = GenomeDataset(
             _genome_dir_paths,
             seq_len=_TEST_SEQ_LEN,
             max_num_paddings=_TEST_MAX_NUM_PADDINGS,
         )
+        print(f'Creating a genome dataset with {len(_genome_dir_paths)} '
+              f'genomes takes {time.time() - _start_time:.2f} seconds.')
 
+        # measure the time for sampling _TEST_NUM_SAMPLES genome sequences
         _test_indices: List[int] = \
             random.sample(range(len(_genome_dataset)), _TEST_NUM_SAMPLES)
         _start_time = time.time()
         for _i in _test_indices:
-            _genome_dataset[_i]
+            assert _genome_dataset[_i]
         print(f'Indexing {_TEST_NUM_SAMPLES} samples from the dataset '
               f'takes {time.time() - _start_time:.2f} seconds.')
 

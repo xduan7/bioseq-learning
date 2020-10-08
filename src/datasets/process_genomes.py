@@ -83,7 +83,6 @@ def process_genome(
     os.makedirs(feature_dir_path, exist_ok=True)
     os.makedirs(conserved_domain_dir_path, exist_ok=True)
 
-
     # read the entire genome into list of contig sequences
     contig_seq_record_iter: Iterator[SeqRecord] = \
         SeqIO.parse(contig_seq_path, 'fasta')

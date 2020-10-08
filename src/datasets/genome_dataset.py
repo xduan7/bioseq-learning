@@ -9,7 +9,8 @@ import os
 import random
 import logging
 from bisect import bisect
-from typing import Tuple, List, Set, Dict, Iterable, Iterator
+from multiprocessing import Pool, cpu_count
+from typing import Tuple, List, Set, Dict, Iterable, Iterator, Optional
 
 import torch
 from Bio import SeqIO, SeqRecord
@@ -36,8 +37,84 @@ PADDING_INDEX: int = NUCLEOTIDE_CHAR_INDEX_DICT[PADDING_CHAR]
 _LOGGER = logging.getLogger(__name__)
 
 
+def _process_single_contig(
+        _genome_id: str,
+        _contig_seq_path: str,
+        _seq_len: int,
+        _max_num_paddings: int,
+        _nucleotide_char_index_dict: Dict[str, int],
+        _padding_index: int,
+) -> Optional[Tuple[str, int, Tuple[int, ...]]]:
+    """process a single contig sequence, which includes sanity check for
+    length and characters, and then transform/index the contig into indices
+    that can be digest by word embedding layers
+
+    :param _genome_id: ID of the genome (NOT contig); the contig ID will be
+    parsed and appended to genome ID for the ultimate genome contig ID
+    :type _genome_id: str
+    :param _contig_seq_path: path to the contig sequence fasta file
+    :type _contig_seq_path: str
+    :param _seq_len: desired length of the output segmented sequence; used
+    for sanity checking
+    :type _seq_len: int
+    :param _max_num_paddings: maximum number of paddings for a output
+    sequence; used for sanity checking and sequence construction
+    :type _max_num_paddings: int
+    :param _nucleotide_char_index_dict: dictionary that maps nucleotide
+    characters (ATGCs) to indices
+    :type _nucleotide_char_index_dict: Dict[str, int]
+    :param _padding_index: index for the padding character
+    :type _padding_index: int
+    :return: if contig sequence is valid fo
+    :rtype:
+    """
+
+    with open(_contig_seq_path, 'r') as _fh:
+        _contig_seq_rec: SeqRecord = \
+            next(SeqIO.parse(_fh, 'fasta'))
+    _genome_contig_id: str = \
+        f'{_genome_id}/{_contig_seq_rec.id}'
+    _seq: str = str(_contig_seq_rec.seq).lower()
+
+    # note that this does not work for really short contigs
+    # e.g. when 'seq_len + paddings > len(contig)'. in this case,
+    # the number of paddings will exceed the given maximum
+    if len(_seq) < _seq_len - _max_num_paddings:
+        _warning_msg = \
+            f'The length of contig {_contig_seq_rec.id} from genome ' \
+            f'{_genome_id} is {len(_seq)} with paddings at the end, ' \
+            f'smaller compared to the intended dataset sequence ' \
+            f'length {_seq_len}. Ignoring the contig ...'
+        _LOGGER.warning(_warning_msg)
+        return None
+    else:
+        _num_seqs: int = len(_seq) + _max_num_paddings - _seq_len + 1
+
+    # note that there are sequences with letters are not atgc
+    # e.g. genome/contig ID: 562.54941/CP047077
+    try:
+        _indexed_seq: List[int] = \
+            [_nucleotide_char_index_dict[_c] for _c in _seq] + \
+            [_padding_index] * _max_num_paddings
+        _indexed_seq: Tuple[int, ...] = tuple(_indexed_seq)
+        # transforming the indexed sequence into PyTorch tensor might
+        # cause: 'RuntimeError: received 0 items of ancdata'
+        # _indexed_seq_tensor: torch.LongTensor = \
+        #     torch.LongTensor(_indexed_seq)
+    except KeyError:
+        _warning_msg = \
+            f'The contig {_contig_seq_rec.id} from genome {_genome_id} ' \
+            f'contains the following letters that are not normal ' \
+            f'nucleotide bases: {set(_seq) - NUCLEOTIDE_CHAR_SET}' \
+            f'. Ignoring the contig ...'
+        _LOGGER.warning(_warning_msg)
+        return None
+
+    return _genome_contig_id, _num_seqs, _indexed_seq
+
+
 class GenomeDataset(Dataset):
-    """basic genome dataset for (dynamic) masked language model training
+    """basic genome dataset for language model
     """
     def __init__(
             self,
@@ -71,67 +148,62 @@ class GenomeDataset(Dataset):
         self._seq_len: int = seq_len
         self._max_num_paddings: int = max_num_paddings
 
-        # dict that maps (genome id + contig id) to contig sequence
-        self._genome_contig_seq_dict: Dict[str, str] = {}
-        # data structure that stores a iterable of tuples that contains
-        # (genome id + contig id, number of samples/segmented sequences)
-        _genome_contig_id_num_seqs_list: List[Tuple[str, int]] = []
+        # get a list of argument for single contig processing
+        # _process_single_contig_arg_list: \
+        #     List[Tuple[str, str, int, int, Dict[str, int], int]] = []
+        _process_single_contig_arg_list: \
+            List[Tuple[str, str, int, int, Dict[str, int], int]] = []
         for _genome_dir_path in genome_dir_paths:
+
             _genome_id: str = os.path.basename(_genome_dir_path.rstrip('/'))
             _genome_contig_seq_dir_path: str = os.path.join(
                 _genome_dir_path, 'contigs')
-            # _genome_feature_dir_path: str = os.path.join(
-            #     _genome_dir_path, 'features')
+
             for _contig_seq_file_name in \
                     os.listdir(_genome_contig_seq_dir_path):
+
                 _contig_seq_path = os.path.join(
                     _genome_contig_seq_dir_path,
                     _contig_seq_file_name,
                 )
-                with open(_contig_seq_path, 'r') as _fh:
-                    _contig_seq_rec: SeqRecord = \
-                        next(SeqIO.parse(_fh, 'fasta'))
-                _genome_contig_id: str = \
-                    f'{_genome_id}/{_contig_seq_rec.id}'
-                _padded_seq: str = \
-                    str(_contig_seq_rec.seq).lower() + \
-                    max_num_paddings * PADDING_CHAR
+                if os.path.isfile(_contig_seq_path):
+                    _process_single_contig_arg_list.append((
+                        _genome_id,
+                        _contig_seq_path,
+                        self._seq_len,
+                        self._max_num_paddings,
+                        # a copy of dict can boost the performance,
+                        # probably due to faster memory access for
+                        # all the processes during multiprocessing
+                        NUCLEOTIDE_CHAR_INDEX_DICT.copy(),
+                        PADDING_INDEX,
+                    ))
 
-                # note that this does not work for really short contigs
-                # e.g. when 'seq_len + paddings > len(contig)'. in this case,
-                # the number of paddings will exceed the given maximum
-                if len(_padded_seq) < self._seq_len:
-                    _warning_msg = \
-                        f'The length of contig {_contig_seq_rec.id} from ' \
-                        f'genome {_genome_id} is {len(_padded_seq)} with ' \
-                        f'paddings at the end, smaller compared to the ' \
-                        f'intended dataset sequence length ' \
-                        f'{self._seq_len}. Ignoring the contig ...'
-                    _LOGGER.warning(_warning_msg)
-                    continue
+        # multi-processing approach
+        with Pool(cpu_count()) as _pool:
+            _processed_contigs: \
+                List[Optional[Tuple[str, int, Tuple[int, ...]]]] = \
+                _pool.starmap(
+                    _process_single_contig,
+                    _process_single_contig_arg_list,
+                )
 
-                # note that there are sequences with letters are not atgc
-                # e.g. genome/contig ID: 562.54941/CP047077
-                if not set(_padded_seq).issubset(NUCLEOTIDE_CHAR_SET):
-                    _warning_msg = \
-                        f'The contig {_contig_seq_rec.id} from genome ' \
-                        f'{_genome_id} contains the following letters that ' \
-                        f'are not normal nucleotide bases: ' \
-                        f'{set(_padded_seq) - NUCLEOTIDE_CHAR_SET}' \
-                        f'. Ignoring the contig ...'
-                    _LOGGER.warning(_warning_msg)
-                    continue
+        # dict that maps (genome contig id) to the num of sequences that can
+        # be segmented from the whole contig, and the whole contig sequence
+        self._genome_contig_seq_dict: \
+            Dict[str, Tuple[int, Tuple[int, ...]]] = {}
 
-                self._genome_contig_seq_dict[_genome_contig_id] = \
-                    _padded_seq
-                _num_seqs: int = len(_padded_seq) - self._seq_len + 1
-                _genome_contig_id_num_seqs_list.append(
-                    (_genome_contig_id, _num_seqs))
-                self._len += _num_seqs
+        for _processed_single_contig in _processed_contigs:
+            # returned None from process single contig means either length
+            # too short or contains illegal character
+            if not _processed_single_contig:
+                continue
 
-        # convert list to tuple for faster access
-        # self._genome_contig_num_seqs_tuple: Tuple[Tuple[str, int], ...] = \
-        #     tuple(_genome_contig_num_seqs_list)
+            # otherwise add the genome contigs into class dict
+            _genome_contig_id, _num_seq, _indexed_seq_tensor = \
+                _processed_single_contig
+            self._genome_contig_seq_dict[_genome_contig_id] = \
+                (_num_seq, _indexed_seq_tensor)
 
         # get the tuple of genome contig IDs, and the accumulative number of
         # sequences of all the genome contigs; for example:
@@ -146,7 +218,9 @@ class GenomeDataset(Dataset):
         _total_num_seqs: int = 0
         _acc_num_seqs_list: List[int] = []
         _genome_contig_id_list: List[str] = []
-        for _genome_contig_id, _num_seqs in _genome_contig_id_num_seqs_list:
+        for _genome_contig_id, _seq_tuple in \
+                self._genome_contig_seq_dict.items():
+            _num_seqs = _seq_tuple[0]
             _total_num_seqs += _num_seqs
             _acc_num_seqs_list.append(_total_num_seqs)
             _genome_contig_id_list.append(_genome_contig_id)
@@ -154,6 +228,8 @@ class GenomeDataset(Dataset):
             tuple(_acc_num_seqs_list)
         self._genome_contig_id_tuple: Tuple[str, ...] = \
             tuple(_genome_contig_id_list)
+
+        self._len = _total_num_seqs
 
     def __len__(self) -> int:
         """get the length of the dataset
@@ -191,23 +267,27 @@ class GenomeDataset(Dataset):
             (_index - self._acc_num_seqs_tuple[_genome_contig_index - 1])
         _genome_contig_id: str = \
             self._genome_contig_id_tuple[_genome_contig_index]
-        _genome_contig_seq: str = \
-            self._genome_contig_seq_dict[_genome_contig_id]
-        _seq: str = _genome_contig_seq[
-            _seq_start_pos: _seq_start_pos + self._seq_len]
 
-        # convert the nucleotide sequence to the indexed (numeric) sequence
-        # TODO: map the char-index dict during initialization
-        _indexed_seq = torch.LongTensor(
-            list(map(NUCLEOTIDE_CHAR_INDEX_DICT.get, _seq)))
+        # map the nucleotide to indices during the dataset construction (
+        # instead of doing so here) reduce the time rom 0.45 seconds per 10000
+        # samples to 0.22 seconds
+        _indexed_seq: Tuple[int] = \
+            self._genome_contig_seq_dict[_genome_contig_id][1]
+        _segmented_indexed_seq: Tuple[int] = \
+            _indexed_seq[_seq_start_pos: _seq_start_pos + self._seq_len]
+        _segmented_indexed_seq_tensor: torch.LongTensor = \
+            torch.LongTensor(_segmented_indexed_seq)
 
         # get the paddings in seq as tensor of booleans
-        _padding_mask = torch.BoolTensor(_indexed_seq == PADDING_INDEX)
+        _padding_mask_tensor: torch.BoolTensor = \
+            torch.BoolTensor(_segmented_indexed_seq_tensor == PADDING_INDEX)
 
-        return _indexed_seq, _padding_mask
+        return _segmented_indexed_seq_tensor, _padding_mask_tensor
 
 
 class GenomeIterDataset(IterableDataset, GenomeDataset):
+    """basic iterative genome dataset for language model
+    """
 
     def __init__(
             self,
@@ -307,4 +387,3 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
             return self.__strictly_next()
         else:
             return self.__randomly_next()
-
