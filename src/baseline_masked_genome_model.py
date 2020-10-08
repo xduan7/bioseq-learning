@@ -56,7 +56,6 @@ if default_config['nni_search']:
         (config['xfmr_enc_norm'].lower() == 'true')
 
     # NNI will automatically configure the GPU(s) assigned to this trial
-    # TODO: get rid of the get_computation_devices in this case
     # device = get_computation_devices(
     #     preferred_gpu_list=config['preferred_gpu_list'],
     #     multi_gpu_flag=config['multi_gpu_flag'],
@@ -272,6 +271,10 @@ def train(cur_epoch: int):
         )
 
         _trn_loss.backward()
+        nn.utils.clip_grad_norm_(
+            parameters=model.parameters(),
+            max_norm=config['max_grad_norm'],
+        )
         optimizer.step()
 
         _trn_loss: float = _trn_loss.item()
@@ -301,13 +304,14 @@ def evaluate(_dataloader, test=False):
     _num_total_predictions = 0
     _num_correct_predictions = 0
 
+    max_num_batches: int = config['max_num_tst_batches'] if test \
+        else config['max_num_vld_batches_per_epoch']
+
     with torch.no_grad():
         for _batch_index, _batch in enumerate(_dataloader):
 
             # stop this epoch if there has been too many batches already
-            # this is only applicable for validation
-            if (not test) and \
-                    _batch_index >= config['max_num_vld_batches_per_epoch']:
+            if _batch_index >= max_num_batches:
                 break
 
             _indexed_seqs = _batch[0].to(device)
@@ -428,8 +432,12 @@ while True:
 
 # evaluate the model on the test set
 if best_model:
+
     model = best_model
+    tst_start_time = time.time()
     tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
+    tst_time_in_sec = time.time() - tst_start_time
+
     if nni_search:
         nni.report_final_result({
             'tst_loss': tst_loss,
@@ -440,6 +448,7 @@ if best_model:
     print('=' * 80)
     print(
         f'| end of training '
+        f'| test time {tst_time_in_sec:>5.0f} s '
         f'| test loss {tst_loss:5.4f} '
         f'| test accuracy {(tst_acc * 100):3.2f}% '
     )
