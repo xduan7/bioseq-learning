@@ -5,9 +5,7 @@ Project:            bioseq-learning
 File Description:
 
 """
-import copy
-import random
-from typing import Tuple
+from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -34,8 +32,8 @@ class TransformerEncoderModel(nn.Module):
             xfmr_enc_layer_feedforward_dim: int,
             xfmr_enc_layer_activation: str,
             xfmr_enc_layer_dropout: float,
+            xfmr_enc_layer_norm: bool,
             xfmr_enc_num_layers: int,
-            xfmr_enc_norm: bool,
     ):
         super(TransformerEncoderModel, self).__init__()
 
@@ -60,13 +58,13 @@ class TransformerEncoderModel(nn.Module):
             activation=xfmr_enc_layer_activation,
             dropout=xfmr_enc_layer_dropout,
         )
-        _xfmr_enc_norm = nn.LayerNorm(
+        _xfmr_enc_layer_norm = nn.LayerNorm(
             normalized_shape=[seq_len, batch_size, emb_dim]
-        ) if xfmr_enc_norm else None
+        ) if xfmr_enc_layer_norm else None
         self._xfmr_enc = nn.TransformerEncoder(
             encoder_layer=_xfmr_enc_layer,
             num_layers=xfmr_enc_num_layers,
-            norm=_xfmr_enc_norm,
+            norm=_xfmr_enc_layer_norm,
         )
         self._dec = nn.Linear(emb_dim, num_tokens)
 
@@ -80,8 +78,8 @@ class TransformerEncoderModel(nn.Module):
     def forward(
             self,
             src: torch.LongTensor,
-            attn_mask: torch.FloatTensor,
-            padding_mask: torch.BoolTensor,
+            attn_mask: Optional[torch.FloatTensor],
+            padding_mask: Optional[torch.BoolTensor],
     ) -> torch.FloatTensor:
 
         # dynamically generate a mask of size (seq_len, seq_len)

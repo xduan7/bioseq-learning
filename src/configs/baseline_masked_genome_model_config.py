@@ -71,8 +71,9 @@ _xfmr_enc_layer_num_attn_heads: int = 1
 _xfmr_enc_layer_feedforward_dim: int = 1024
 _xfmr_enc_layer_activation: str = 'relu'
 _xfmr_enc_layer_dropout: float = 0.1
+_xfmr_enc_layer_norm: bool = True
 _xfmr_enc_num_layers: int = 1
-_xfmr_enc_norm: bool = True
+_xfmr_attn_mask: bool = False
 
 
 # training configurations

@@ -47,30 +47,18 @@ _LOGGER = logging.getLogger(__name__)
 if default_config['nni_search']:
     import nni
     # merge the configured hyper-parameters and the next tuning parameters
-    # TODO: better merge function
-    #  (1) matches dtype
-    #  (2) clarify which one is base
-    # config = {**dict(default_config), **nni.get_next_parameter()}
-    #
-    # # needs to do since NNI config cannot accept anything else other than
-    # # numbers or strings, and therefore if there is hyper-param of any other
-    # # type, one must manually convert the type
-    # config['xfmr_enc_norm']: bool = config['xfmr_enc_norm'] if \
-    #     isinstance(config['xfmr_enc_norm'], bool) else \
-    #     (config['xfmr_enc_norm'].lower() == 'true')
-
     config: MappingProxyType = \
         merge_nni_config(default_config, nni.get_next_parameter())
 
     # NNI will automatically configure the GPU(s) assigned to this trial
     # note that torch.cuda.current_device() will always give you 0
     # device = torch.device(torch.cuda.current_device())
-    _nni_trial_gpu_list: List[int] = \
-        list(map(int, os.getenv('CUDA_VISIBLE_DEVICES').split(',')))
-    device = get_computation_devices(
-        preferred_gpu_list=_nni_trial_gpu_list,
-        multi_gpu_flag=config['multi_gpu_flag'],
-    )[0]
+    # _nni_trial_gpu_list: List[int] = \
+    #     list(map(int, os.getenv('CUDA_VISIBLE_DEVICES').split(',')))
+    # device = get_computation_devices(
+    #     preferred_gpu_list=_nni_trial_gpu_list,
+    #     multi_gpu_flag=config['multi_gpu_flag'],
+    # )[0]
     device = torch.device('cuda')
     nni_search: bool = True
 else:
@@ -192,7 +180,7 @@ dataloader_kwargs = {
     # layer normalization requires that the input tensor has the same size
     # therefore requires dropping the last batch of data, which is often of
     # different shapes compared to previous batches
-    'drop_last': config['xfmr_enc_norm'],
+    'drop_last': config['xfmr_enc_layer_norm'],
     'collate_fn': __collate_fn,
 }
 
@@ -222,8 +210,8 @@ model = TransformerEncoderModel(
     xfmr_enc_layer_feedforward_dim=config['xfmr_enc_layer_feedforward_dim'],
     xfmr_enc_layer_activation=config['xfmr_enc_layer_activation'],
     xfmr_enc_layer_dropout=config['xfmr_enc_layer_dropout'],
+    xfmr_enc_layer_norm=config['xfmr_enc_layer_norm'],
     xfmr_enc_num_layers=config['xfmr_enc_num_layers'],
-    xfmr_enc_norm=config['xfmr_enc_norm'],
 ).to(device)
 criterion = nn.CrossEntropyLoss(ignore_index=PADDING_INDEX)
 optimizer = get_torch_optimizer(
@@ -281,7 +269,7 @@ def train(cur_epoch: int):
         # the model output has the shape of (seq_len, batch_size, num_tokens)
         _output = model(
             src=_masked_indexed_seqs,
-            attn_mask=_attn_mask,
+            attn_mask=_attn_mask if config['xfmr_attn_mask'] else None,
             padding_mask=_padding_mask,
         )
         _trn_loss = criterion(
@@ -345,7 +333,7 @@ def evaluate(_dataloader, test=False):
 
             _output = model(
                 src=_masked_indexed_seqs,
-                attn_mask=_attn_mask,
+                attn_mask=_attn_mask if config['xfmr_attn_mask'] else None,
                 padding_mask=_padding_mask,
             )
             _input = _masked_indexed_seqs.view(-1)
