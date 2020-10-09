@@ -1,26 +1,61 @@
 {
-  "seq_len": {
-    "_type": "choice",
-    "_value": [512, 1024, 2048, 4096]
-  },
   "num_masks": {
     "_type": "choice",
-    "_value": [0.02, 0.05, 0.1, 0.15]
+    "_value": [0.01, 0.02, 0.05, 0.1, 0.15]
   },
-  "xfmr_enc_layer_dropout": {
+  "pos_enc": {
     "_type": "choice",
-    "_value": [0, 0.1]
-  },
-  "xfmr_enc_layer_num_attn_heads": {
-    "_type": "choice",
-    "_value": [1, 2]
+    "_value": [1, 0]
   },
   "xfmr_enc_num_layers": {
     "_type": "choice",
     "_value": [1, 2, 3]
   },
+  "seq_len": {
+    "_type": "choice",
+    "_value": [500, 1000, 2000, 4000]
+  },
+  "xfmr_enc_layer_config": {
+    "_type": "choice",
+    "_value": [
+      {
+        "xfmr_enc_layer_num_attn_heads": {
+          "_type": "choice",
+          "_value": [1]
+        },
+        "emb_dim": {
+          "_type": "choice",
+          "_value": [1, 2, 4]
+        }
+      },
+      {
+        "xfmr_enc_layer_num_attn_heads": {
+          "_type": "choice",
+          "_value": [2]
+        },
+        "emb_dim": {
+          "_type": "choice",
+          "_value": [2, 4]
+        }
+      },
+      {
+        "xfmr_enc_layer_num_attn_heads": {
+          "_type": "choice",
+          "_value": [3]
+        },
+        "emb_dim": {
+          "_type": "choice",
+          "_value": [3]
+        }
+      }
+    ]
+  },
+  "xfmr_enc_layer_dropout": {
+    "_type": "choice",
+    "_value": [0, 0.05]
+  },
   "xfmr_enc_norm": {
     "_type": "choice",
-    "_value": ["True", "False"]
+    "_value": [1, 0]
   }
 }

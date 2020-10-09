@@ -15,6 +15,7 @@ import math
 import time
 import logging
 import traceback
+from types import MappingProxyType
 
 import numpy as np
 import torch
@@ -31,7 +32,8 @@ from src.datasets.genome_dataset import \
     PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT
 from src.modules import TransformerEncoderModel
 from src.optimization import get_torch_optimizer, get_torch_lr_scheduler
-from src.utilities import set_random_seed, get_computation_devices
+from src.utilities import \
+    set_random_seed, get_computation_devices, merge_nni_config
 from src.configs.baseline_masked_genome_model_config import config as \
     default_config
 
@@ -46,14 +48,17 @@ if default_config['nni_search']:
     # TODO: better merge function
     #  (1) matches dtype
     #  (2) clarify which one is base
-    config = {**dict(default_config), **nni.get_next_parameter()}
+    # config = {**dict(default_config), **nni.get_next_parameter()}
+    #
+    # # needs to do since NNI config cannot accept anything else other than
+    # # numbers or strings, and therefore if there is hyper-param of any other
+    # # type, one must manually convert the type
+    # config['xfmr_enc_norm']: bool = config['xfmr_enc_norm'] if \
+    #     isinstance(config['xfmr_enc_norm'], bool) else \
+    #     (config['xfmr_enc_norm'].lower() == 'true')
 
-    # needs to do since NNI config cannot accept anything else other than
-    # numbers or strings, and therefore if there is hyper-param of any other
-    # type, one must manually convert the type
-    config['xfmr_enc_norm']: bool = config['xfmr_enc_norm'] if \
-        isinstance(config['xfmr_enc_norm'], bool) else \
-        (config['xfmr_enc_norm'].lower() == 'true')
+    config: MappingProxyType = \
+        merge_nni_config(default_config, nni.get_next_parameter())
 
     # NNI will automatically configure the GPU(s) assigned to this trial
     # device = get_computation_devices(
@@ -413,7 +418,7 @@ while True:
 
             if math.isnan(epoch_vld_loss):
                 print('validation loss gets to NaN; exiting current '
-                      'invalid trail ...')
+                      'invalid trial ...')
                 if nni_search:
                     nni.report_final_result({'default': 0})
                 sys.exit()

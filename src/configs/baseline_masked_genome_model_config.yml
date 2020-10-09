@@ -1,16 +1,34 @@
-authorName: "Xiaotian Duan"
+authorName: "Xiaotian Duan (xduan7)"
 experimentName: "baseline masked genome model prediction with transformer"
 trialConcurrency: 4
-maxExecDuration: 999d
-maxTrialNum: 99999
-trainingServicePlatform: local
-searchSpacePath: "/home/xduan7/projects/bioseq-learning/src/configs/baseline_masked_genome_model_search_space.json"
+maxExecDuration: 10d
+# maxTrialNum: 99999
+trainingServicePlatform: remote
+searchSpacePath: "baseline_masked_genome_model_search_space.json"
 useAnnotation: false
-multiThread: false
+nniManagerIp: lambda4.cs.uchicago.edu
+# looks like only absolute paths without ~ or $HOME are acceptable
+logDir: /Users/xduan7/projects/bioseq-learning/logs/nni_experiments
+# note that localhost (as nniManagerIp) is not capable of receiving log from server machines ...
+logCollection: http
+multiThread: true
+
 tuner:
   builtinTunerName: GridSearch
   # gpuIndices: "0,1,2,3"
+
 trial:
-  command: "export PYTHONPATH=/home/xduan7/projects/bioseq-learning:$PYTHONPATH && python ./src/baseline_masked_genome_model.py"
-  codeDir: "/home/xduan7/projects/bioseq-learning"
+  command: export PYTHONPATH="${HOME}/projects/bioseq-learning:${PYTHONPATH}" && /home/xduan7/anaconda3/envs/bioseq/bin/python ~/projects/bioseq-learning/src/baseline_masked_genome_model.py
+  # this means that only 1 GPU would be used for a single trial
   gpuNum: 1
+  codeDir: "./nni_code_dir"
+
+machineList:
+  - ip: lambda4.cs.uchicago.edu
+    port: 22
+    username: xduan7
+    sshKeyPath: ~/.ssh/id_rsa_pem
+    # gpuIndices: 0,1,2,3
+    maxTrialNumPerGpu: 1
+    useActiveGpu: false
+    # preCommand: conda activate bioseq && export PYTHONPATH=${HOME}/projects/bioseq-learning:${PYTHONPATH}
