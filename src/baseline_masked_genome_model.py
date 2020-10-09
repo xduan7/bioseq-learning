@@ -9,12 +9,14 @@ File Description:
     https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb
 
 """
+import os
 import sys
 import copy
 import math
 import time
 import logging
 import traceback
+from typing import List
 from types import MappingProxyType
 
 import numpy as np
@@ -61,11 +63,16 @@ if default_config['nni_search']:
         merge_nni_config(default_config, nni.get_next_parameter())
 
     # NNI will automatically configure the GPU(s) assigned to this trial
-    # device = get_computation_devices(
-    #     preferred_gpu_list=config['preferred_gpu_list'],
-    #     multi_gpu_flag=config['multi_gpu_flag'],
-    # )[0]
-    device = torch.device(torch.cuda.current_device())
+    # note that torch.cuda.current_device() will always give you 0
+    # device = torch.device(torch.cuda.current_device())
+    _nni_trial_gpu_list: List[int] = \
+        list(map(int, os.getenv('CUDA_VISIBLE_DEVICES').split(',')))
+    print(_nni_trial_gpu_list)
+    device = get_computation_devices(
+        preferred_gpu_list=_nni_trial_gpu_list,
+        multi_gpu_flag=config['multi_gpu_flag'],
+    )[0]
+    device = torch.device('cuda')
     nni_search: bool = True
 else:
     config = default_config
@@ -81,19 +88,26 @@ set_random_seed(
     deterministic_cudnn_flag=config['deterministic_cudnn_flag'],
 )
 if device.type == 'cuda':
-    # specify the cuda devices explicitly so that apex won't use cuda: 0
-    torch.cuda.set_device(device)
-
     nvidia_amp_opt: bool = config['nvidia_amp_opt']
     if config['nvidia_amp_opt']:
         try:
             from apex import amp
+            # specify the cuda device so that apex won't use cuda: 0
+            torch.cuda.set_device(device)
         except ImportError:
             _warning_msg = \
                 f'Cannot import NVIDIA-apex. ' \
                 f'Ignoring mixed-precision training/inference ... '
             _LOGGER.warning(_warning_msg)
             nvidia_amp_opt = False
+        # note that if device number is not explicitly set, then the following
+        # line won't work ... which essentially means tht apex and nni cannot
+        # work well together, in the way that apex might always use a small
+        # chunk of memory on cuda:0 even if the device is not cuda:0
+        except ValueError:
+            _warning_msg = \
+                f'Failed tp specify cuda device; and Apex might take up ' \
+                f'a small chunk of memory in cuda:0 during the run.'
 else:
     nvidia_amp_opt: bool = False
 
@@ -154,6 +168,7 @@ tst_dataset = GenomeDataset(
     tst_genome_dir_paths,
     **masked_genome_dataset_kwargs,
 )
+
 
 # modified collection function so that sequence shape is compatible with
 # transformer (sequence_length, batch_size)

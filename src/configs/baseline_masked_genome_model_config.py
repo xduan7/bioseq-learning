@@ -35,7 +35,8 @@ _deterministic_cudnn_flag: bool = True
 # "preferred" GPUs for computation device specification
 # to use CPU only, set to None or empty list []; otherwise, set to a list
 # of integers representing preferred GPUs for this experiment
-_preferred_gpu_list: Optional[List[int]] = [0, 1, 2, 3]
+_preferred_gpu_list: Optional[List[int]] = \
+    None if _nni_search else [0, 1, 2, 3, 4, 5, 6, 7]
 # flag for using multiple GPUs (nn.DataParallel) for this experiment
 _multi_gpu_flag: bool = False
 
@@ -99,12 +100,12 @@ _num_trn_logs: int = 10
 # adjust configurations if it's a dry run
 if _dry_run:
     __dry_run_factor: int = 10
-    _warning_msg = \
-        f'reducing the data length (sequences and paddings), ' \
+    __warning_msg = \
+        f'Reducing the data length (sequences and paddings), ' \
         f'the number of training and validation batches, and ' \
         f'the number of training and early stopping patience epochs ' \
         f'by a factor of {__dry_run_factor} for dry run ... '
-    __LOGGER.warning(_warning_msg)
+    __LOGGER.warning(__warning_msg)
 
     _seq_len //= __dry_run_factor
     _max_num_paddings //= __dry_run_factor

@@ -36,10 +36,19 @@ def merge_nni_config(
         if _nni_config_key not in _config_dict:
             _warning_msg: str = \
                 f'NNI configuration with key {_nni_config_key} ' \
-                f'is not found in the default configuration. ' \
-                f'Adding into config anyway ...'
+                f'is not found in the default configuration. '
+            # if the nni config value turned out to be a nested dict
+            # recursively call the merge function
+            if isinstance(_nni_config_value, dict):
+                _warning_msg += f'Trying to add nested dict into config ...'
+                _config_dict = dict(merge_nni_config(
+                    default_config=MappingProxyType(_config_dict),
+                    nni_config=_nni_config_value,
+                ))
+            else:
+                _warning_msg += f'Ignoring ...'
             _LOGGER.warning(_warning_msg)
-            _config_dict[_nni_config_key] = _nni_config_value
+
         else:
             _nni_config_value_type: type = type(_nni_config_value)
             _default_config_value = default_config[_nni_config_key]
