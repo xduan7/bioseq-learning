@@ -14,6 +14,7 @@ from .get_object_from_module import \
 from .get_valid_kwargs import get_valid_kwargs
 from .is_subclass import is_subclass
 from .set_random_seed import set_random_seed
+from .merge_nni_config import merge_nni_config
 
 
 __all__ = [
@@ -32,4 +33,6 @@ __all__ = [
     'is_subclass',
     # src.utilities.set_random_seed
     'set_random_seed',
+
+    'merge_nni_config',
 ]
