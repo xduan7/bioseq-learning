@@ -1,34 +1,98 @@
+###############################################################################
+# Configuration for Microsoft NNI
+# Reference: https://nni.readthedocs.io/en/latest/Tutorial/ExperimentConfig.html
+#
+# Run the NNI experiment:
+#   nnictl create --config $HOME/projects/bioseq-learning/src/configs/baseline_masked_genome_model_config.yml --debug --port 8080
+#
+# Some must-read notes:
+# - sshKeyPath demands PEM formatting or whatnot
+# - paths in YAML file cannot use environment variables
+# - codeDir will be copied over to worker machines and cannot be empty
+# - localhost (as nniManagerIp) cannot receive log from worker machines over http
+# - CUDA_VISIBLE_DEVICES will be set for the first instruction in trail command only
+#
+###############################################################################
+
 authorName: "Xiaotian Duan (xduan7)"
 experimentName: "baseline masked genome model prediction with transformer"
-trialConcurrency: 4
-maxExecDuration: 10d
-# maxTrialNum: 99999
+trialConcurrency: 20
+# maxExecDuration: 10d
+# maxTrialNum: 1000
 trainingServicePlatform: remote
 searchSpacePath: "baseline_masked_genome_model_search_space.json"
 useAnnotation: false
-nniManagerIp: lambda4.cs.uchicago.edu
-# looks like only absolute paths without ~ or $HOME are acceptable
-logDir: /Users/xduan7/projects/bioseq-learning/logs/nni_experiments
-# note that localhost (as nniManagerIp) is not capable of receiving log from server machines ...
-logCollection: http
 multiThread: true
 
 tuner:
   builtinTunerName: GridSearch
-  # gpuIndices: "0,1,2,3"
 
 trial:
-  command: export PYTHONPATH="${HOME}/projects/bioseq-learning:${PYTHONPATH}" && /home/xduan7/anaconda3/envs/bioseq/bin/python ~/projects/bioseq-learning/src/baseline_masked_genome_model.py
-  # this means that only 1 GPU would be used for a single trial
-  gpuNum: 1
-  codeDir: "./nni_code_dir"
+  command: CUDA_DEVICE_ORDER=PCI_BUS_ID PYTHONPATH="${HOME}/projects/bioseq-learning:${PYTHONPATH}" ${HOME}/anaconda3/envs/bioseq/bin/python ${HOME}/projects/bioseq-learning/src/baseline_masked_genome_model.py
+  gpuNum: 1  # only 1 GPU would be used for a single trial
+  codeDir: nni_code_dir
+
+###############################################################################
+# manager: localhost
+# worker: lambda4.cels.anl.gov
+###############################################################################
+
+#logDir: /Users/xduan7/projects/bioseq-learning/logs/nni_experiments
+#nniManagerIp: localhost
+#
+#machineList:
+#- ip: lambda4.cs.uchicago.edu
+#  port: 22
+#  username: xduan7
+#  sshKeyPath: ~/.ssh/id_rsa_pem
+#  maxTrialNumPerGpu: 1
+#  useActiveGpu: false
+
+###############################################################################
+# manager: lambda0.cels.anl.gov
+# worker: lambda0.cels.anl.gov, lambda1.cels.anl.gov, etc.
+#
+# to use local browser dashboard,
+# (1) run 'ssh -C2qTnN -D 8080 lambda0' on local machine
+# (2) set up the browser proxy (firefox)
+#     - check manual proxy configuration
+#     - SOCKS Host=localhost, port=8080
+#     - check SOCKS v5
+# (3) use address lambda0.cels.anl.gov:8080, assuming the port is 8080
+###############################################################################
+
+logDir: /homes/duan/projects/bioseq-learning/logs/nni_experiments
+nniManagerIp: lambda0.cels.anl.gov
+logCollection: http  # doesn't seem to work though ...
 
 machineList:
-  - ip: lambda4.cs.uchicago.edu
+  - ip: lambda0.cels.anl.gov
     port: 22
-    username: xduan7
+    username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
-    # gpuIndices: 0,1,2,3
     maxTrialNumPerGpu: 1
     useActiveGpu: false
-    # preCommand: conda activate bioseq && export PYTHONPATH=${HOME}/projects/bioseq-learning:${PYTHONPATH}
+  - ip: lambda1.cels.anl.gov
+    port: 22
+    username: duan
+    sshKeyPath: ~/.ssh/id_rsa_pem
+    maxTrialNumPerGpu: 1
+    useActiveGpu: false
+  - ip: lambda2.cels.anl.gov
+    port: 22
+    username: duan
+    sshKeyPath: ~/.ssh/id_rsa_pem
+    maxTrialNumPerGpu: 1
+    useActiveGpu: false
+  - ip: lambda3.cels.anl.gov
+    port: 22
+    username: duan
+    sshKeyPath: ~/.ssh/id_rsa_pem
+    maxTrialNumPerGpu: 1
+    useActiveGpu: false
+  - ip: lambda4.cels.anl.gov
+    port: 22
+    username: duan
+    sshKeyPath: ~/.ssh/id_rsa_pem
+    maxTrialNumPerGpu: 1
+    useActiveGpu: false

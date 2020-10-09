@@ -67,7 +67,6 @@ if default_config['nni_search']:
     # device = torch.device(torch.cuda.current_device())
     _nni_trial_gpu_list: List[int] = \
         list(map(int, os.getenv('CUDA_VISIBLE_DEVICES').split(',')))
-    print(_nni_trial_gpu_list)
     device = get_computation_devices(
         preferred_gpu_list=_nni_trial_gpu_list,
         multi_gpu_flag=config['multi_gpu_flag'],

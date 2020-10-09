@@ -26,7 +26,7 @@ _nni_search: bool = True
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
-_dry_run: bool = True
+_dry_run: bool = False
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -55,7 +55,7 @@ _dataloader_batch_size: int = 32
 _dataloader_num_workers: int = _dataloader_batch_size
 _max_num_trn_batches_per_epoch: int = 10000
 _max_num_vld_batches_per_epoch: int = 10000
-_max_num_tst_batches: int = 10000
+_max_num_tst_batches: int = 50000
 
 
 # transformer and network module configurations
