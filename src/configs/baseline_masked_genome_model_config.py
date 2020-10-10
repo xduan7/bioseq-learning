@@ -35,8 +35,8 @@ _deterministic_cudnn_flag: bool = True
 # "preferred" GPUs for computation device specification
 # to use CPU only, set to None or empty list []; otherwise, set to a list
 # of integers representing preferred GPUs for this experiment
-_preferred_gpu_list: Optional[List[int]] = \
-    None if _nni_search else [0, 1, 2, 3, 4, 5, 6, 7]
+_preferred_gpu_list: Optional[Union[List[int], str]] = \
+    'all' if _nni_search else [0, 1, 2, 3]
 # flag for using multiple GPUs (nn.DataParallel) for this experiment
 _multi_gpu_flag: bool = False
 
