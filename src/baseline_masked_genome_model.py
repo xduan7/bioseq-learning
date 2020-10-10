@@ -16,8 +16,8 @@ import math
 import time
 import logging
 import traceback
-from typing import List
 from types import MappingProxyType
+from typing import List, Dict, Any
 
 import numpy as np
 import torch
@@ -46,9 +46,14 @@ _LOGGER = logging.getLogger(__name__)
 # configure the trial parameters with given configuration and NNI settings
 if default_config['nni_search']:
     import nni
+
     # merge the configured hyper-parameters and the next tuning parameters
+    # notes on the NNI config v1.8.0:
+    # - all the values are numeric or strings (of choices)
+    # - nested configurations are stored in list instead of dict
+    _nni_config: Dict[str, Any] = nni.get_next_parameter()
     config: MappingProxyType = \
-        merge_nni_config(default_config, nni.get_next_parameter())
+        merge_nni_config(default_config, _nni_config)
 
     # NNI will automatically configure the GPU(s) assigned to this trial
     # note that torch.cuda.current_device() will always give you 0
@@ -62,7 +67,7 @@ if default_config['nni_search']:
     device = torch.device('cuda')
     nni_search: bool = True
 else:
-    config = default_config
+    config: MappingProxyType = default_config
     # TODO: multi-GPU model ...
     device = get_computation_devices(
         preferred_gpu_list=config['preferred_gpu_list'],

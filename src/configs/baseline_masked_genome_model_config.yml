@@ -16,7 +16,7 @@
 
 authorName: "Xiaotian Duan (xduan7)"
 experimentName: "baseline masked genome model prediction with transformer"
-trialConcurrency: 20
+
 # maxExecDuration: 10d
 # maxTrialNum: 1000
 trainingServicePlatform: remote
@@ -39,6 +39,7 @@ trial:
 
 #logDir: /Users/xduan7/projects/bioseq-learning/logs/nni_experiments
 #nniManagerIp: localhost
+#trialConcurrency: 4
 #
 #machineList:
 #- ip: lambda4.cs.uchicago.edu
@@ -63,7 +64,10 @@ trial:
 
 logDir: /homes/duan/projects/bioseq-learning/logs/nni_experiments
 nniManagerIp: lambda0.cels.anl.gov
-logCollection: http  # doesn't seem to work though ...
+trialConcurrency: 20
+# the log collection part doesn't seem to work ...
+# not only that, the paths to logs would be hidden in the log collection mode
+#logCollection: http
 
 machineList:
   - ip: lambda0.cels.anl.gov
@@ -71,28 +75,33 @@ machineList:
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
+    gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false
   - ip: lambda1.cels.anl.gov
     port: 22
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
+    gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false
   - ip: lambda2.cels.anl.gov
     port: 22
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
+    gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false
   - ip: lambda3.cels.anl.gov
     port: 22
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
+    gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false
   - ip: lambda4.cels.anl.gov
     port: 22
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
+    gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false

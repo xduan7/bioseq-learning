@@ -40,10 +40,18 @@ def merge_nni_config(
             # if the nni config value turned out to be a nested dict
             # recursively call the merge function
             if isinstance(_nni_config_value, dict):
-                _warning_msg += f'Trying to add nested dict into config ...'
+                _warning_msg += \
+                    f'Trying to add value dict into config ...'
                 _config_dict = dict(merge_nni_config(
                     default_config=MappingProxyType(_config_dict),
                     nni_config=_nni_config_value,
+                ))
+            if isinstance(_nni_config_value, list):
+                _warning_msg += \
+                    f'Trying to process value list as dict into config ...'
+                _config_dict = dict(merge_nni_config(
+                    default_config=MappingProxyType(_config_dict),
+                    nni_config={_i[0]: _i[1] for _i in _nni_config_value},
                 ))
             else:
                 _warning_msg += f'Ignoring ...'

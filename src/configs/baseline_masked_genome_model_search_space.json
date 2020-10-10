@@ -50,10 +50,6 @@
       }
     ]
   },
-  "xfmr_enc_layer_dropout": {
-    "_type": "choice",
-    "_value": [0, 0.05]
-  },
   "xfmr_enc_layer_norm": {
     "_type": "choice",
     "_value": [1, 0]
