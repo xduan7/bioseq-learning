@@ -13,6 +13,7 @@ from multiprocessing import Pool, cpu_count
 from typing import Tuple, List, Set, Dict, Iterable, Iterator, Optional
 
 import torch
+import numpy as np
 from Bio import SeqIO, SeqRecord
 from torch.utils.data import Dataset, IterableDataset
 
@@ -44,7 +45,7 @@ def _process_single_contig(
         _max_num_paddings: int,
         _nucleotide_char_index_dict: Dict[str, int],
         _padding_index: int,
-) -> Optional[Tuple[str, int, Tuple[int, ...]]]:
+) -> Optional[Tuple[str, int, np.ndarray, np.ndarray]]:
     """process a single contig sequence, which includes sanity check for
     length and characters, and then transform/index the contig into indices
     that can be digest by word embedding layers
@@ -62,11 +63,14 @@ def _process_single_contig(
     :type _max_num_paddings: int
     :param _nucleotide_char_index_dict: dictionary that maps nucleotide
     characters (ATGCs) to indices
-    :type _nucleotide_char_index_dict: Dict[str, int]
+    :type _nucleotide_char_index_dict: Dict[str, np.uint8]
     :param _padding_index: index for the padding character
-    :type _padding_index: int
-    :return: if contig sequence is valid fo
-    :rtype:
+    :type _padding_index: np.uint8
+    :return: if contig sequence is valid in terms of length and nucleotide
+    bases, then return a tuple of ID, number of sequences for the contig in
+    total, and numpy array of indexes sequence and the padding mask;
+    otherwise return None
+    :rtype: Optional[Tuple[str, int, np.ndarray, np.ndarray]]
     """
 
     with open(_contig_seq_path, 'r') as _fh:
@@ -93,10 +97,15 @@ def _process_single_contig(
     # note that there are sequences with letters are not atgc
     # e.g. genome/contig ID: 562.54941/CP047077
     try:
-        _indexed_seq: List[int] = \
-            [_nucleotide_char_index_dict[_c] for _c in _seq] + \
-            [_padding_index] * _max_num_paddings
-        _indexed_seq: Tuple[int, ...] = tuple(_indexed_seq)
+        _indexed_seq: np.ndarray = np.array(
+            [_nucleotide_char_index_dict[_c] for _c in _seq] +
+            [_padding_index] * _max_num_paddings,
+            dtype=np.uint8
+        )
+        _padding_mask_seq: np.ndarray = np.array(
+            [False] * len(_seq) + [True] * _max_num_paddings,
+            dtype=np.bool
+        )
         # transforming the indexed sequence into PyTorch tensor might
         # cause: 'RuntimeError: received 0 items of ancdata'
         # _indexed_seq_tensor: torch.LongTensor = \
@@ -109,8 +118,7 @@ def _process_single_contig(
             f'. Ignoring the contig ...'
         _LOGGER.warning(_warning_msg)
         return None
-
-    return _genome_contig_id, _num_seqs, _indexed_seq
+    return _genome_contig_id, _num_seqs, _indexed_seq, _padding_mask_seq
 
 
 class GenomeDataset(Dataset):
@@ -179,19 +187,20 @@ class GenomeDataset(Dataset):
                         PADDING_INDEX,
                     ))
 
-        # multi-processing approach
+        # multi-processing the genome contigs
         with Pool(cpu_count()) as _pool:
             _processed_contigs: \
-                List[Optional[Tuple[str, int, Tuple[int, ...]]]] = \
+                List[Optional[Tuple[str, int, np.ndarray, np.ndarray]]] = \
                 _pool.starmap(
                     _process_single_contig,
                     _process_single_contig_arg_list,
                 )
 
         # dict that maps (genome contig id) to the num of sequences that can
-        # be segmented from the whole contig, and the whole contig sequence
+        # be segmented from the whole contig, the indexes sequence, and the
+        # padding mask for the whole contig sequence
         self._genome_contig_seq_dict: \
-            Dict[str, Tuple[int, Tuple[int, ...]]] = {}
+            Dict[str, Tuple[int, np.ndarray, np.ndarray]] = {}
 
         for _processed_single_contig in _processed_contigs:
             # returned None from process single contig means either length
@@ -200,10 +209,10 @@ class GenomeDataset(Dataset):
                 continue
 
             # otherwise add the genome contigs into class dict
-            _genome_contig_id, _num_seq, _indexed_seq_tensor = \
+            _genome_contig_id, _num_seq, _indexed_seq, _padding_mask_seq = \
                 _processed_single_contig
             self._genome_contig_seq_dict[_genome_contig_id] = \
-                (_num_seq, _indexed_seq_tensor)
+                (_num_seq, _indexed_seq, _padding_mask_seq)
 
         # get the tuple of genome contig IDs, and the accumulative number of
         # sequences of all the genome contigs; for example:
@@ -265,24 +274,27 @@ class GenomeDataset(Dataset):
         # actual indexed sequence that we are looking for ...
         _seq_start_pos: int = _index if _genome_contig_index == 0 else \
             (_index - self._acc_num_seqs_tuple[_genome_contig_index - 1])
+        _seq_end_pos: int = _seq_start_pos + self._seq_len
         _genome_contig_id: str = \
             self._genome_contig_id_tuple[_genome_contig_index]
 
-        # map the nucleotide to indices during the dataset construction (
-        # instead of doing so here) reduce the time rom 0.45 seconds per 10000
-        # samples to 0.22 seconds
-        _indexed_seq: Tuple[int] = \
-            self._genome_contig_seq_dict[_genome_contig_id][1]
-        _segmented_indexed_seq: Tuple[int] = \
-            _indexed_seq[_seq_start_pos: _seq_start_pos + self._seq_len]
+        # segment the indexed sequence and padding mask sequence
+        _indexed_seq: np.ndarray
+        _padding_mask_seq: np.ndarray
+        _, _indexed_seq, _padding_mask_seq = \
+            self._genome_contig_seq_dict[_genome_contig_id]
+
+        _segmented_indexed_seq: np.ndarray = \
+            _indexed_seq[_seq_start_pos: _seq_end_pos]
         _segmented_indexed_seq_tensor: torch.LongTensor = \
             torch.LongTensor(_segmented_indexed_seq)
 
-        # get the paddings in seq as tensor of booleans
-        _padding_mask_tensor: torch.BoolTensor = \
-            torch.BoolTensor(_segmented_indexed_seq_tensor == PADDING_INDEX)
+        _segmented_padding_mask_seq: np.ndarray = \
+            _padding_mask_seq[_seq_start_pos: _seq_end_pos]
+        _segmented_padding_mask_tensor: torch.BoolTensor = \
+            torch.BoolTensor(_segmented_padding_mask_seq)
 
-        return _segmented_indexed_seq_tensor, _padding_mask_tensor
+        return _segmented_indexed_seq_tensor, _segmented_padding_mask_tensor
 
 
 class GenomeIterDataset(IterableDataset, GenomeDataset):
