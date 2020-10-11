@@ -75,33 +75,33 @@ machineList:
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
-    gpuIndices: 2,3,4,5,6,7
+    # gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false
   - ip: lambda1.cels.anl.gov
     port: 22
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
-    gpuIndices: 2,3,4,5,6,7
+    # gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false
   - ip: lambda2.cels.anl.gov
     port: 22
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
-    gpuIndices: 2,3,4,5,6,7
+    # gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false
   - ip: lambda3.cels.anl.gov
     port: 22
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
-    gpuIndices: 2,3,4,5,6,7
+    # gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false
   - ip: lambda4.cels.anl.gov
     port: 22
     username: duan
     sshKeyPath: ~/.ssh/id_rsa_pem
     maxTrialNumPerGpu: 1
-    gpuIndices: 2,3,4,5,6,7
+    # gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false

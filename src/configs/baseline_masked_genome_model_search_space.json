@@ -15,40 +15,13 @@
     "_type": "choice",
     "_value": [500, 1000, 2000, 4000]
   },
-  "xfmr_enc_layer_config": {
+  "xfmr_enc_layer_num_attn_heads": {
     "_type": "choice",
-    "_value": [
-      {
-        "xfmr_enc_layer_num_attn_heads": {
-          "_type": "choice",
-          "_value": [1]
-        },
-        "emb_dim": {
-          "_type": "choice",
-          "_value": [1, 2, 4]
-        }
-      },
-      {
-        "xfmr_enc_layer_num_attn_heads": {
-          "_type": "choice",
-          "_value": [2]
-        },
-        "emb_dim": {
-          "_type": "choice",
-          "_value": [2, 4]
-        }
-      },
-      {
-        "xfmr_enc_layer_num_attn_heads": {
-          "_type": "choice",
-          "_value": [3]
-        },
-        "emb_dim": {
-          "_type": "choice",
-          "_value": [3]
-        }
-      }
-    ]
+    "_value": [1, 2, 3]
+  },
+  "emb_dim": {
+    "_type": "choice",
+    "_value": [2, 4, 6]
   },
   "xfmr_enc_layer_norm": {
     "_type": "choice",

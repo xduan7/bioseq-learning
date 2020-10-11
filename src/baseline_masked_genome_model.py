@@ -395,9 +395,9 @@ while True:
             epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
             if nni_search:
                 nni.report_intermediate_result({
-                    'vld_avg_loss': epoch_vld_loss,
-                    'vld_acc': epoch_vld_acc,
                     'default': epoch_vld_acc,
+                    # 'vld_acc': epoch_vld_acc,
+                    'vld_avg_loss': epoch_vld_loss,
                 })
 
             lr_scheduler.step()
@@ -451,9 +451,9 @@ if best_model:
 
     if nni_search:
         nni.report_final_result({
-            'tst_loss': tst_loss,
-            'tst_acc': tst_acc,
             'default': tst_acc,
+            # 'tst_acc': tst_acc,
+            'tst_loss': tst_loss,
         })
 
     print('=' * 80)
