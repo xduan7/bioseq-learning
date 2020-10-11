@@ -215,11 +215,10 @@ dmypy.json
 
 
 ### User defined ignores
-data/raw/*
-data/interim/*
-data/processed/*
-.idea/
+.idea
 .mypy_cache
 .pytest_cache
 **/.DS_Store
+data
+models
 poetry.lock
