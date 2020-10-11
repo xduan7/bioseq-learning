@@ -60,7 +60,8 @@ _max_num_tst_batches: int = 50000
 
 # transformer and network module configurations
 # the embedding dimension for each "word"(A, T, G, C, and <padding>)
-# must be dividable by the number of attention heads
+# - must be dividable by the number of attention heads
+# - must be dividable by 2 with positional encoding
 _emb_dim: int = 4
 # boolean indicator for positional encoding
 _pos_enc: bool = True

@@ -6,7 +6,7 @@ File Description:
 
     Official PyTorch implementation of positional encoding, copied from
     the transformer tutorial with some changes on the comments:
-    https://pytorch.org/tutorials/beginner/transformer_tutorial.html.
+    https://pytorch.org/tutorials/beginner/transformer_tutorial.html
 
     My own previous implementation which is functionally the same:
     https://github.com/xduan7/DLTM/blob/master/networks/transformer/positional_encoder.py
@@ -46,7 +46,8 @@ class PositionalEncoding(nn.Module):
 
         :param seq_len: (maximum) length of the input sequence
         :type seq_len: int
-        :param emb_dim: embedding dimension for sequence model
+        :param emb_dim: embedding dimension for sequence model; must be an
+        even number for both sin and cos positional terms
         :type emb_dim: int
         :param dropout: dropout rate (after adding positional encoding); de
         :type dropout: float
@@ -56,6 +57,9 @@ class PositionalEncoding(nn.Module):
         :return: None
         """
         super(PositionalEncoding, self).__init__()
+
+        # embedding dimension must be even for both sin and cos terms
+        assert emb_dim % 2 == 0
 
         # scaling embedded vector to prevent it from getting diminished after
         # adding positional encoding
