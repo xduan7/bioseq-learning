@@ -53,13 +53,16 @@ trial:
 # manager: lambda0.cels.anl.gov
 # worker: lambda0.cels.anl.gov, lambda1.cels.anl.gov, etc.
 #
-# to use local browser dashboard,
+# to use local browser dashboard:
 # (1) run 'ssh -C2qTnN -D 8080 lambda0' on local machine
 # (2) set up the browser proxy (firefox)
 #     - check manual proxy configuration
 #     - SOCKS Host=localhost, port=8080
 #     - check SOCKS v5
 # (3) use address lambda0.cels.anl.gov:8080, assuming the port is 8080
+#
+# alternatively, one could run 'sshuttle -r lambda0 0.0.0.0/0' to replace
+#  step (1) and (2) above, but the connection seems to be unstable
 ###############################################################################
 
 logDir: /homes/duan/projects/bioseq-learning/logs/nni_experiments

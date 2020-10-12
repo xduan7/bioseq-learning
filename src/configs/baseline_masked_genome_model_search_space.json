@@ -17,11 +17,11 @@
   },
   "xfmr_enc_layer_num_attn_heads": {
     "_type": "choice",
-    "_value": [1, 2, 3]
+    "_value": [1, 2, 3, 4]
   },
   "emb_dim": {
     "_type": "choice",
-    "_value": [2, 4, 6]
+    "_value": [2, 4, 6, 8, 10, 12]
   },
   "xfmr_enc_layer_norm": {
     "_type": "choice",
