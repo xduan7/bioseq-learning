@@ -1,4 +1,4 @@
 [core]
-    remote = storage
-['remote "storage"']
-    url = ../data/lambda:~/data/dvc/bioseq
+    remote = lambda
+['remote "lambda"']
+    url = ssh://lambda/home/xduan7/data/dvc/bioseq-learning

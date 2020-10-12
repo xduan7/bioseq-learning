@@ -22,6 +22,7 @@ scikit-learn = "^0.23.2"
 colorama = "^0.4.3"
 nni = "^1.8"
 dvc = "^1.8.2"
+paramiko = "^2.7.2"
 
 [tool.poetry.dev-dependencies]
 
