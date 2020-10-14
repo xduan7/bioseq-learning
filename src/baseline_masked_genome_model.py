@@ -382,85 +382,87 @@ def evaluate(_dataloader, test=False):
     return _loss, _acc
 
 
-# train the model over the epochs and evaluate on the validation set
-best_vld_loss, best_vld_acc, best_epoch, best_model = \
-    float('inf'), 0., 0, None
-print('=' * 80)
-while True:
-    try:
-        for epoch in range(1, config['max_num_epochs']):
+if __name__ == "__main__":
 
-            epoch_start_time = time.time()
-            train(epoch)
-            epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
-            if nni_search:
-                nni.report_intermediate_result({
-                    'default': epoch_vld_acc,
-                    # 'vld_acc': epoch_vld_acc,
-                    'vld_avg_loss': epoch_vld_loss,
-                })
+    # train the model over the epochs and evaluate on the validation set
+    best_vld_loss, best_vld_acc, best_epoch, best_model = \
+        float('inf'), 0., 0, None
+    print('=' * 80)
+    while True:
+        try:
+            for epoch in range(1, config['max_num_epochs']):
 
-            lr_scheduler.step()
-            epoch_time_in_sec = time.time() - epoch_start_time
-
-            print('-' * 80)
-            print(
-                f'| end of epoch {epoch:3d} '
-                f'| time {epoch_time_in_sec:>5.0f} s '
-                f'| validation loss {epoch_vld_loss:5.4f} '
-                f'| validation accuracy {(epoch_vld_acc * 100):3.3f}% '
-            )
-            print('-' * 80)
-
-            # if epoch_vld_loss < best_vld_loss:
-            if epoch_vld_acc > best_vld_acc:
-                best_vld_loss = epoch_vld_loss
-                best_vld_acc = epoch_vld_acc
-                best_epoch = epoch
-                best_model = copy.deepcopy(model)
-            elif epoch - best_epoch >= config['early_stopping_patience']:
-                print('exiting from training early for early stopping ... ')
-                break
-
-            if math.isnan(epoch_vld_loss):
-                print('validation loss gets to NaN; exiting current '
-                      'invalid trial ...')
+                epoch_start_time = time.time()
+                train(epoch)
+                epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
                 if nni_search:
-                    nni.report_final_result({'default': 0})
-                sys.exit()
-        break
+                    nni.report_intermediate_result({
+                        'default': epoch_vld_acc,
+                        # 'vld_acc': epoch_vld_acc,
+                        'vld_avg_loss': epoch_vld_loss,
+                    })
 
-    except RuntimeError as e:
-        # CUDA memory or other errors from the training/evaluation process
-        traceback.print_exc()
+                lr_scheduler.step()
+                epoch_time_in_sec = time.time() - epoch_start_time
+
+                print('-' * 80)
+                print(
+                    f'| end of epoch {epoch:3d} '
+                    f'| time {epoch_time_in_sec:>5.0f} s '
+                    f'| validation loss {epoch_vld_loss:5.4f} '
+                    f'| validation accuracy {(epoch_vld_acc * 100):3.3f}% '
+                )
+                print('-' * 80)
+
+                # if epoch_vld_loss < best_vld_loss:
+                if epoch_vld_acc > best_vld_acc:
+                    best_vld_loss = epoch_vld_loss
+                    best_vld_acc = epoch_vld_acc
+                    best_epoch = epoch
+                    best_model = copy.deepcopy(model)
+                elif epoch - best_epoch >= config['early_stopping_patience']:
+                    print('exiting from training early for early stopping ... ')
+                    break
+
+                if math.isnan(epoch_vld_loss):
+                    print('validation loss gets to NaN; exiting current '
+                          'invalid trial ...')
+                    if nni_search:
+                        nni.report_final_result({'default': 0})
+                    sys.exit()
+            break
+
+        except RuntimeError as e:
+            # CUDA memory or other errors from the training/evaluation process
+            traceback.print_exc()
+            if nni_search:
+                nni.report_final_result({'default': 0})
+            sys.exit()
+
+        except KeyboardInterrupt:
+            print('exiting from training early for KeyboardInterrupt ... ')
+            break
+
+    # evaluate the model on the test set
+    if best_model:
+
+        model = best_model
+        tst_start_time = time.time()
+        tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
+        tst_time_in_sec = time.time() - tst_start_time
+
         if nni_search:
-            nni.report_final_result({'default': 0})
-        sys.exit()
+            nni.report_final_result({
+                'default': tst_acc,
+                # 'tst_acc': tst_acc,
+                'tst_loss': tst_loss,
+            })
 
-    except KeyboardInterrupt:
-        print('exiting from training early for KeyboardInterrupt ... ')
-        break
-
-# evaluate the model on the test set
-if best_model:
-
-    model = best_model
-    tst_start_time = time.time()
-    tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
-    tst_time_in_sec = time.time() - tst_start_time
-
-    if nni_search:
-        nni.report_final_result({
-            'default': tst_acc,
-            # 'tst_acc': tst_acc,
-            'tst_loss': tst_loss,
-        })
-
-    print('=' * 80)
-    print(
-        f'| end of training '
-        f'| test time {tst_time_in_sec:>5.0f} s '
-        f'| test loss {tst_loss:5.4f} '
-        f'| test accuracy {(tst_acc * 100):3.2f}% '
-    )
-    print('=' * 80)
+        print('=' * 80)
+        print(
+            f'| end of training '
+            f'| test time {tst_time_in_sec:>5.0f} s '
+            f'| test loss {tst_loss:5.4f} '
+            f'| test accuracy {(tst_acc * 100):3.2f}% '
+        )
+        print('=' * 80)
