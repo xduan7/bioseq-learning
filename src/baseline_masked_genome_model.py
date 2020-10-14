@@ -427,16 +427,16 @@ if __name__ == "__main__":
                 if math.isnan(epoch_vld_loss):
                     print('validation loss gets to NaN; exiting current '
                           'invalid trial ...')
-                    if nni_search:
-                        nni.report_final_result({'default': 0})
+                    # if nni_search:
+                    #     nni.report_final_result({'default': 0})
                     sys.exit()
             break
 
         except RuntimeError as e:
             # CUDA memory or other errors from the training/evaluation process
             traceback.print_exc()
-            if nni_search:
-                nni.report_final_result({'default': 0})
+            # if nni_search:
+            #     nni.report_final_result({'default': 0})
             sys.exit()
 
         except KeyboardInterrupt:
