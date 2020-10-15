@@ -10,7 +10,7 @@ from typing import Optional
 import torch
 import torch.nn as nn
 
-from src.modules import PositionalEncoding
+from src.modules.positional_encoding import PositionalEncoding
 
 
 class TransformerEncoderModel(nn.Module):

@@ -7,8 +7,12 @@ File Description:
 """
 import logging
 from math import sqrt
+from functools import partial
 from types import MappingProxyType
 from typing import Optional, List, Dict, Union, Any
+
+from src.optimization.lr_scheduler_function import \
+    cosine_annealing_warm_restarts
 
 
 __LOGGER = logging.getLogger(__name__)
@@ -22,11 +26,11 @@ _experiment_name: str = \
 # indicator for Microsoft NNI hyper-parameter search
 # note that the searching parameters from NNI would replace some of the
 # parameters listed below in this file
-_nni_search: bool = True
+_nni_search: bool = False
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
-_dry_run: bool = False
+_dry_run: bool = True
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -85,17 +89,23 @@ _early_stopping_patience: int = 32
 # reference: https://arxiv.org/pdf/1706.03762.pdf
 _optimizer: str = 'Adam'
 _optimizer_kwargs: Dict[str, Any] = {
-    'lr': 2e-3,
+    'lr': 1e-3,
     'betas': (0.9, 0.98),
     'eps': 1e-9,
     # 'momentum': 0.9,
     # 'weight_decay': 1e-5,
 }
 _max_grad_norm: Union[int, float] = 10
-_lr_scheduler: str = 'CosineAnnealingWarmRestarts'
+_lr_scheduler: str = 'LambdaLR'
 _lr_scheduler_kwargs: Dict[str, Any] = {
-    'T_0': 16,
-    'eta_min': 1e-4,
+    'lr_lambda': partial(
+        cosine_annealing_warm_restarts,
+        eta_max=1.0,
+        eta_min=0.1,
+        t_0=16.0,
+        t_mult=1.002,
+        gamma=0.998,
+    ),
 }
 # logging configurations
 _num_trn_logs: int = 10

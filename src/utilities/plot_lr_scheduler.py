@@ -43,6 +43,7 @@ def plot_lr_scheduler(
         # model training code goes here, which includes optimizer.step()
         group_lr_list.append(
             [_group['lr'] for _group in _optimizer.param_groups])
+        _optimizer.step()
         lr_scheduler.step()
 
     # construct a dataframe for seaborn line plot

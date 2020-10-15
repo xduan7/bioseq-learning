@@ -1,19 +1,9 @@
-from .conserved_domain_search import conserved_domain_search
-from .process_genomes import process_genome, process_genomes
-from .split_genome_dir_paths import split_genome_dir_paths
-from .print_masked_genome_predictions import print_masked_genome_predictions
+"""
+File Name:          __init__.py
+Project:            dl-project-template
 
-from .genome_dataset import GenomeDataset, GenomeIterDataset
-from .sequence_mask import SequenceMask
+File Description:
 
-__all__ = [
-    'conserved_domain_search',
-    'process_genome',
-    'process_genomes',
-    'split_genome_dir_paths',
-    'print_masked_genome_predictions',
+    PyTorch dataset and related functions and classes
 
-    'GenomeDataset',
-    'GenomeIterDataset',
-    'SequenceMask',
-]
+"""

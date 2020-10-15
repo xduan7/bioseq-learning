@@ -8,17 +8,15 @@ File Description:
 
 """
 from .get_torch_optimizer import \
-    Optimizer, get_torch_optimizer, is_torch_optimizer_class
+    get_torch_optimizer, is_torch_optimizer_class
 from .get_torch_lr_scheduler import \
-    LRScheduler, get_torch_lr_scheduler, is_torch_lr_scheduler_class
+    get_torch_lr_scheduler, is_torch_lr_scheduler_class
 
 __all__ = [
     # src.optimization.get_torch_optimizer
-    'Optimizer',
     'get_torch_optimizer',
     'is_torch_optimizer_class',
     # src.optimization.get_torch_lr_scheduler
-    'LRScheduler',
     'get_torch_lr_scheduler',
     'is_torch_lr_scheduler_class',
 ]

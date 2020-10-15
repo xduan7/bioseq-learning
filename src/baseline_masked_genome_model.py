@@ -26,15 +26,15 @@ from torch.utils.data import DataLoader
 from torch.utils.data.dataloader import default_collate
 
 from src import E_COLI_GENOME_PARENT_DIR_PATH
-from src.datasets import \
-    split_genome_dir_paths, print_masked_genome_predictions, \
-    SequenceMask, GenomeDataset, GenomeIterDataset
+from src.datasets.split_genome_dir_paths import split_genome_dir_paths
+from src.datasets.sequence_mask import SequenceMask
 from src.datasets.genome_dataset import \
-    PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT
-from src.modules import TransformerEncoderModel
+    PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT, \
+    GenomeDataset, GenomeIterDataset
+from src.modules.transformer_encoder_model import TransformerEncoderModel
 from src.optimization import get_torch_optimizer, get_torch_lr_scheduler
-from src.utilities import \
-    set_random_seed, get_computation_devices, merge_nni_config
+from src.utilities import set_random_seed, get_computation_devices
+from src.utilities.merge_nni_config import merge_nni_config
 from src.configs.baseline_masked_genome_model_config import config as \
     default_config
 
@@ -51,6 +51,8 @@ if default_config['nni_search']:
     # - all the values are numeric or strings (of choices)
     # - nested configurations are stored in list instead of dict
     _nni_config: Dict[str, Any] = nni.get_next_parameter()
+    assert len(_nni_config) > 0
+
     config: MappingProxyType = \
         merge_nni_config(default_config, _nni_config)
 
@@ -382,7 +384,7 @@ def evaluate(_dataloader, test=False):
     return _loss, _acc
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     # train the model over the epochs and evaluate on the validation set
     best_vld_loss, best_vld_acc, best_epoch, best_model = \
