@@ -23,6 +23,8 @@ colorama = "^0.4.3"
 nni = "^1.8"
 dvc = "^1.8.2"
 paramiko = "^2.7.2"
+torchgpipe = "^0.0.7"
+torchsummary = {git = "https://github.com/sksq96/pytorch-summary.git"}
 
 [tool.poetry.dev-dependencies]
 
