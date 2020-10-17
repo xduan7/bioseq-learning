@@ -5,8 +5,9 @@ Project:            bioseq-learning
 File Description:
 
 """
-from typing import Optional
+import random
 from collections import OrderedDict
+from typing import Iterable, Optional, Tuple
 
 import torch
 import torch.nn as nn
@@ -14,85 +15,245 @@ import torch.nn as nn
 from src.modules.positional_encoding import PositionalEncoding
 
 
-class TransformerEncoderModel(nn.Module):
-    """container module for a complete end-to-end transformer encoder model,
-    with a embedding layer, (possibly) a position encoding layer,
-    and a linear decoding layer at the end
-    """
+MaskerInput = Tuple[
+    torch.FloatTensor,
+    Optional[torch.BoolTensor]
+]
+TransformerInput = Tuple[
+    torch.FloatTensor,
+    Optional[torch.FloatTensor],
+    Optional[torch.BoolTensor],
+]
+
+
+class _Masker(nn.Module):
+    def __init__(
+            self,
+            seq_len: int,
+            num_masks: int,
+            mask_index: int,
+    ):
+        super(_Masker, self).__init__()
+
+        assert 0 < num_masks < seq_len
+        self._seq_len: int = seq_len
+        self._num_masks: int = num_masks
+        self._mask_index: int = mask_index
+
+        # noinspection PyTypeChecker
+        self.attn_mask: nn.Parameter = nn.Parameter(None, requires_grad=False)
+        # noinspection PyTypeChecker
+        self.src_mask: nn.Parameter = nn.Parameter(None, requires_grad=False)
+        self.update()
+
+        # tensors for input/target storage, used for accuracy calculation
+        self.curr_masked_indexed_seqs: Optional[torch.LongTensor] = None
+
+    def update(
+            self,
+            num_masks: Optional[int] = None,
+            masked_indices: Optional[Iterable[int]] = None,
+    ):
+        """update the attention and sequence masks
+
+        :param num_masks: optional number of masks for update
+        :type num_masks int or None
+        :param masked_indices: optional indices for masking, randomly
+        generate a a list of mask indices if it's not given
+        :type masked_indices: iterable of integer or None
+        :return None
+        :rtype None
+        """
+        if num_masks:
+            self._num_masks = num_masks
+        __masked_indices = torch.LongTensor(masked_indices) \
+            if masked_indices else torch.LongTensor(
+            random.sample(range(self._seq_len), self._num_masks))
+
+        __attn_mask: torch.FloatTensor = torch.zeros(
+            size=(self._seq_len,), dtype=torch.float
+        ).scatter_(
+            0, __masked_indices, float('-inf')
+        ).repeat(self._seq_len).view(-1, self._seq_len)
+        __src_mask: torch.BoolTensor = torch.zeros(
+            size=(self._seq_len,), dtype=torch.bool,
+        ).scatter_(0, __masked_indices, True)
+
+        __device = self.attn_mask.data.device
+        self.attn_mask.data = __attn_mask.to(__device)
+        self.src_mask.data = __src_mask.to(__device)
+
+    def forward(
+            self,
+            input: MaskerInput,
+    ) -> TransformerInput:
+
+        _indexed_seqs, _padding_mask = input
+        _masked_indexed_seqs = _indexed_seqs.clone()
+        _masked_indexed_seqs[:, self.src_mask] = self._mask_index
+
+        self.curr_masked_indexed_seqs = _masked_indexed_seqs
+
+        _tmp = _masked_indexed_seqs.transpose(0, 1).contiguous()
+        return _tmp, self.attn_mask, _padding_mask
+
+
+class _Embedding(nn.Module):
     def __init__(
             self,
             num_tokens: int,
-            padding_index: int,
-            seq_len: int,
-            batch_size: int,
             emb_dim: int,
-            pos_enc: bool,
-            pos_enc_dropout: float,
-            pos_enc_emb_scale: float,
-            xfmr_enc_layer_num_attn_heads: int,
-            xfmr_enc_layer_feedforward_dim: int,
-            xfmr_enc_layer_activation: str,
-            xfmr_enc_layer_dropout: float,
-            xfmr_enc_layer_norm: bool,
-            xfmr_enc_num_layers: int,
+            padding_index: int,
     ):
-        super(TransformerEncoderModel, self).__init__()
-
-        self._seq_len: int = seq_len
-        self._pos_enc: bool = pos_enc
-        self._xfmr_enc_layer_norm: bool = xfmr_enc_layer_norm
-        self._xfmr_enc_num_layers: int = xfmr_enc_num_layers
-
-        # TODO: add k-mer embedding option
-        _layers = OrderedDict()
-        _layers['emb'] = nn.Embedding(
+        super(_Embedding, self).__init__()
+        self._emb = nn.Embedding(
             num_embeddings=num_tokens,
             embedding_dim=emb_dim,
             padding_idx=padding_index,
         )
-        if pos_enc:
-            _layers['pos_enc'] = PositionalEncoding(
-                seq_len=seq_len,
-                emb_dim=emb_dim,
-                dropout=pos_enc_dropout,
-                emb_scale=pos_enc_emb_scale,
-            )
-        for _i in range(1, xfmr_enc_num_layers + 1):
-            _layers[f'xfmr_enc_layer_{_i}'] = nn.TransformerEncoderLayer(
-                d_model=emb_dim,
-                nhead=xfmr_enc_layer_num_attn_heads,
-                dim_feedforward=xfmr_enc_layer_feedforward_dim,
-                activation=xfmr_enc_layer_activation,
-                dropout=xfmr_enc_layer_dropout,
-            )
-        if xfmr_enc_layer_norm:
-            _layers['xfmr_enc_layer_norm'] = nn.LayerNorm(
-                normalized_shape=[seq_len, batch_size, emb_dim]
-            )
-        _layers['dec'] = nn.Linear(emb_dim, num_tokens)
-        self._layers = nn.Sequential(_layers)
-
-        # self._init_weights()
+        self._init_weights()
 
     def _init_weights(self):
-        # the initialization methods and parameters are purely random
-        nn.init.normal_(getattr(self._layers, 'emb').weight, mean=0.0, std=1.0)
-        nn.init.normal_(getattr(self._layers, 'dec').weight, mean=0.0, std=1.0)
+        nn.init.normal_(self._emb.weight, mean=0.0, std=1.0)
 
-    def forward(
+    def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
+        src, attn_mask, padding_mask = xfmr_input
+        _tmp = self._emb(src)
+        return _tmp, attn_mask, padding_mask
+
+
+class _PositionalEncoding(nn.Module):
+    def __init__(
             self,
-            src: torch.LongTensor,
-            attn_mask: Optional[torch.FloatTensor],
-            padding_mask: Optional[torch.BoolTensor],
-    ) -> torch.FloatTensor:
+            seq_len: int,
+            emb_dim: int,
+            pos_enc: bool,
+            pos_enc_dropout: float,
+            pos_enc_emb_scale: float,
+    ):
+        super(_PositionalEncoding, self).__init__()
+        self._pos_enc = PositionalEncoding(
+            seq_len=seq_len,
+            emb_dim=emb_dim,
+            dropout=pos_enc_dropout,
+            emb_scale=pos_enc_emb_scale,
+        ) if pos_enc else None
 
-        _tmp = getattr(self._layers, 'emb')(src)
-        if self._pos_enc:
-            _tmp = getattr(self._layers, 'pos_enc')(_tmp)
-        for _i in range(1, self._xfmr_enc_num_layers + 1):
-            _tmp = getattr(self._layers, f'xfmr_enc_layer_{_i}')(
-                src=_tmp,
-                src_mask=attn_mask,
-                src_key_padding_mask=padding_mask,
-            )
-        return getattr(self._layers, 'dec')(_tmp)
+    def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
+        src, attn_mask, padding_mask = xfmr_input
+        _tmp = self._pos_enc(src) if self._pos_enc else src
+        return _tmp, attn_mask, padding_mask
+
+
+class _TransformerEncoderLayer(nn.Module):
+    def __init__(
+            self,
+            emb_dim: int,
+            xfmr_enc_layer_num_attn_heads: int,
+            xfmr_enc_layer_feedforward_dim: int,
+            xfmr_enc_layer_activation: str,
+            xfmr_enc_layer_dropout: float,
+    ):
+        super(_TransformerEncoderLayer, self).__init__()
+        self._xfmr_enc_layer = nn.TransformerEncoderLayer(
+            d_model=emb_dim,
+            nhead=xfmr_enc_layer_num_attn_heads,
+            dim_feedforward=xfmr_enc_layer_feedforward_dim,
+            activation=xfmr_enc_layer_activation,
+            dropout=xfmr_enc_layer_dropout,
+        )
+
+    def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
+        src, attn_mask, padding_mask = xfmr_input
+        _tmp = self._xfmr_enc_layer(
+            src=src,
+            src_mask=attn_mask,
+            src_key_padding_mask=padding_mask,
+        )
+        return _tmp, attn_mask, padding_mask
+
+
+class _LayerNorm(nn.Module):
+    def __init__(
+            self,
+            emb_dim: int,
+            xfmr_enc_layer_norm: bool,
+    ):
+        super(_LayerNorm, self).__init__()
+        self._layer_norm = nn.LayerNorm(emb_dim) if xfmr_enc_layer_norm else None
+
+    def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
+        src, attn_mask, padding_mask = xfmr_input
+        _tmp = self._layer_norm(src) if self._layer_norm else src
+        return _tmp, attn_mask, padding_mask
+
+
+class _Decoder(nn.Module):
+    def __init__(
+            self,
+            num_tokens: int,
+            emb_dim: int,
+    ):
+        super(_Decoder, self).__init__()
+        self._dec = nn.Linear(emb_dim, num_tokens)
+        self._init_weights()
+
+    def _init_weights(self):
+        nn.init.normal_(self._dec.weight, mean=0.0, std=1.0)
+
+    def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
+        src, _, _ = xfmr_input
+        return self._dec(src).transpose(0, 1).contiguous()
+
+
+def get_transformer_encoder_model(
+        num_tokens: int,
+        num_masks: int,
+        mask_index: int,
+        padding_index: int,
+        seq_len: int,
+        emb_dim: int,
+        pos_enc: bool,
+        pos_enc_dropout: float,
+        pos_enc_emb_scale: float,
+        xfmr_enc_layer_num_attn_heads: int,
+        xfmr_enc_layer_feedforward_dim: int,
+        xfmr_enc_layer_activation: str,
+        xfmr_enc_layer_dropout: float,
+        xfmr_enc_layer_norm: bool,
+        xfmr_enc_num_layers: int,
+) -> nn.Sequential:
+
+    # TODO: add k-mer embedding option
+    _layers = OrderedDict()
+    _layers['msk'] = _Masker(
+        seq_len=seq_len,
+        num_masks=num_masks,
+        mask_index=mask_index,
+    )
+    _layers['emb'] = _Embedding(
+        num_tokens=num_tokens,
+        emb_dim=emb_dim,
+        padding_index=padding_index,
+    )
+    _layers['pos_enc'] = _PositionalEncoding(
+        seq_len=seq_len,
+        emb_dim=emb_dim,
+        pos_enc=pos_enc,
+        pos_enc_dropout=pos_enc_dropout,
+        pos_enc_emb_scale=pos_enc_emb_scale,
+    )
+    for _i in range(1, xfmr_enc_num_layers + 1):
+        _layers[f'xfmr_enc_layer_{_i}'] = _TransformerEncoderLayer(
+            emb_dim=emb_dim,
+            xfmr_enc_layer_num_attn_heads=xfmr_enc_layer_num_attn_heads,
+            xfmr_enc_layer_feedforward_dim=xfmr_enc_layer_feedforward_dim,
+            xfmr_enc_layer_activation=xfmr_enc_layer_activation,
+            xfmr_enc_layer_dropout=xfmr_enc_layer_dropout,
+        )
+    _layers['xfmr_enc_layer_norm'] = _LayerNorm(
+        emb_dim=emb_dim,
+        xfmr_enc_layer_norm=xfmr_enc_layer_norm,
+    )
+    _layers['dec'] = _Decoder(num_tokens=num_tokens, emb_dim=emb_dim)
+    return nn.Sequential(_layers)

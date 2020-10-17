@@ -23,15 +23,13 @@ import torch
 import torch.onnx
 import torch.nn as nn
 from torch.utils.data import DataLoader
-from torch.utils.data.dataloader import default_collate
 
 from src import E_COLI_GENOME_PARENT_DIR_PATH
 from src.datasets.split_genome_dir_paths import split_genome_dir_paths
-from src.datasets.sequence_mask import SequenceMask
 from src.datasets.genome_dataset import \
     PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT, \
     GenomeDataset, GenomeIterDataset
-from src.modules.transformer_encoder_model import TransformerEncoderModel
+from src.modules.transformer_encoder_model import get_transformer_encoder_model
 from src.optimization import get_torch_optimizer, get_torch_lr_scheduler
 from src.utilities import set_random_seed, get_computation_devices
 from src.utilities.merge_nni_config import merge_nni_config
@@ -58,35 +56,32 @@ if default_config['nni_search']:
 
     # NNI will automatically configure the GPU(s) assigned to this trial
     # note that torch.cuda.current_device() will always give you 0
-    # device = torch.device(torch.cuda.current_device())
-    # _nni_trial_gpu_list: List[int] = \
-    #     list(map(int, os.getenv('CUDA_VISIBLE_DEVICES').split(',')))
-    # device = get_computation_devices(
-    #     preferred_gpu_list=_nni_trial_gpu_list,
-    #     multi_gpu_flag=config['multi_gpu_flag'],
-    # )[0]
-    device = torch.device('cuda')
+    devices = get_computation_devices(
+        preferred_gpu_list='all',
+        multi_gpu_flag=config['multi_gpu_flag'],
+    )
     nni_search: bool = True
 else:
     config: MappingProxyType = default_config
-    # TODO: multi-GPU model ...
-    device = get_computation_devices(
+    devices = get_computation_devices(
         preferred_gpu_list=config['preferred_gpu_list'],
         multi_gpu_flag=config['multi_gpu_flag'],
-    )[0]
+    )
     nni_search: bool = False
+
+# configure computation devices here ...
+# TODO: multi-GPU model ...
+
 
 set_random_seed(
     random_seed=config['random_seed'],
     deterministic_cudnn_flag=config['deterministic_cudnn_flag'],
 )
-if device.type == 'cuda':
+if devices[0].type == 'cuda':
     nvidia_amp_opt: bool = config['nvidia_amp_opt']
     if config['nvidia_amp_opt']:
         try:
             from apex import amp
-            # specify the cuda device so that apex won't use cuda: 0
-            torch.cuda.set_device(device)
         except ImportError:
             _warning_msg = \
                 f'Cannot import NVIDIA-apex. ' \
@@ -165,17 +160,17 @@ tst_dataset = GenomeDataset(
 
 # modified collection function so that sequence shape is compatible with
 # transformer (sequence_length, batch_size)
-def __collate_fn(__batch):
-    __batch = default_collate(__batch)
-    __indexed_seqs = __batch[0].transpose(0, 1).contiguous()
-    __padding_mask = __batch[1]
-    return __indexed_seqs, __padding_mask
+# def __collate_fn(__batch):
+#     __batch = default_collate(__batch)
+#     __indexed_seqs = __batch[0].transpose(0, 1).contiguous()
+#     __padding_mask = __batch[1]
+#     return __indexed_seqs, __padding_mask
 
 
 dataloader_kwargs = {
     'batch_size': config['dataloader_batch_size'],
     'num_workers': config['dataloader_num_workers'],
-    'pin_memory': (device.type == 'cuda'),
+    'pin_memory': (devices[0].type == 'cuda'),
     # shuffle should be set to False for training adn validation:
     # (0) shuffling all the genome sequences takes extremely long and a good
     #     chunk of memory (> 150 G)
@@ -187,27 +182,26 @@ dataloader_kwargs = {
     # therefore requires dropping the last batch of data, which is often of
     # different shapes compared to previous batches
     'drop_last': config['xfmr_enc_layer_norm'],
-    'collate_fn': __collate_fn,
+    # 'collate_fn': __collate_fn,
 }
 
 trn_dataloader = DataLoader(trn_iter_dataset, **dataloader_kwargs)
 vld_dataloader = DataLoader(vld_iter_dataset, **dataloader_kwargs)
 tst_dataloader = DataLoader(tst_dataset, shuffle=True, **dataloader_kwargs)
 
-# create a SequenceMask which generates the sequence and attention masks
-seq_mask = SequenceMask(seq_len=config['seq_len'], num_masks=num_masks)
 
 
 ###############################################################################
 # Build the model
 ###############################################################################
 
-model = TransformerEncoderModel(
+model = get_transformer_encoder_model(
     # number of tokens shall not include the padding token
     num_tokens=num_tokens,
+    num_masks=num_masks,
     padding_index=PADDING_INDEX,
+    mask_index=PADDING_INDEX,
     seq_len=config['seq_len'],
-    batch_size=config['dataloader_batch_size'],
     emb_dim=config['emb_dim'],
     pos_enc=config['pos_enc'],
     pos_enc_dropout=config['pos_enc_dropout'],
@@ -218,7 +212,47 @@ model = TransformerEncoderModel(
     xfmr_enc_layer_dropout=config['xfmr_enc_layer_dropout'],
     xfmr_enc_layer_norm=config['xfmr_enc_layer_norm'],
     xfmr_enc_num_layers=config['xfmr_enc_num_layers'],
-).to(device)
+)
+if config['multi_gpu_flag']:
+
+    # TODO: model parallelization with balancing
+
+    # from torchgpipe import GPipe
+    # from torchgpipe.balance import balance_by_size
+    # from torchgpipe.balance import balance_by_time
+    #
+    # _batch = next(iter(tst_dataloader))
+    # _indexed_seqs = _batch[0].to(device)
+    # _padding_mask = _batch[1].to(device)
+    # _attn_mask = seq_mask.get_attn_mask()
+    #
+    # balance = balance_by_size(
+    #     torch.cuda.device_count(),
+    #     model._layers,
+    #     (_indexed_seqs, _attn_mask, _padding_mask),
+    #     chunks=8,
+    #     param_scale=4.0,
+    # )
+    # model = GPipe(model, balance, chunks=8)
+    #
+    # balance = balance_by_time(
+    #     torch.cuda.device_count(),
+    #     model,
+    #     (_indexed_seqs, _attn_mask, _padding_mask),
+    # )
+    # model = GPipe(model, balance, chunks=8)
+
+    # from src.utilities.get_module_summary import get_module_summary
+    # _batch = next(iter(tst_dataloader))
+    # _indexed_seqs = _batch[0].to(devices[0])
+    # _padding_mask = _batch[1].to(devices[0])
+    # _model_summary_ordered_dict, _model_summary_str = \
+    #     get_module_summary(model, (_indexed_seqs, _padding_mask))
+
+    pass
+else:
+    model = model.to(devices[0])
+
 criterion = nn.CrossEntropyLoss(ignore_index=PADDING_INDEX)
 optimizer = get_torch_optimizer(
     optimizer=config['optimizer'],
@@ -259,30 +293,20 @@ def train(cur_epoch: int):
         if _batch_index >= config['max_num_trn_batches_per_epoch']:
             break
 
-        _indexed_seqs = _batch[0].to(device)
-        _padding_mask = _batch[1].to(device)
-
-        _attn_mask, _src_mask = seq_mask.update()
-        _attn_mask = _attn_mask.to(device)
-        _src_mask = _src_mask.to(device)
-
-        _masked_indexed_seqs = _indexed_seqs.clone()
-        _masked_indexed_seqs[_src_mask, :] = 0
+        _indexed_seqs = _batch[0].to(devices[0])
+        _padding_mask = _batch[1].to(devices[0])
 
         # model.zero_grad()
         optimizer.zero_grad()
 
         # the model output has the shape of (seq_len, batch_size, num_tokens)
-        _output = model(
-            src=_masked_indexed_seqs,
-            attn_mask=_attn_mask if config['xfmr_attn_mask'] else None,
-            padding_mask=_padding_mask,
-        )
+        model.msk.update()
+        _output = model((_indexed_seqs, _padding_mask))
+
         _trn_loss = criterion(
             input=_output.view(-1, num_tokens),
             target=_indexed_seqs.view(-1),
         )
-
         _trn_loss.backward()
         nn.utils.clip_grad_norm_(
             parameters=model.parameters(),
@@ -327,22 +351,13 @@ def evaluate(_dataloader, test=False):
             if _batch_index >= max_num_batches:
                 break
 
-            _indexed_seqs = _batch[0].to(device)
-            _padding_mask = _batch[1].to(device)
+            _indexed_seqs = _batch[0].to(devices[0])
+            _padding_mask = _batch[1].to(devices[0])
 
-            _attn_mask, _src_mask = seq_mask.update()
-            _attn_mask = _attn_mask.to(device)
-            _src_mask = _src_mask.to(device)
+            model.msk.update()
+            _output = model((_indexed_seqs, _padding_mask))
 
-            _masked_indexed_seqs = _indexed_seqs.clone()
-            _masked_indexed_seqs[_src_mask, :] = 0
-
-            _output = model(
-                src=_masked_indexed_seqs,
-                attn_mask=_attn_mask if config['xfmr_attn_mask'] else None,
-                padding_mask=_padding_mask,
-            )
-            _input = _masked_indexed_seqs.view(-1)
+            _input = model.msk.curr_masked_indexed_seqs.view(-1)
             _output = _output.view(-1, num_tokens)
             _target = _indexed_seqs.view(-1)
 

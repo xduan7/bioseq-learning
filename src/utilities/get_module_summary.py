@@ -23,7 +23,7 @@ from typing import List, Sequence, Tuple, Union
 
 import torch
 import numpy as np
-from torch.nn import Module
+import torch.nn as nn
 
 from torch.utils.hooks import RemovableHandle
 
@@ -36,7 +36,7 @@ _HEADER_LEN: int = _LAYER_NAME_LEN + _OUTPUT_SHAPE_LEN + _NUM_PARAM_LEN
 
 
 def get_module_summary(
-        module: Module,
+        module: nn.Module,
         batch_input: Union[torch.Tensor, Sequence[torch.Tensor]],
 ) -> Tuple[OrderedDict, str]:
     """get the PyTorch module summary with given batched input

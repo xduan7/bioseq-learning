@@ -52,7 +52,7 @@ _nvidia_amp_opt_level: str = 'O3'
 # dataset and dataloader parameters
 _vld_ratio: float = 0.01
 _tst_ratio: float = 0.01
-_seq_len: int = 2000
+_seq_len: int = 500
 _num_masks: float = 0.10
 _max_num_paddings: int = 0
 _dataloader_batch_size: int = 32
@@ -66,20 +66,20 @@ _max_num_tst_batches: int = 50000
 # the embedding dimension for each "word"(A, T, G, C, and <padding>)
 # - must be dividable by the number of attention heads
 # - must be dividable by 2 with positional encoding
-_emb_dim: int = 4
+_emb_dim: int = 32
 # boolean indicator for positional encoding
 _pos_enc: bool = True
 _pos_enc_dropout: float = 0.0
 _pos_enc_emb_scale: float = sqrt(_emb_dim)
 # the number of attention heads must be a factor of the embedding dimension
-_xfmr_enc_layer_num_attn_heads: int = 2
+_xfmr_enc_layer_num_attn_heads: int = 8
 _xfmr_enc_layer_feedforward_dim: int = 1024
 _xfmr_enc_layer_activation: str = 'relu'
 # TODO: need to investigate xfmr dropout (no effect)
 _xfmr_enc_layer_dropout: float = 0.0
 _xfmr_enc_layer_norm: bool = True
-_xfmr_enc_num_layers: int = 1
-_xfmr_attn_mask: bool = False
+_xfmr_enc_num_layers: int = 3
+_xfmr_attn_mask: bool = True
 
 
 # training configurations
