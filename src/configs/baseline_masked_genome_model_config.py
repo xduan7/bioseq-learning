@@ -11,6 +11,7 @@ from functools import partial
 from types import MappingProxyType
 from typing import Optional, List, Dict, Union, Any
 
+from src import MODEL_DIR_PATH
 from src.optimization.lr_scheduler_function import \
     cosine_annealing_warm_restarts
 
@@ -40,9 +41,9 @@ _deterministic_cudnn_flag: bool = True
 # to use CPU only, set to None or empty list []; otherwise, set to a list
 # of integers representing preferred GPUs for this experiment
 _preferred_gpu_list: Optional[Union[List[int], str]] = \
-    'all' if _nni_search else [0, 1, 2, 3]
+    'all' if _nni_search else [0, 1]
 # flag for using multiple GPUs (nn.DataParallel) for this experiment
-_multi_gpu_flag: bool = False
+_multi_gpu_flag: bool = True
 
 # Nvidia apex mixed-precision training
 _nvidia_amp_opt: bool = False
@@ -109,6 +110,8 @@ _lr_scheduler_kwargs: Dict[str, Any] = {
 }
 # logging configurations
 _num_trn_logs: int = 10
+# model checkpoint directory
+_model_directory: str = MODEL_DIR_PATH
 
 # adjust configurations if it's a dry run
 if _dry_run:

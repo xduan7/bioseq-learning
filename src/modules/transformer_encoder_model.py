@@ -88,7 +88,7 @@ class _Masker(nn.Module):
             input: MaskerInput,
     ) -> TransformerInput:
 
-        _indexed_seqs, _padding_mask = input
+        _indexed_seqs, _padding_mask = input[0], input[1]
         _masked_indexed_seqs = _indexed_seqs.clone()
         _masked_indexed_seqs[:, self.src_mask] = self._mask_index
 
@@ -117,7 +117,8 @@ class _Embedding(nn.Module):
         nn.init.normal_(self._emb.weight, mean=0.0, std=1.0)
 
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
-        src, attn_mask, padding_mask = xfmr_input
+        src, attn_mask, padding_mask = \
+            xfmr_input[0], xfmr_input[1], xfmr_input[2]
         _tmp = self._emb(src)
         return _tmp, attn_mask, padding_mask
 
@@ -140,7 +141,8 @@ class _PositionalEncoding(nn.Module):
         ) if pos_enc else None
 
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
-        src, attn_mask, padding_mask = xfmr_input
+        src, attn_mask, padding_mask = \
+            xfmr_input[0], xfmr_input[1], xfmr_input[2]
         _tmp = self._pos_enc(src) if self._pos_enc else src
         return _tmp, attn_mask, padding_mask
 
@@ -164,7 +166,8 @@ class _TransformerEncoderLayer(nn.Module):
         )
 
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
-        src, attn_mask, padding_mask = xfmr_input
+        src, attn_mask, padding_mask = \
+            xfmr_input[0], xfmr_input[1], xfmr_input[2]
         _tmp = self._xfmr_enc_layer(
             src=src,
             src_mask=attn_mask,
@@ -183,7 +186,8 @@ class _LayerNorm(nn.Module):
         self._layer_norm = nn.LayerNorm(emb_dim) if xfmr_enc_layer_norm else None
 
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
-        src, attn_mask, padding_mask = xfmr_input
+        src, attn_mask, padding_mask = \
+            xfmr_input[0], xfmr_input[1], xfmr_input[2]
         _tmp = self._layer_norm(src) if self._layer_norm else src
         return _tmp, attn_mask, padding_mask
 
@@ -202,7 +206,7 @@ class _Decoder(nn.Module):
         nn.init.normal_(self._dec.weight, mean=0.0, std=1.0)
 
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
-        src, _, _ = xfmr_input
+        src = xfmr_input[0]
         return self._dec(src).transpose(0, 1).contiguous()
 
 

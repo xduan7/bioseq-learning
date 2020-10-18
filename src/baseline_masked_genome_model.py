@@ -9,14 +9,14 @@ File Description:
     https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb
 
 """
+import os
 import sys
-import copy
 import math
 import time
 import logging
 import traceback
+from typing import Any, Dict
 from types import MappingProxyType
-from typing import List, Dict, Any
 
 import numpy as np
 import torch
@@ -61,6 +61,10 @@ if default_config['nni_search']:
         multi_gpu_flag=config['multi_gpu_flag'],
     )
     nni_search: bool = True
+    model_checkpoint_path: str = os.path.join(
+        config['model_directory'],
+        f'nni-{nni.get_trial_id()}.pt',
+    )
 else:
     config: MappingProxyType = default_config
     devices = get_computation_devices(
@@ -68,6 +72,8 @@ else:
         multi_gpu_flag=config['multi_gpu_flag'],
     )
     nni_search: bool = False
+    model_checkpoint_path: str = os.path.join(
+        config['model_directory'], f'temporary.pt')
 
 # configure computation devices here ...
 # TODO: multi-GPU model ...
@@ -215,41 +221,60 @@ model = get_transformer_encoder_model(
 )
 if config['multi_gpu_flag']:
 
-    # TODO: model parallelization with balancing
+    from torchgpipe import GPipe
+    from torchgpipe.balance.blockpartition import solve
+    from src.utilities.get_module_summary import get_module_summary
 
-    # from torchgpipe import GPipe
-    # from torchgpipe.balance import balance_by_size
-    # from torchgpipe.balance import balance_by_time
-    #
-    # _batch = next(iter(tst_dataloader))
-    # _indexed_seqs = _batch[0].to(device)
-    # _padding_mask = _batch[1].to(device)
-    # _attn_mask = seq_mask.get_attn_mask()
-    #
-    # balance = balance_by_size(
-    #     torch.cuda.device_count(),
-    #     model._layers,
-    #     (_indexed_seqs, _attn_mask, _padding_mask),
-    #     chunks=8,
-    #     param_scale=4.0,
-    # )
-    # model = GPipe(model, balance, chunks=8)
-    #
-    # balance = balance_by_time(
-    #     torch.cuda.device_count(),
-    #     model,
-    #     (_indexed_seqs, _attn_mask, _padding_mask),
-    # )
-    # model = GPipe(model, balance, chunks=8)
+    # summarize the model with a forward pass
+    # validation dataloader is faster compared to training (bigger) or test
+    # (strictly mapping) datasets
+    _batch = next(iter(vld_dataloader))
+    _model_summary_ordered_dict, _model_summary_str = \
+        get_module_summary(model, tuple(_batch))
 
-    # from src.utilities.get_module_summary import get_module_summary
-    # _batch = next(iter(tst_dataloader))
-    # _indexed_seqs = _batch[0].to(devices[0])
-    # _padding_mask = _batch[1].to(devices[0])
-    # _model_summary_ordered_dict, _model_summary_str = \
-    #     get_module_summary(model, (_indexed_seqs, _padding_mask))
+    # get a dict that maps sequential layer name -> number of parameters
+    _model_summary_list = list(_model_summary_ordered_dict.items())
+    _summary_index = 0
+    _layer_num_params_dict: Dict[str, int] = {}
+    for _layer in model:
 
-    pass
+        _layer_num_params = 0
+        _layer_class = str(_layer.__class__).split('.')[-1].split('\'')[0]
+
+        while not _model_summary_list[_summary_index][0]\
+                .startswith(_layer_class):
+            _layer_num_params += \
+                _model_summary_list[_summary_index][1]['num_params']
+            _summary_index += 1
+
+        _summary_index += 1
+
+        __i: int = 0
+        for __k in _layer_num_params_dict.keys():
+            if __k.startswith(_layer_class):
+                __i += 1
+        _layer_name = _layer_class + f'-{__i}'
+        _layer_num_params_dict[_layer_name] = _layer_num_params
+
+    # TODO: check how many devices are sufficient enough
+    # reduce the 'devices' list to the minimal number of devices
+    # torch.cuda.get_device_properties(0).total_memory
+
+    # solve for balanced distribution over all the devices
+    _balance = [len(__b) for __b in solve(
+        list(_layer_num_params_dict.values()),
+        partitions=len(devices),
+    )]
+
+    #
+    model = GPipe(
+        module=model,
+        balance=_balance,
+        devices=devices,
+        chunks=1,
+        checkpoint='never',
+    )
+
 else:
     model = model.to(devices[0])
 
@@ -293,19 +318,21 @@ def train(cur_epoch: int):
         if _batch_index >= config['max_num_trn_batches_per_epoch']:
             break
 
-        _indexed_seqs = _batch[0].to(devices[0])
-        _padding_mask = _batch[1].to(devices[0])
+        _indexed_seqs = _batch[0].to(devices[0], non_blocking=True)
+        _padding_mask = _batch[1].to(devices[0], non_blocking=True)
 
         # model.zero_grad()
         optimizer.zero_grad()
 
-        # the model output has the shape of (seq_len, batch_size, num_tokens)
-        model.msk.update()
+        # update the mask for every batch
+        model[0].update()
+
+        # the model output has the shape of (batch_size, seq_len, num_tokens)
         _output = model((_indexed_seqs, _padding_mask))
 
         _trn_loss = criterion(
             input=_output.view(-1, num_tokens),
-            target=_indexed_seqs.view(-1),
+            target=_indexed_seqs.to(devices[-1], non_blocking=True).view(-1),
         )
         _trn_loss.backward()
         nn.utils.clip_grad_norm_(
@@ -351,15 +378,17 @@ def evaluate(_dataloader, test=False):
             if _batch_index >= max_num_batches:
                 break
 
-            _indexed_seqs = _batch[0].to(devices[0])
-            _padding_mask = _batch[1].to(devices[0])
+            _indexed_seqs = _batch[0].to(devices[0], non_blocking=True)
+            _padding_mask = _batch[1].to(devices[0], non_blocking=True)
 
-            model.msk.update()
+            model[0].update()
             _output = model((_indexed_seqs, _padding_mask))
 
-            _input = model.msk.curr_masked_indexed_seqs.view(-1)
+            _input = model[0].curr_masked_indexed_seqs.view(-1).to(
+                devices[-1], non_blocking=True)
+            _target = _indexed_seqs.view(-1).to(
+                devices[-1], non_blocking=True)
             _output = _output.view(-1, num_tokens)
-            _target = _indexed_seqs.view(-1)
 
             # collect the loss
             _loss = criterion(input=_output, target=_target)
@@ -392,7 +421,8 @@ def evaluate(_dataloader, test=False):
             #     _input, _target, _prediction,
             # )
 
-    _num_batches: int = len(_dataloader) if test else \
+    _num_batches: int = \
+        min(len(_dataloader), config['max_num_tst_batches']) if test else \
         min(len(_dataloader), config['max_num_vld_batches_per_epoch'])
     _loss = _total_loss / _num_batches
     _acc = _num_correct_predictions / _num_total_predictions
@@ -402,8 +432,7 @@ def evaluate(_dataloader, test=False):
 if __name__ == '__main__':
 
     # train the model over the epochs and evaluate on the validation set
-    best_vld_loss, best_vld_acc, best_epoch, best_model = \
-        float('inf'), 0., 0, None
+    best_vld_loss, best_vld_acc, best_epoch = float('inf'), 0., 0
     print('=' * 80)
     while True:
         try:
@@ -436,7 +465,8 @@ if __name__ == '__main__':
                     best_vld_loss = epoch_vld_loss
                     best_vld_acc = epoch_vld_acc
                     best_epoch = epoch
-                    best_model = copy.deepcopy(model)
+                    # best_model = copy.deepcopy(model)
+                    torch.save(model.state_dict(), model_checkpoint_path)
                 elif epoch - best_epoch >= config['early_stopping_patience']:
                     print('exiting from training early for early stopping ... ')
                     break
@@ -461,25 +491,23 @@ if __name__ == '__main__':
             break
 
     # evaluate the model on the test set
-    if best_model:
+    model.load_state_dict(torch.load(model_checkpoint_path))
+    tst_start_time = time.time()
+    tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
+    tst_time_in_sec = time.time() - tst_start_time
 
-        model = best_model
-        tst_start_time = time.time()
-        tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
-        tst_time_in_sec = time.time() - tst_start_time
+    if nni_search:
+        nni.report_final_result({
+            'default': tst_acc,
+            # 'tst_acc': tst_acc,
+            'tst_loss': tst_loss,
+        })
 
-        if nni_search:
-            nni.report_final_result({
-                'default': tst_acc,
-                # 'tst_acc': tst_acc,
-                'tst_loss': tst_loss,
-            })
-
-        print('=' * 80)
-        print(
-            f'| end of training '
-            f'| test time {tst_time_in_sec:>5.0f} s '
-            f'| test loss {tst_loss:5.4f} '
-            f'| test accuracy {(tst_acc * 100):3.2f}% '
-        )
-        print('=' * 80)
+    print('=' * 80)
+    print(
+        f'| end of training '
+        f'| test time {tst_time_in_sec:>5.0f} s '
+        f'| test loss {tst_loss:5.4f} '
+        f'| test accuracy {(tst_acc * 100):3.2f}% '
+    )
+    print('=' * 80)
