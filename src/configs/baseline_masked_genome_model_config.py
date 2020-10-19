@@ -27,7 +27,7 @@ _experiment_name: str = \
 # indicator for Microsoft NNI hyper-parameter search
 # note that the searching parameters from NNI would replace some of the
 # parameters listed below in this file
-_nni_search: bool = False
+_nni_search: bool = True
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
@@ -41,7 +41,7 @@ _deterministic_cudnn_flag: bool = True
 # to use CPU only, set to None or empty list []; otherwise, set to a list
 # of integers representing preferred GPUs for this experiment
 _preferred_gpu_list: Optional[Union[List[int], str]] = \
-    'all' if _nni_search else [0, 1]
+    'all' if _nni_search else [0, 1, 2, 3]
 # flag for using multiple GPUs (nn.DataParallel) for this experiment
 _multi_gpu_flag: bool = True
 
@@ -53,9 +53,9 @@ _nvidia_amp_opt_level: str = 'O3'
 # dataset and dataloader parameters
 _vld_ratio: float = 0.01
 _tst_ratio: float = 0.01
-_seq_len: int = 500
+_seq_len: int = 2000
 _num_masks: float = 0.10
-_max_num_paddings: int = 0
+_max_num_paddings: Union[int, float] = 0.5
 _dataloader_batch_size: int = 32
 _dataloader_num_workers: int = _dataloader_batch_size
 _max_num_trn_batches_per_epoch: int = 10000
@@ -67,19 +67,19 @@ _max_num_tst_batches: int = 50000
 # the embedding dimension for each "word"(A, T, G, C, and <padding>)
 # - must be dividable by the number of attention heads
 # - must be dividable by 2 with positional encoding
-_emb_dim: int = 32
+_emb_dim: int = 16
 # boolean indicator for positional encoding
 _pos_enc: bool = True
 _pos_enc_dropout: float = 0.0
 _pos_enc_emb_scale: float = sqrt(_emb_dim)
 # the number of attention heads must be a factor of the embedding dimension
-_xfmr_enc_layer_num_attn_heads: int = 8
+_xfmr_enc_layer_num_attn_heads: int = 4
 _xfmr_enc_layer_feedforward_dim: int = 1024
 _xfmr_enc_layer_activation: str = 'relu'
 # TODO: need to investigate xfmr dropout (no effect)
 _xfmr_enc_layer_dropout: float = 0.0
 _xfmr_enc_layer_norm: bool = True
-_xfmr_enc_num_layers: int = 3
+_xfmr_enc_num_layers: int = 8
 _xfmr_attn_mask: bool = True
 
 
