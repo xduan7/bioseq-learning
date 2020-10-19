@@ -16,6 +16,8 @@ File Description:
     - fixed the buffer size calculation
     - optimization for coding style and computation ...
 
+    TODO: need to go through GPipe for better implementation of the summary
+
 """
 import logging
 from collections import OrderedDict
@@ -38,7 +40,7 @@ _HEADER_LEN: int = _LAYER_NAME_LEN + _OUTPUT_SHAPE_LEN + _NUM_PARAM_LEN
 def get_module_summary(
         module: nn.Module,
         batch_input: Union[torch.Tensor, Sequence[torch.Tensor]],
-) -> Tuple[OrderedDict, str]:
+) -> Tuple[OrderedDict, str, float]:
     """get the PyTorch module summary with given batched input
 
     :param module: module to be summarized
@@ -78,10 +80,19 @@ def get_module_summary(
         if hasattr(__module, 'bias') \
                 and hasattr(__module.bias, 'size'):
             _num_params += np.prod(list(__module.bias.size()))
+        # parameters and buffers are registered as OrderedDict
+        # TODO: parameters could be trainable ...
+        if hasattr(__module, '_parameters'):
+            _num_params += np.sum([
+                np.prod(__b.size())
+                for __b in list(__module._parameters.values())
+                if hasattr(__b, 'size')
+            ])
         if hasattr(__module, '_buffers'):
             _num_params += np.sum([
                np.prod(__b.size())
                 for __b in list(__module._buffers.values())
+                if hasattr(__b, 'size')
             ])
         _summary[__module_key_]['num_params'] = int(_num_params)
 
@@ -126,7 +137,7 @@ def get_module_summary(
             f'{_summary[__module_key]["num_params"]:>{_NUM_PARAM_LEN},}\n'
         _summary_str += __module_summary_str
 
-        _total_num_params += _summary[__module_key]["num_params"]
+        _total_num_params += _summary[__module_key]['num_params']
         _num_layer_outputs += _get_size(_summary[__module_key]['output_shape'])
         if (('trainable' in _summary[__module_key]) and
                 _summary[__module_key]["trainable"]):
@@ -161,4 +172,4 @@ def get_module_summary(
     _summary_str += f'Estimated Total Size (MB):{_total_size_in_mb:0.2f}\n'
     _summary_str += '-' * _HEADER_LEN + '\n'
 
-    return _summary, _summary_str
+    return _summary, _summary_str, _total_size_in_mb

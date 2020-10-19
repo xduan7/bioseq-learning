@@ -62,7 +62,7 @@ def get_computation_devices(
         # specification so that the 'available' GPUs are actually ready
         # for deep learning runs (https://github.com/anderskm/gputil)
         _available_gpu_list = getAvailable(
-            limit=_MAX_NUM_GPUS,
+            limit=min(_MAX_NUM_GPUS, torch.cuda.device_count()),
             maxLoad=_MAX_GPU_LOAD,
             maxMemory=_MAX_GPU_MEM_USED,
         )

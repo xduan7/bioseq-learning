@@ -15,7 +15,7 @@ import math
 import time
 import logging
 import traceback
-from typing import Any, Dict
+from typing import Any, Dict, List
 from types import MappingProxyType
 
 import numpy as np
@@ -74,10 +74,6 @@ else:
     nni_search: bool = False
     model_checkpoint_path: str = os.path.join(
         config['model_directory'], f'temporary.pt')
-
-# configure computation devices here ...
-# TODO: multi-GPU model ...
-
 
 set_random_seed(
     random_seed=config['random_seed'],
@@ -140,9 +136,12 @@ if config['dry_run']:
     vld_genome_dir_paths = vld_genome_dir_paths[0:10]
     tst_genome_dir_paths = tst_genome_dir_paths[0:1]
 
+_max_num_paddings: int = config['max_num_paddings'] \
+    if isinstance(config['max_num_paddings'], int) else \
+    int(config['max_num_paddings'] * config['seq_len'])
 masked_genome_dataset_kwargs = {
     'seq_len': config['seq_len'],
-    'max_num_paddings': config['max_num_paddings'],
+    'max_num_paddings': _max_num_paddings,
 }
 print(f'Generating training dataset from '
       f'{len(trn_genome_dir_paths)} genomes ...')
@@ -196,7 +195,6 @@ vld_dataloader = DataLoader(vld_iter_dataset, **dataloader_kwargs)
 tst_dataloader = DataLoader(tst_dataset, shuffle=True, **dataloader_kwargs)
 
 
-
 ###############################################################################
 # Build the model
 ###############################################################################
@@ -219,63 +217,20 @@ model = get_transformer_encoder_model(
     xfmr_enc_layer_norm=config['xfmr_enc_layer_norm'],
     xfmr_enc_num_layers=config['xfmr_enc_num_layers'],
 )
+
 if config['multi_gpu_flag']:
-
-    from torchgpipe import GPipe
-    from torchgpipe.balance.blockpartition import solve
-    from src.utilities.get_module_summary import get_module_summary
-
-    # summarize the model with a forward pass
-    # validation dataloader is faster compared to training (bigger) or test
-    # (strictly mapping) datasets
-    _batch = next(iter(vld_dataloader))
-    _model_summary_ordered_dict, _model_summary_str = \
-        get_module_summary(model, tuple(_batch))
-
-    # get a dict that maps sequential layer name -> number of parameters
-    _model_summary_list = list(_model_summary_ordered_dict.items())
-    _summary_index = 0
-    _layer_num_params_dict: Dict[str, int] = {}
-    for _layer in model:
-
-        _layer_num_params = 0
-        _layer_class = str(_layer.__class__).split('.')[-1].split('\'')[0]
-
-        while not _model_summary_list[_summary_index][0]\
-                .startswith(_layer_class):
-            _layer_num_params += \
-                _model_summary_list[_summary_index][1]['num_params']
-            _summary_index += 1
-
-        _summary_index += 1
-
-        __i: int = 0
-        for __k in _layer_num_params_dict.keys():
-            if __k.startswith(_layer_class):
-                __i += 1
-        _layer_name = _layer_class + f'-{__i}'
-        _layer_num_params_dict[_layer_name] = _layer_num_params
-
-    # TODO: check how many devices are sufficient enough
-    # reduce the 'devices' list to the minimal number of devices
-    # torch.cuda.get_device_properties(0).total_memory
-
-    # solve for balanced distribution over all the devices
-    _balance = [len(__b) for __b in solve(
-        list(_layer_num_params_dict.values()),
-        partitions=len(devices),
-    )]
-
-    #
-    model = GPipe(
-        module=model,
-        balance=_balance,
-        devices=devices,
-        chunks=1,
-        checkpoint='never',
-    )
-
+    # if more than 1 devices is necessary for the run ...
+    # gpipe model on 1 gpu is much slower compared to ordinary model
+    if len(devices) > 1:
+        from src.utilities.shard_module import shard_module
+        model, devices = shard_module(
+            module=model,
+            input_sample=next(iter(vld_dataloader)),
+            devices=devices,
+            num_chunks=config['dataloader_batch_size'] // 4,
+        )
 else:
+    # if the multi-gpu flag is False/disabled
     model = model.to(devices[0])
 
 criterion = nn.CrossEntropyLoss(ignore_index=PADDING_INDEX)
@@ -384,8 +339,11 @@ def evaluate(_dataloader, test=False):
             model[0].update()
             _output = model((_indexed_seqs, _padding_mask))
 
-            _input = model[0].curr_masked_indexed_seqs.view(-1).to(
+            _masked_indexed_seqs = _indexed_seqs.clone().to(
                 devices[-1], non_blocking=True)
+            _masked_indexed_seqs[:, model[0].src_mask] = \
+                model[0]._mask_index
+            _input = _masked_indexed_seqs.view(-1)
             _target = _indexed_seqs.view(-1).to(
                 devices[-1], non_blocking=True)
             _output = _output.view(-1, num_tokens)

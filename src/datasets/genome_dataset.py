@@ -202,6 +202,7 @@ class GenomeDataset(Dataset):
         self._genome_contig_seq_dict: \
             Dict[str, Tuple[int, np.ndarray, np.ndarray]] = {}
 
+        # TODO: debug or info for how many contigs are kept and thrown
         for _processed_single_contig in _processed_contigs:
             # returned None from process single contig means either length
             # too short or contains illegal character

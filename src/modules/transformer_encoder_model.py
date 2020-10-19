@@ -21,7 +21,7 @@ MaskerInput = Tuple[
 ]
 TransformerInput = Tuple[
     torch.FloatTensor,
-    Optional[torch.FloatTensor],
+    Optional[torch.BoolTensor],
     Optional[torch.BoolTensor],
 ]
 
@@ -40,10 +40,20 @@ class _Masker(nn.Module):
         self._num_masks: int = num_masks
         self._mask_index: int = mask_index
 
-        # noinspection PyTypeChecker
-        self.attn_mask: nn.Parameter = nn.Parameter(None, requires_grad=False)
-        # noinspection PyTypeChecker
-        self.src_mask: nn.Parameter = nn.Parameter(None, requires_grad=False)
+        self.attn_mask: nn.Parameter = nn.Parameter(
+            torch.zeros(
+                size=(self._seq_len, self._seq_len),
+                dtype=torch.bool,
+            ),
+            requires_grad=False,
+        )
+        self.src_mask: nn.Parameter = nn.Parameter(
+            torch.zeros(
+                size=(self._seq_len, ),
+                dtype=torch.bool,
+            ),
+            requires_grad=False,
+        )
         self.update()
 
         # tensors for input/target storage, used for accuracy calculation
@@ -70,13 +80,17 @@ class _Masker(nn.Module):
             if masked_indices else torch.LongTensor(
             random.sample(range(self._seq_len), self._num_masks))
 
-        __attn_mask: torch.FloatTensor = torch.zeros(
-            size=(self._seq_len,), dtype=torch.float
+        # self.attn_mask.data = None
+        # self.src_mask.data = None
+
+        __attn_mask: torch.BoolTensor = torch.zeros(
+            size=(self._seq_len,), dtype=torch.bool, requires_grad=False,
         ).scatter_(
-            0, __masked_indices, float('-inf')
+            0, __masked_indices, True
         ).repeat(self._seq_len).view(-1, self._seq_len)
+
         __src_mask: torch.BoolTensor = torch.zeros(
-            size=(self._seq_len,), dtype=torch.bool,
+            size=(self._seq_len,), dtype=torch.bool, requires_grad=False,
         ).scatter_(0, __masked_indices, True)
 
         __device = self.attn_mask.data.device
@@ -95,7 +109,7 @@ class _Masker(nn.Module):
         self.curr_masked_indexed_seqs = _masked_indexed_seqs
 
         _tmp = _masked_indexed_seqs.transpose(0, 1).contiguous()
-        return _tmp, self.attn_mask, _padding_mask
+        return _tmp, self.attn_mask.data, _padding_mask
 
 
 class _Embedding(nn.Module):
