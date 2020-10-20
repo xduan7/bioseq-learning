@@ -82,8 +82,8 @@ def shard_module(
                 _module_layer_sizes_in_byte,
                 partitions=len(devices),
             )]
-            # TODO: maybe not using gpipe? since we are not actually
-            #  chunking the batches ...
+            # TODO: maybe not using gpipe?
+            # since we are not actually chunking the batches ...
             module = GPipe(
                 module=module,
                 balance=_balance,

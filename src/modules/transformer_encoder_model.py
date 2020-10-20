@@ -341,7 +341,6 @@ def get_transformer_encoder_model(
         xfmr_padding_mask: bool,
 ) -> nn.Sequential:
 
-    # TODO: add k-mer embedding option
     _layers = OrderedDict()
     _layers['emb'] = _Embedding(
         num_tokens=num_tokens,

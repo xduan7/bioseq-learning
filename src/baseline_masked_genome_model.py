@@ -313,6 +313,7 @@ def train(cur_epoch: int):
         # update the mask for every batch
         masker.update()
 
+        # TODO: switch some data processing from module to dataset
         # the model output has the shape of (batch_size, seq_len, num_tokens)
         _masked_indexed_seqs, _attn_mask = masker(_indexed_seqs)
         _indexed_kmer_seqs, _, _ = seq2kmer((_indexed_seqs, None, None))
