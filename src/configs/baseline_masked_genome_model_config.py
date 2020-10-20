@@ -27,11 +27,11 @@ _experiment_name: str = \
 # indicator for Microsoft NNI hyper-parameter search
 # note that the searching parameters from NNI would replace some of the
 # parameters listed below in this file
-_nni_search: bool = False
+_nni_search: bool = True
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
-_dry_run: bool = True
+_dry_run: bool = False
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -56,7 +56,7 @@ _nvidia_amp_opt_level: str = 'O3'
 # dataset and dataloader parameters
 _vld_ratio: float = 0.01
 _tst_ratio: float = 0.01
-_seq_len: int = 20000
+_seq_len: int = 2000
 _num_masks: float = 0.10
 _max_num_paddings: Union[int, float] = 0.5
 _dataloader_batch_size: int = 32
@@ -65,6 +65,9 @@ _max_num_trn_batches_per_epoch: int = 10000
 _max_num_vld_batches_per_epoch: int = 10000
 _max_num_tst_batches: int = 50000
 
+
+# length of k-mer conversion for genomes
+_kmer_len: int = 3
 
 # transformer and network module configurations
 # the embedding dimension for each "word"(A, T, G, C, and <padding>)

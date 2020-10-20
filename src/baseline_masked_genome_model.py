@@ -29,7 +29,8 @@ from src.datasets.split_genome_dir_paths import split_genome_dir_paths
 from src.datasets.genome_dataset import \
     PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT, \
     GenomeDataset, GenomeIterDataset
-from src.modules.transformer_encoder_model import get_transformer_encoder_model
+from src.modules.transformer_encoder_model import \
+    Masker, Seq2Kmer, Kmer2Seq, get_transformer_encoder_model
 from src.optimization import get_torch_optimizer, get_torch_lr_scheduler
 from src.utilities import set_random_seed, get_computation_devices
 from src.utilities.merge_nni_config import merge_nni_config
@@ -121,6 +122,7 @@ num_masks: int = int(np.round(config['num_masks'] * config['seq_len'])) \
     if isinstance(config['num_masks'], float) else config['num_masks']
 # the number of tokens in the nucleotide char: index dict
 num_tokens: int = len(NUCLEOTIDE_CHAR_INDEX_DICT)
+num_kmer_tokens: int = (num_tokens ** config['kmer_len'])
 
 trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
     split_genome_dir_paths(
@@ -198,13 +200,24 @@ tst_dataloader = DataLoader(tst_dataset, shuffle=True, **dataloader_kwargs)
 # Build the model
 ###############################################################################
 
+masker = Masker(
+    seq_len=config['seq_len'],
+    num_masks=num_masks,
+    mask_index=PADDING_INDEX,
+    attn_mask=config['xfmr_attn_mask'],
+)
+seq2kmer = Seq2Kmer(
+    k=config['kmer_len'],
+    seq_len=config['seq_len'],
+    num_tokens=num_tokens,
+    attn_mask=config['xfmr_attn_mask'],
+    padding_mask=config['xfmr_padding_mask'],
+)
 model = get_transformer_encoder_model(
     # number of tokens shall not include the padding token
-    num_tokens=num_tokens,
-    num_masks=num_masks,
+    num_tokens=num_kmer_tokens,
     padding_index=PADDING_INDEX,
-    mask_index=PADDING_INDEX,
-    seq_len=config['seq_len'],
+    seq_len=(config['seq_len'] - config['kmer_len'] + 1),
     emb_dim=config['emb_dim'],
     pos_enc=config['pos_enc'],
     pos_enc_dropout=config['pos_enc_dropout'],
@@ -218,21 +231,32 @@ model = get_transformer_encoder_model(
     xfmr_attn_mask=config['xfmr_attn_mask'],
     xfmr_padding_mask=config['xfmr_padding_mask'],
 )
+kmer2seq = Kmer2Seq(
+    k=config['kmer_len'],
+    seq_len=config['seq_len'],
+    num_tokens=num_tokens,
+)
 
 if config['multi_gpu_flag']:
-    # if more than 1 devices is necessary for the run ...
-    # gpipe model on 1 gpu is much slower compared to ordinary model
-    if len(devices) > 1:
-        from src.utilities.shard_module import shard_module
-        model, devices = shard_module(
-            module=model,
-            input_sample=next(iter(vld_dataloader)),
-            devices=devices,
-            num_chunks=config['num_gpipe_chunks'],
-        )
+    from src.utilities.shard_module import shard_module
+    _batch = next(iter(vld_dataloader))
+    _masked_indexed_seqs, _attn_mask = masker(_batch[0])
+    _input_sample = seq2kmer((_masked_indexed_seqs, _attn_mask, _batch[1]))
+    model, devices = shard_module(
+        module=model,
+        input_sample=_input_sample,
+        devices=devices,
+        num_chunks=config['num_gpipe_chunks'],
+    )
+    masker = masker.to(devices[0])
+    seq2kmer = seq2kmer.to(devices[0])
+    kmer2seq = kmer2seq.to(devices[-1])
 else:
     # if the multi-gpu flag is False/disabled
+    masker = masker.to(devices[0])
+    seq2kmer = seq2kmer.to(devices[0])
     model = model.to(devices[0])
+    kmer2seq = kmer2seq.to(devices[0])
 
 criterion = nn.CrossEntropyLoss(ignore_index=PADDING_INDEX)
 optimizer = get_torch_optimizer(
@@ -287,14 +311,22 @@ def train(cur_epoch: int):
         optimizer.zero_grad()
 
         # update the mask for every batch
-        model[0].update()
+        masker.update()
 
         # the model output has the shape of (batch_size, seq_len, num_tokens)
-        _output = model((_indexed_seqs, _padding_mask))
+        _masked_indexed_seqs, _attn_mask = masker(_indexed_seqs)
+        _indexed_kmer_seqs, _, _ = seq2kmer((_indexed_seqs, None, None))
+        _masked_indexed_kmer_seqs, _attn_kmer_mask, _padding_kmer_mask = \
+            seq2kmer((_masked_indexed_seqs, _attn_mask, _padding_mask))
+        _output = model((
+            _masked_indexed_kmer_seqs,
+            _attn_kmer_mask,
+            _padding_kmer_mask,
+        ))
 
         _trn_loss = criterion(
-            input=_output.view(-1, num_tokens),
-            target=_indexed_seqs.to(devices[-1], non_blocking=True).view(-1),
+            input=_output.view(-1, num_kmer_tokens),
+            target=_indexed_kmer_seqs.to(devices[-1], non_blocking=True).view(-1),
         )
         _trn_loss.backward()
         nn.utils.clip_grad_norm_(
@@ -347,17 +379,22 @@ def evaluate(_dataloader, test=False):
                     size=(config['dataloader_batch_size'], 0),
                     dtype=torch.bool).to(devices[0], non_blocking=True)
 
-            model[0].update()
-            _output = model((_indexed_seqs, _padding_mask))
+            masker.update()
 
-            _masked_indexed_seqs = _indexed_seqs.clone().to(
+            _masked_indexed_seqs, _attn_mask = masker(_indexed_seqs)
+            _indexed_kmer_seqs, _, _ = seq2kmer((_indexed_seqs, None, None))
+            _masked_indexed_kmer_seqs, _attn_kmer_mask, _padding_kmer_mask = \
+                seq2kmer((_masked_indexed_seqs, _attn_mask, _padding_mask))
+            _output = model((
+                _masked_indexed_kmer_seqs,
+                _attn_kmer_mask,
+                _padding_kmer_mask,
+            ))
+
+            _input = _masked_indexed_kmer_seqs.view(-1)
+            _target = _indexed_kmer_seqs.view(-1).to(
                 devices[-1], non_blocking=True)
-            _masked_indexed_seqs[:, model[0].src_mask] = \
-                model[0]._mask_index
-            _input = _masked_indexed_seqs.view(-1)
-            _target = _indexed_seqs.view(-1).to(
-                devices[-1], non_blocking=True)
-            _output = _output.view(-1, num_tokens)
+            _output = _output.view(-1, num_kmer_tokens)
 
             # collect the loss
             _loss = criterion(input=_output, target=_target)

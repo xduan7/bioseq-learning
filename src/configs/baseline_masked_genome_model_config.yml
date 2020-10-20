@@ -25,7 +25,12 @@ useAnnotation: false
 multiThread: true
 
 tuner:
-  builtinTunerName: GridSearch
+  builtinTunerName: TPE
+  classArgs:
+    optimize_mode: maximize
+    parallel_optimize: True
+    constant_liar_type: min
+
 
 trial:
   command: CUDA_DEVICE_ORDER=PCI_BUS_ID PYTHONPATH="${HOME}/projects/bioseq-learning:${PYTHONPATH}" ${HOME}/anaconda3/envs/bioseq/bin/python ${HOME}/projects/bioseq-learning/src/baseline_masked_genome_model.py

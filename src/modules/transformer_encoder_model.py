@@ -5,6 +5,7 @@ Project:            bioseq-learning
 File Description:
 
 """
+import logging
 import random
 from collections import OrderedDict
 from typing import Iterable, Optional, Tuple
@@ -14,6 +15,8 @@ import torch.nn as nn
 
 from src.modules.positional_encoding import PositionalEncoding
 
+
+_LOGGER = logging.getLogger(__name__)
 
 MaskerInput = Tuple[
     torch.FloatTensor,
@@ -26,7 +29,7 @@ TransformerInput = Tuple[
 ]
 
 
-class _Masker(nn.Module):
+class Masker(nn.Module):
     def __init__(
             self,
             seq_len: int,
@@ -34,7 +37,7 @@ class _Masker(nn.Module):
             mask_index: int,
             attn_mask: bool,
     ):
-        super(_Masker, self).__init__()
+        super(Masker, self).__init__()
 
         assert 0 < num_masks < seq_len
         self._seq_len: int = seq_len
@@ -58,9 +61,6 @@ class _Masker(nn.Module):
         )
         self.update()
 
-        # tensors for input/target storage, used for accuracy calculation
-        # self.curr_masked_indexed_seqs: Optional[torch.LongTensor] = None
-
     def update(
             self,
             num_masks: Optional[int] = None,
@@ -81,10 +81,6 @@ class _Masker(nn.Module):
         __masked_indices = torch.LongTensor(masked_indices) \
             if masked_indices else torch.LongTensor(
             random.sample(range(self._seq_len), self._num_masks))
-
-        # self.attn_mask.data = None
-        # self.src_mask.data = None
-
         __device = self.src_mask.data.device
 
         if self._attn_mask:
@@ -102,19 +98,74 @@ class _Masker(nn.Module):
 
     def forward(
             self,
-            input: MaskerInput,
-    ) -> TransformerInput:
+            indexed_seqs: torch.FloatTensor,
+    ) -> Tuple[torch.FloatTensor, Optional[torch.BoolTensor]]:
 
-        _indexed_seqs, _padding_mask = input[0], input[1]
-        _masked_indexed_seqs = _indexed_seqs.clone()
+        _masked_indexed_seqs = indexed_seqs.clone()
         _masked_indexed_seqs[:, self.src_mask] = self._mask_index
-
-        # self.curr_masked_indexed_seqs = _masked_indexed_seqs
-
-        _tmp = _masked_indexed_seqs.transpose(0, 1).contiguous()
         _attn_mask = self.attn_mask.data
+        return _masked_indexed_seqs, _attn_mask
 
-        return _tmp, _attn_mask, _padding_mask
+
+class Seq2Kmer(nn.Module):
+    def __init__(
+            self,
+            k: int,
+            seq_len: int,
+            num_tokens: int,
+            attn_mask: bool,
+            padding_mask: bool,
+    ):
+        super(Seq2Kmer, self).__init__()
+
+        self._k: int = k
+        self._seq_len: int = seq_len
+        self._num_tokens: int = num_tokens
+        self._attn_mask: bool = attn_mask
+        self._padding_mask: bool = padding_mask
+        self._kmer_seq_len: int = self._seq_len - self._k + 1
+
+        # if padding mask is still requested for k-mer sequence, which is
+        # actually not well-defined, return an all-False tensor indicating
+        # that attention will be applied everywhere on the k-mer sequence
+        if (self._k > 1) and self._attn_mask:
+            _warning_msg = \
+                f'Attention mask on k-mer (k={self._k}) genome sequence ' \
+                f'with masked nucleotide bases is not well-defined. Will ' \
+                f'pass-in all \'False\' tensor indicating that the ' \
+                f'model shall attend all positions of the sequence.'
+            _LOGGER.warning(_warning_msg)
+            self.attn_mask: nn.Parameter = nn.Parameter(
+                torch.zeros(
+                    size=(self._kmer_seq_len, self._kmer_seq_len),
+                    dtype=torch.bool,
+                ),
+                requires_grad=False,
+            )
+
+    def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
+
+        if self._k == 1:
+            return xfmr_input
+
+        indexed_seq, attn_mask, padding_mask = \
+            xfmr_input[0], xfmr_input[1], xfmr_input[2]
+
+        _indexed_kmer_seq = torch.zeros(
+            (indexed_seq.shape[0], self._kmer_seq_len),
+            dtype=indexed_seq.dtype,
+        ).to(indexed_seq.device)
+        for __k in range(self._k):
+            _indexed_kmer_seq += \
+                indexed_seq[:, __k: self._kmer_seq_len + __k] * \
+                (self._num_tokens ** (self._k - __k - 1))
+
+        if self._attn_mask and (attn_mask is not None):
+            attn_mask = self.attn_mask.data
+        if self._padding_mask and (padding_mask is not None):
+            padding_mask = padding_mask[:, :self._kmer_seq_len]
+
+        return _indexed_kmer_seq, attn_mask, padding_mask
 
 
 class _Embedding(nn.Module):
@@ -162,7 +213,8 @@ class _PositionalEncoding(nn.Module):
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
         src, attn_mask, padding_mask = \
             xfmr_input[0], xfmr_input[1], xfmr_input[2]
-        _tmp = self._pos_enc(src) if self._pos_enc else src
+        _tmp = src.transpose(0, 1).contiguous()
+        _tmp = self._pos_enc(_tmp) if self._pos_enc else _tmp
         return _tmp, attn_mask, padding_mask
 
 
@@ -228,15 +280,51 @@ class _Decoder(nn.Module):
     def _init_weights(self):
         nn.init.normal_(self._dec.weight, mean=0.0, std=1.0)
 
-    def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
+    def forward(self, xfmr_input: TransformerInput) -> torch.Tensor:
         src = xfmr_input[0]
         return self._dec(src).transpose(0, 1).contiguous()
 
 
+class Kmer2Seq(nn.Module):
+    def __init__(
+            self,
+            k: int,
+            seq_len: int,
+            num_tokens: int,
+
+    ):
+        super(Kmer2Seq, self).__init__()
+
+        self._k: int = k
+        self._seq_len: int = seq_len
+        self._num_tokens: int = num_tokens
+        self._kmer_seq_len: int = self._seq_len - self._k + 1
+
+    def forward(self, indexed_kmer_seq: torch.Tensor) -> torch.Tensor:
+
+        if self._k == 1:
+            return indexed_kmer_seq
+
+        _indexed_kmer_seq = indexed_kmer_seq.clone()
+        _indexed_seq = torch.zeros(
+            (_indexed_kmer_seq.shape[0], self._seq_len),
+            dtype=_indexed_kmer_seq.dtype,
+        ).to(indexed_kmer_seq.device)
+        for __k in range(self._k):
+            __factor: int = (self._num_tokens ** (self._k - __k - 1))
+            if __k == 0:
+                _indexed_seq[:, 0: self._kmer_seq_len] += \
+                    (_indexed_kmer_seq // __factor)
+            else:
+                _indexed_seq[:, self._kmer_seq_len + __k - 1] = \
+                    (_indexed_kmer_seq[:, -1] // __factor)
+            _indexed_kmer_seq = _indexed_kmer_seq % __factor
+
+        return _indexed_seq
+
+
 def get_transformer_encoder_model(
         num_tokens: int,
-        num_masks: int,
-        mask_index: int,
         padding_index: int,
         seq_len: int,
         emb_dim: int,
@@ -255,12 +343,6 @@ def get_transformer_encoder_model(
 
     # TODO: add k-mer embedding option
     _layers = OrderedDict()
-    _layers['msk'] = _Masker(
-        seq_len=seq_len,
-        num_masks=num_masks,
-        mask_index=mask_index,
-        attn_mask=xfmr_attn_mask,
-    )
     _layers['emb'] = _Embedding(
         num_tokens=num_tokens,
         emb_dim=emb_dim,
