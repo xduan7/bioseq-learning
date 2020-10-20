@@ -16,7 +16,7 @@ import pandas as pd
 from tqdm import tqdm
 from Bio import SeqIO, SeqRecord
 
-from src.datasets import conserved_domain_search
+from src.datasets.conserved_domain_search import conserved_domain_search
 
 
 _LOGGER = logging.getLogger(__name__)

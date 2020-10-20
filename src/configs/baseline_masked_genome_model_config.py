@@ -27,7 +27,7 @@ _experiment_name: str = \
 # indicator for Microsoft NNI hyper-parameter search
 # note that the searching parameters from NNI would replace some of the
 # parameters listed below in this file
-_nni_search: bool = True
+_nni_search: bool = False
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
@@ -44,6 +44,9 @@ _preferred_gpu_list: Optional[Union[List[int], str]] = \
     'all' if _nni_search else [0, 1, 2, 3]
 # flag for using multiple GPUs (nn.DataParallel) for this experiment
 _multi_gpu_flag: bool = True
+# number of chunks for GPipe pipeline parallelization, only works when
+# multi-GPU is enabled and necessary, must be a factor of batch size
+_num_gpipe_chunks: int = 8
 
 # Nvidia apex mixed-precision training
 _nvidia_amp_opt: bool = False
@@ -124,9 +127,11 @@ if _dry_run:
     __LOGGER.warning(__warning_msg)
 
     _seq_len //= __dry_run_factor
-    _max_num_paddings //= __dry_run_factor
+    _max_num_paddings = (_max_num_paddings // __dry_run_factor) \
+        if isinstance(_max_num_paddings, int) else _max_num_paddings
     _max_num_trn_batches_per_epoch //= __dry_run_factor
     _max_num_vld_batches_per_epoch //= __dry_run_factor
+    _max_num_tst_batches //= __dry_run_factor
     _max_num_epochs //= __dry_run_factor
     _early_stopping_patience //= __dry_run_factor
 

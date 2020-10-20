@@ -183,10 +183,9 @@ dataloader_kwargs = {
     #     which requires no shuffling in the dataloader level
     # 'shuffle': False,
     #
-    # layer normalization requires that the input tensor has the same size
-    # therefore requires dropping the last batch of data, which is often of
-    # different shapes compared to previous batches
-    'drop_last': config['xfmr_enc_layer_norm'],
+    # set 'drop_last' to True all the time to avoid trouble caused by
+    # irregular batch size for normalization and GPipe chunking
+    'drop_last': True,
     # 'collate_fn': __collate_fn,
 }
 
@@ -216,6 +215,7 @@ model = get_transformer_encoder_model(
     xfmr_enc_layer_dropout=config['xfmr_enc_layer_dropout'],
     xfmr_enc_layer_norm=config['xfmr_enc_layer_norm'],
     xfmr_enc_num_layers=config['xfmr_enc_num_layers'],
+    xfmr_attn_mask=config['xfmr_attn_mask'],
 )
 
 if config['multi_gpu_flag']:
@@ -227,7 +227,7 @@ if config['multi_gpu_flag']:
             module=model,
             input_sample=next(iter(vld_dataloader)),
             devices=devices,
-            num_chunks=config['dataloader_batch_size'] // 4,
+            num_chunks=config['num_gpipe_chunks'],
         )
 else:
     # if the multi-gpu flag is False/disabled

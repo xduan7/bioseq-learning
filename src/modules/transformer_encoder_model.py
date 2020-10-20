@@ -32,6 +32,7 @@ class _Masker(nn.Module):
             seq_len: int,
             num_masks: int,
             mask_index: int,
+            attn_mask: bool,
     ):
         super(_Masker, self).__init__()
 
@@ -39,12 +40,13 @@ class _Masker(nn.Module):
         self._seq_len: int = seq_len
         self._num_masks: int = num_masks
         self._mask_index: int = mask_index
+        self._attn_mask: bool = attn_mask
 
         self.attn_mask: nn.Parameter = nn.Parameter(
             torch.zeros(
                 size=(self._seq_len, self._seq_len),
                 dtype=torch.bool,
-            ),
+            ) if self._attn_mask else torch.BoolTensor([]),
             requires_grad=False,
         )
         self.src_mask: nn.Parameter = nn.Parameter(
@@ -57,7 +59,7 @@ class _Masker(nn.Module):
         self.update()
 
         # tensors for input/target storage, used for accuracy calculation
-        self.curr_masked_indexed_seqs: Optional[torch.LongTensor] = None
+        # self.curr_masked_indexed_seqs: Optional[torch.LongTensor] = None
 
     def update(
             self,
@@ -83,18 +85,19 @@ class _Masker(nn.Module):
         # self.attn_mask.data = None
         # self.src_mask.data = None
 
-        __attn_mask: torch.BoolTensor = torch.zeros(
-            size=(self._seq_len,), dtype=torch.bool, requires_grad=False,
-        ).scatter_(
-            0, __masked_indices, True
-        ).repeat(self._seq_len).view(-1, self._seq_len)
+        __device = self.src_mask.data.device
+
+        if self._attn_mask:
+            __attn_mask: torch.BoolTensor = torch.zeros(
+                size=(self._seq_len,), dtype=torch.bool, requires_grad=False,
+            ).scatter_(
+                0, __masked_indices, True
+            ).repeat(self._seq_len).view(-1, self._seq_len)
+            self.attn_mask.data = __attn_mask.to(__device)
 
         __src_mask: torch.BoolTensor = torch.zeros(
             size=(self._seq_len,), dtype=torch.bool, requires_grad=False,
         ).scatter_(0, __masked_indices, True)
-
-        __device = self.attn_mask.data.device
-        self.attn_mask.data = __attn_mask.to(__device)
         self.src_mask.data = __src_mask.to(__device)
 
     def forward(
@@ -106,10 +109,12 @@ class _Masker(nn.Module):
         _masked_indexed_seqs = _indexed_seqs.clone()
         _masked_indexed_seqs[:, self.src_mask] = self._mask_index
 
-        self.curr_masked_indexed_seqs = _masked_indexed_seqs
+        # self.curr_masked_indexed_seqs = _masked_indexed_seqs
 
         _tmp = _masked_indexed_seqs.transpose(0, 1).contiguous()
-        return _tmp, self.attn_mask.data, _padding_mask
+        _attn_mask = self.attn_mask.data
+
+        return _tmp, _attn_mask, _padding_mask
 
 
 class _Embedding(nn.Module):
@@ -169,8 +174,10 @@ class _TransformerEncoderLayer(nn.Module):
             xfmr_enc_layer_feedforward_dim: int,
             xfmr_enc_layer_activation: str,
             xfmr_enc_layer_dropout: float,
+            xfmr_attn_mask: bool,
     ):
         super(_TransformerEncoderLayer, self).__init__()
+        self._attn_mask: bool = xfmr_attn_mask
         self._xfmr_enc_layer = nn.TransformerEncoderLayer(
             d_model=emb_dim,
             nhead=xfmr_enc_layer_num_attn_heads,
@@ -184,7 +191,7 @@ class _TransformerEncoderLayer(nn.Module):
             xfmr_input[0], xfmr_input[1], xfmr_input[2]
         _tmp = self._xfmr_enc_layer(
             src=src,
-            src_mask=attn_mask,
+            src_mask=attn_mask if self._attn_mask else None,
             src_key_padding_mask=padding_mask,
         )
         return _tmp, attn_mask, padding_mask
@@ -240,6 +247,7 @@ def get_transformer_encoder_model(
         xfmr_enc_layer_dropout: float,
         xfmr_enc_layer_norm: bool,
         xfmr_enc_num_layers: int,
+        xfmr_attn_mask: bool,
 ) -> nn.Sequential:
 
     # TODO: add k-mer embedding option
@@ -248,6 +256,7 @@ def get_transformer_encoder_model(
         seq_len=seq_len,
         num_masks=num_masks,
         mask_index=mask_index,
+        attn_mask=xfmr_attn_mask,
     )
     _layers['emb'] = _Embedding(
         num_tokens=num_tokens,
@@ -268,6 +277,7 @@ def get_transformer_encoder_model(
             xfmr_enc_layer_feedforward_dim=xfmr_enc_layer_feedforward_dim,
             xfmr_enc_layer_activation=xfmr_enc_layer_activation,
             xfmr_enc_layer_dropout=xfmr_enc_layer_dropout,
+            xfmr_attn_mask=xfmr_attn_mask,
         )
     _layers['xfmr_enc_layer_norm'] = _LayerNorm(
         emb_dim=emb_dim,
