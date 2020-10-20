@@ -175,9 +175,11 @@ class _TransformerEncoderLayer(nn.Module):
             xfmr_enc_layer_activation: str,
             xfmr_enc_layer_dropout: float,
             xfmr_attn_mask: bool,
+            xfmr_padding_mask: bool,
     ):
         super(_TransformerEncoderLayer, self).__init__()
         self._attn_mask: bool = xfmr_attn_mask
+        self._padding_mask: bool = xfmr_padding_mask
         self._xfmr_enc_layer = nn.TransformerEncoderLayer(
             d_model=emb_dim,
             nhead=xfmr_enc_layer_num_attn_heads,
@@ -192,7 +194,7 @@ class _TransformerEncoderLayer(nn.Module):
         _tmp = self._xfmr_enc_layer(
             src=src,
             src_mask=attn_mask if self._attn_mask else None,
-            src_key_padding_mask=padding_mask,
+            src_key_padding_mask=padding_mask if self._padding_mask else None,
         )
         return _tmp, attn_mask, padding_mask
 
@@ -248,6 +250,7 @@ def get_transformer_encoder_model(
         xfmr_enc_layer_norm: bool,
         xfmr_enc_num_layers: int,
         xfmr_attn_mask: bool,
+        xfmr_padding_mask: bool,
 ) -> nn.Sequential:
 
     # TODO: add k-mer embedding option
@@ -278,6 +281,7 @@ def get_transformer_encoder_model(
             xfmr_enc_layer_activation=xfmr_enc_layer_activation,
             xfmr_enc_layer_dropout=xfmr_enc_layer_dropout,
             xfmr_attn_mask=xfmr_attn_mask,
+            xfmr_padding_mask=xfmr_padding_mask,
         )
     _layers['xfmr_enc_layer_norm'] = _LayerNorm(
         emb_dim=emb_dim,

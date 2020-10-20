@@ -216,6 +216,7 @@ model = get_transformer_encoder_model(
     xfmr_enc_layer_norm=config['xfmr_enc_layer_norm'],
     xfmr_enc_num_layers=config['xfmr_enc_num_layers'],
     xfmr_attn_mask=config['xfmr_attn_mask'],
+    xfmr_padding_mask=config['xfmr_padding_mask'],
 )
 
 if config['multi_gpu_flag']:
@@ -274,7 +275,13 @@ def train(cur_epoch: int):
             break
 
         _indexed_seqs = _batch[0].to(devices[0], non_blocking=True)
-        _padding_mask = _batch[1].to(devices[0], non_blocking=True)
+        # using an empty tensor for padding mask if the padding mask is 
+        # disabled, to save the memory and IO bandwidth
+        _padding_mask = \
+            _batch[1].to(devices[0], non_blocking=True) \
+            if config['xfmr_padding_mask'] else torch.zeros(
+                size=(config['dataloader_batch_size'], 0),
+                dtype=torch.bool).to(devices[0], non_blocking=True)
 
         # model.zero_grad()
         optimizer.zero_grad()
@@ -334,7 +341,11 @@ def evaluate(_dataloader, test=False):
                 break
 
             _indexed_seqs = _batch[0].to(devices[0], non_blocking=True)
-            _padding_mask = _batch[1].to(devices[0], non_blocking=True)
+            _padding_mask = \
+                _batch[1].to(devices[0], non_blocking=True) \
+                if config['xfmr_padding_mask'] else torch.zeros(
+                    size=(config['dataloader_batch_size'], 0),
+                    dtype=torch.bool).to(devices[0], non_blocking=True)
 
             model[0].update()
             _output = model((_indexed_seqs, _padding_mask))

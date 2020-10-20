@@ -56,7 +56,7 @@ _nvidia_amp_opt_level: str = 'O3'
 # dataset and dataloader parameters
 _vld_ratio: float = 0.01
 _tst_ratio: float = 0.01
-_seq_len: int = 2000
+_seq_len: int = 20000
 _num_masks: float = 0.10
 _max_num_paddings: Union[int, float] = 0.5
 _dataloader_batch_size: int = 32
@@ -83,7 +83,8 @@ _xfmr_enc_layer_activation: str = 'relu'
 _xfmr_enc_layer_dropout: float = 0.0
 _xfmr_enc_layer_norm: bool = True
 _xfmr_enc_num_layers: int = 8
-_xfmr_attn_mask: bool = True
+_xfmr_attn_mask: bool = False
+_xfmr_padding_mask: bool = False
 
 
 # training configurations
