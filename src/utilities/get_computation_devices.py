@@ -20,10 +20,9 @@ except (ImportError, ModuleNotFoundError):
 
 
 # criteria for GPU availability checking
-_MAX_NUM_GPUS = 16          # max number of GPUs available
-_MAX_GPU_LOAD = 0.05        # max load to be considered as available
-_MAX_GPU_MEM_USED = 0.2     # max memory usage to be considered as available
-
+_MAX_NUM_GPUS = float('inf')    # max number of GPUs available
+_MAX_GPU_LOAD = 0.05            # max load to be considered as available
+_MAX_GPU_MEM_USED = 0.2         # max memory usage considered as available
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -74,6 +73,20 @@ def get_computation_devices(
             f'Assuming all GPUs ({_available_gpu_list}) are available ' \
             f'and ready for training ... '
         _LOGGER.warning(_warning_msg)
+
+    # double check to make sure that all GPUs are accessible for PyTorch
+    _available_gpu_list_: List[int] = []
+    for __available_gpu_id in _available_gpu_list:
+        try:
+            torch.cuda.get_device_properties(__available_gpu_id)
+        except Exception:
+            _warning_msg = \
+                f'CUDA device {__available_gpu_id}, despite in the range ' \
+                f'of PyTorch GPU count, is not available.'
+            _LOGGER.warning(_warning_msg)
+        else:
+            _available_gpu_list_.append(__available_gpu_id)
+    _available_gpu_list = _available_gpu_list_
 
     # get the overlap between the preferred and the available GPUs
     if isinstance(preferred_gpu_list, str) and preferred_gpu_list == 'all':

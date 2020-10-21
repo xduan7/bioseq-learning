@@ -6,7 +6,7 @@ File Description:
 
 """
 import logging
-from typing import List, Sequence, Union
+from typing import List, Sequence, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -25,7 +25,7 @@ def shard_module(
         input_sample: Union[Tensor, Sequence[Tensor]],
         devices: Sequence[device],
         num_chunks: int,
-) -> Union[GPipe, nn.Sequential]:
+) -> Tuple[Union[GPipe, nn.Sequential], List[device]]:
 
     # if more than 1 devices is necessary for the run ...
     # gpipe model on 1 gpu is much slower compared to ordinary model
