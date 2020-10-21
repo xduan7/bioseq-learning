@@ -243,6 +243,7 @@ class _TransformerEncoderLayer(nn.Module):
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
         src, attn_mask, padding_mask = \
             xfmr_input[0], xfmr_input[1], xfmr_input[2]
+
         _tmp = self._xfmr_enc_layer(
             src=src,
             src_mask=attn_mask if self._attn_mask else None,
@@ -340,7 +341,12 @@ def get_transformer_encoder_model(
         xfmr_attn_mask: bool,
         xfmr_padding_mask: bool,
 ) -> nn.Sequential:
-
+    # this function returns a model suitable for GPipe parallelization
+    # which means that the input of the model should be a single tensor or a
+    # tuple of them, with batch size as the first dimension
+    # otherwise, if this condition cannot be satisfied, then GPipe should be
+    # used with num_chunks=1, which means virtually no pipeline and GPipe is
+    # only good for load-balancing between multiple GPUs
     _layers = OrderedDict()
     _layers['emb'] = _Embedding(
         num_tokens=num_tokens,

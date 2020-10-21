@@ -55,6 +55,11 @@ if default_config['nni_search']:
     config: MappingProxyType = \
         merge_nni_config(default_config, _nni_config)
 
+    # sanity check the configurations to avoid failed runs after building
+    # the datasets, models, and the optimizer etc.
+    assert config['emb_dim'] % 2 == 0
+    assert config['emb_dim'] % config['xfmr_enc_layer_num_attn_heads'] == 0
+
     # NNI will automatically configure the GPU(s) assigned to this trial
     # note that torch.cuda.current_device() will always give you 0
     devices = get_computation_devices(
@@ -62,9 +67,14 @@ if default_config['nni_search']:
         multi_gpu_flag=config['multi_gpu_flag'],
     )
     nni_search: bool = True
-    model_checkpoint_path: str = os.path.join(
+    checkpoint_dir_path: str = os.path.join(
         config['model_directory'],
-        f'nni-{nni.get_trial_id()}.pt',
+        f'nni/{nni.get_experiment_id()}'
+    )
+    os.makedirs(checkpoint_dir_path, exist_ok=True)
+    checkpoint_path: str = os.path.join(
+        checkpoint_dir_path,
+        f'{nni.get_trial_id()}.pt',
     )
 else:
     config: MappingProxyType = default_config
@@ -73,7 +83,7 @@ else:
         multi_gpu_flag=config['multi_gpu_flag'],
     )
     nni_search: bool = False
-    model_checkpoint_path: str = os.path.join(
+    checkpoint_path: str = os.path.join(
         config['model_directory'], f'temporary.pt')
 
 set_random_seed(
@@ -134,9 +144,10 @@ trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
 # genome for training, validation and testing separately
 if config['dry_run']:
     # could pick genome 1033813.3 for one-contig genome
-    trn_genome_dir_paths = trn_genome_dir_paths[0:10]
-    vld_genome_dir_paths = vld_genome_dir_paths[0:10]
-    tst_genome_dir_paths = tst_genome_dir_paths[0:1]
+    # use the same training and validation set to see if the model works
+    trn_genome_dir_paths = trn_genome_dir_paths[0:1]
+    vld_genome_dir_paths = trn_genome_dir_paths[0:1]
+    tst_genome_dir_paths = trn_genome_dir_paths[0:1]
 
 _max_num_paddings: int = config['max_num_paddings'] \
     if isinstance(config['max_num_paddings'], int) else \
@@ -246,7 +257,11 @@ if config['multi_gpu_flag']:
         module=model,
         input_sample=_input_sample,
         devices=devices,
-        num_chunks=config['num_gpipe_chunks'],
+        # if attention masks are passing around between GPUs, it should not
+        # be chunked in by the pipeline as it's not correlated to the batch
+        # size. Should i simply use broadcast instead?
+        num_chunks=1 if config['xfmr_attn_mask']
+        else config['num_gpipe_chunks'],
     )
     masker = masker.to(devices[0])
     seq2kmer = seq2kmer.to(devices[0])
@@ -311,7 +326,8 @@ def train(cur_epoch: int):
         optimizer.zero_grad()
 
         # update the mask for every batch
-        masker.update()
+        if not config['dry_run']:
+            masker.update()
 
         # TODO: switch some data processing from module to dataset
         # the model output has the shape of (batch_size, seq_len, num_tokens)
@@ -380,7 +396,8 @@ def evaluate(_dataloader, test=False):
                     size=(config['dataloader_batch_size'], 0),
                     dtype=torch.bool).to(devices[0], non_blocking=True)
 
-            masker.update()
+            if not config['dry_run']:
+                masker.update()
 
             _masked_indexed_seqs, _attn_mask = masker(_indexed_seqs)
             _indexed_kmer_seqs, _, _ = seq2kmer((_indexed_seqs, None, None))
@@ -392,7 +409,8 @@ def evaluate(_dataloader, test=False):
                 _padding_kmer_mask,
             ))
 
-            _input = _masked_indexed_kmer_seqs.view(-1)
+            _input = _masked_indexed_kmer_seqs.view(-1).to(
+                devices[-1], non_blocking=True)
             _target = _indexed_kmer_seqs.view(-1).to(
                 devices[-1], non_blocking=True)
             _output = _output.view(-1, num_kmer_tokens)
@@ -468,12 +486,20 @@ if __name__ == '__main__':
                 print('-' * 80)
 
                 # if epoch_vld_loss < best_vld_loss:
+                # checkpoint model if it has the best performance so far
                 if epoch_vld_acc > best_vld_acc:
                     best_vld_loss = epoch_vld_loss
                     best_vld_acc = epoch_vld_acc
                     best_epoch = epoch
                     # best_model = copy.deepcopy(model)
-                    torch.save(model.state_dict(), model_checkpoint_path)
+                    torch.save(
+                        {
+                            'epoch': epoch,
+                            'model_state_dict': model.state_dict(),
+                            'optimizer_state_dict': optimizer.state_dict(),
+                        },
+                        checkpoint_path,
+                    )
                 elif epoch - best_epoch >= config['early_stopping_patience']:
                     print('exiting from training early for early stopping ... ')
                     break
@@ -498,7 +524,7 @@ if __name__ == '__main__':
             break
 
     # evaluate the model on the test set
-    model.load_state_dict(torch.load(model_checkpoint_path))
+    model.load_state_dict(torch.load(checkpoint_path)['model_state_dict'])
     tst_start_time = time.time()
     tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
     tst_time_in_sec = time.time() - tst_start_time
