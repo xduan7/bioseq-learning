@@ -509,7 +509,7 @@ if __name__ == '__main__':
                           'invalid trial ...')
                     # if nni_search:
                     #     nni.report_final_result({'default': 0})
-                    sys.exit()
+                    sys.exit(0)
             break
 
         except RuntimeError as e:
@@ -517,7 +517,7 @@ if __name__ == '__main__':
             traceback.print_exc()
             # if nni_search:
             #     nni.report_final_result({'default': 0})
-            sys.exit()
+            sys.exit(1)
 
         except KeyboardInterrupt:
             print('exiting from training early for KeyboardInterrupt ... ')
