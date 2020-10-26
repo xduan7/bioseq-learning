@@ -231,9 +231,6 @@ class GenomeDataset(Dataset):
 
             self._genome_contig_seq_dict[_dry_run_contig[0]] = \
                 _dry_run_contig[1:]
-            print(_dry_run_contig[0])
-            print(len(_dry_run_contig[2]))
-
         else:
             for _processed_single_contig in _processed_contigs:
                 # returned None from process single contig means either length
