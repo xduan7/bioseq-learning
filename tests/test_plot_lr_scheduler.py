@@ -9,7 +9,7 @@ from typing import Iterable
 import torch
 from torch.optim.optimizer import Optimizer
 
-from src.utilities import plot_lr_scheduler
+from src.utilities.plot_lr_scheduler import plot_lr_scheduler
 from src.optimization import get_torch_optimizer, get_torch_lr_scheduler
 
 
@@ -29,8 +29,7 @@ class TestPlotLRScheduler(unittest.TestCase):
             lr_scheduler='CosineAnnealingWarmRestarts',
             optimizer=_optimizer,
             lr_scheduler_kwargs={
-                'T_0': 16,
-                'eta_min': 1e-6,
+                'T_0': 10,
             },
         )
         plot_lr_scheduler(

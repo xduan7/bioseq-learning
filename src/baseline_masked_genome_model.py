@@ -23,6 +23,7 @@ import torch
 import torch.onnx
 import torch.nn as nn
 from torch.utils.data import DataLoader
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from src import E_COLI_GENOME_PARENT_DIR_PATH
 from src.datasets.split_genome_dir_paths import split_genome_dir_paths
@@ -145,9 +146,9 @@ trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
 if config['dry_run']:
     # could pick genome 1033813.3 for one-contig genome
     # use the same training and validation set to see if the model works
-    trn_genome_dir_paths = trn_genome_dir_paths[0:1]
-    vld_genome_dir_paths = trn_genome_dir_paths[0:1]
-    tst_genome_dir_paths = trn_genome_dir_paths[0:1]
+    # trn_genome_dir_paths = trn_genome_dir_paths
+    vld_genome_dir_paths = trn_genome_dir_paths
+    tst_genome_dir_paths = tst_genome_dir_paths[:1]
 
 _max_num_paddings: int = config['max_num_paddings'] \
     if isinstance(config['max_num_paddings'], int) else \
@@ -155,19 +156,23 @@ _max_num_paddings: int = config['max_num_paddings'] \
 masked_genome_dataset_kwargs = {
     'seq_len': config['seq_len'],
     'max_num_paddings': _max_num_paddings,
+    'dry_run': config['dry_run'],
+    'dry_run_contig_len': config['dry_run_contig_len'],
 }
 print(f'Generating training dataset from '
       f'{len(trn_genome_dir_paths)} genomes ...')
 trn_iter_dataset = GenomeIterDataset(
     trn_genome_dir_paths,
+    strict_iteration=False,
     **masked_genome_dataset_kwargs,
 )
 print(f'Generating validation dataset from '
       f'{len(vld_genome_dir_paths)} genomes ...')
 vld_iter_dataset = GenomeIterDataset(
     vld_genome_dir_paths,
+    strict_iteration=False,
     **masked_genome_dataset_kwargs,
-)
+) if vld_genome_dir_paths != trn_genome_dir_paths else trn_iter_dataset
 print(f'Generating testing dataset from '
       f'{len(tst_genome_dir_paths)} genomes ...')
 tst_dataset = GenomeDataset(
@@ -310,7 +315,7 @@ def train(cur_epoch: int):
     for _batch_index, _batch in enumerate(trn_dataloader):
 
         # stop this epoch if there has been too many batches already
-        if _batch_index >= config['max_num_trn_batches_per_epoch']:
+        if _batch_index >= _num_trn_batches:
             break
 
         _indexed_seqs = _batch[0].to(devices[0], non_blocking=True)
@@ -326,8 +331,9 @@ def train(cur_epoch: int):
         optimizer.zero_grad()
 
         # update the mask for every batch
-        if not config['dry_run']:
-            masker.update()
+        # if not config['dry_run']:
+        #     masker.update()
+        masker.update()
 
         # TODO: switch some data processing from module to dataset
         # the model output has the shape of (batch_size, seq_len, num_tokens)
@@ -343,7 +349,8 @@ def train(cur_epoch: int):
 
         _trn_loss = criterion(
             input=_output.view(-1, num_kmer_tokens),
-            target=_indexed_kmer_seqs.to(devices[-1], non_blocking=True).view(-1),
+            target=_indexed_kmer_seqs.
+                to(devices[-1], non_blocking=True).view(-1),
         )
         _trn_loss.backward()
         nn.utils.clip_grad_norm_(
@@ -364,7 +371,7 @@ def train(cur_epoch: int):
                 f'| epoch {cur_epoch:3d} '
                 f'| {(_batch_index + 1):6d} / {_num_trn_batches:<d} batches '
                 f'| learning rate {optimizer.param_groups[0]["lr"]:1.2E} '
-                f'| loss {_trn_avg_loss:5.4f} '
+                f'| loss {_trn_avg_loss:7.4f} '
                 f'| {_trn_avg_time_in_ms:>4.0f} ms/batch |'
             )
 
@@ -379,8 +386,9 @@ def evaluate(_dataloader, test=False):
     _num_total_predictions = 0
     _num_correct_predictions = 0
 
-    max_num_batches: int = config['max_num_tst_batches'] if test \
-        else config['max_num_vld_batches_per_epoch']
+    max_num_batches: int = \
+        min(len(tst_dataloader), config['max_num_tst_batches']) if test \
+        else min(len(vld_dataloader), config['max_num_vld_batches_per_epoch'])
 
     with torch.no_grad():
         for _batch_index, _batch in enumerate(_dataloader):
@@ -396,8 +404,9 @@ def evaluate(_dataloader, test=False):
                     size=(config['dataloader_batch_size'], 0),
                     dtype=torch.bool).to(devices[0], non_blocking=True)
 
-            if not config['dry_run']:
-                masker.update()
+            # if not config['dry_run']:
+            #     masker.update()
+            masker.update()
 
             _masked_indexed_seqs, _attn_mask = masker(_indexed_seqs)
             _indexed_kmer_seqs, _, _ = seq2kmer((_indexed_seqs, None, None))
@@ -473,7 +482,11 @@ if __name__ == '__main__':
                         'vld_avg_loss': epoch_vld_loss,
                     })
 
-                lr_scheduler.step()
+                if isinstance(lr_scheduler, ReduceLROnPlateau):
+                    lr_scheduler.step(metrics=epoch_vld_loss)
+                else:
+                    lr_scheduler.step()
+
                 epoch_time_in_sec = time.time() - epoch_start_time
 
                 print('-' * 80)

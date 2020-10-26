@@ -31,15 +31,15 @@ tuner:
     parallel_optimize: True
     constant_liar_type: min
 
-
 trial:
   command: CUDA_DEVICE_ORDER=PCI_BUS_ID PYTHONPATH="${HOME}/projects/bioseq-learning:${PYTHONPATH}" ${HOME}/anaconda3/envs/bioseq/bin/python ${HOME}/projects/bioseq-learning/src/baseline_masked_genome_model.py
-  gpuNum: 2  # number of GPUs used for a single trial
+  gpuNum: 1  # number of GPUs used for a single trial
   codeDir: nni_code_dir
 
 ###############################################################################
 # manager: localhost
 # worker: lambda4.cels.anl.gov
+# command: nnictl create --config $HOME/projects/bioseq-learning/src/configs/baseline_masked_genome_model_config.yml --debug --port 8080
 ###############################################################################
 
 #logDir: /Users/xduan7/projects/bioseq-learning/logs/nni_experiments
@@ -57,6 +57,7 @@ trial:
 ###############################################################################
 # manager: lambda0.cels.anl.gov
 # worker: lambda0.cels.anl.gov, lambda1.cels.anl.gov, etc.
+# command: nnictl create --config $HOME/projects/bioseq-learning/src/configs/baseline_masked_genome_model_config.yml --debug --port 8080
 #
 # to use local browser dashboard:
 # (1) run 'ssh -C2qTnN -D 8080 lambda0' on local machine
@@ -92,13 +93,13 @@ machineList:
     maxTrialNumPerGpu: 1
     # gpuIndices: 2,3,4,5,6,7
     useActiveGpu: false
-  - ip: lambda2.cels.anl.gov
-    port: 22
-    username: duan
-    sshKeyPath: ~/.ssh/id_rsa_pem
-    maxTrialNumPerGpu: 1
-    # gpuIndices: 2,3,4,5,6,7
-    useActiveGpu: false
+#  - ip: lambda2.cels.anl.gov
+#    port: 22
+#    username: duan
+#    sshKeyPath: ~/.ssh/id_rsa_pem
+#    maxTrialNumPerGpu: 1
+#    # gpuIndices: 2,3,4,5,6,7
+#    useActiveGpu: false
   - ip: lambda3.cels.anl.gov
     port: 22
     username: duan

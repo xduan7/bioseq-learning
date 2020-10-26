@@ -10,7 +10,7 @@ import random
 import logging
 from bisect import bisect
 from multiprocessing import Pool, cpu_count
-from typing import Tuple, List, Set, Dict, Iterable, Iterator, Optional
+from typing import Tuple, List, Set, Dict, Iterable, Iterator, Optional, Union
 
 import torch
 import numpy as np
@@ -129,6 +129,8 @@ class GenomeDataset(Dataset):
             genome_dir_paths: Iterable[str],
             seq_len: int,
             max_num_paddings: int,
+            dry_run: bool,
+            dry_run_contig_len: int,
     ):
         """create a simple dataset of segmented genome sequences
 
@@ -139,6 +141,7 @@ class GenomeDataset(Dataset):
         segmented into 'atgca', tgcat', 'gcatg', 'catgc','atgc-', 'tgc--'
         when seq_len=5 and max_num_paddings=2.
 
+
         :param genome_dir_paths: an iterable of paths to individual genomes
         that are processed (check process_genome.py for details)
         :type genome_dir_paths: iterable of strings
@@ -148,6 +151,10 @@ class GenomeDataset(Dataset):
         :param max_num_paddings: maximum number of padding characters in a
         genome sequence
         :type max_num_paddings: int
+        :param dry_run: TODO
+        :type dry_run: bool
+        :param dry_run_contig_len: TODO
+        :type dry_run_contig_len: int
         """
         # sanity check for the sequence length and number of paddings
         assert 0 <= max_num_paddings < seq_len
@@ -203,17 +210,42 @@ class GenomeDataset(Dataset):
             Dict[str, Tuple[int, np.ndarray, np.ndarray]] = {}
 
         # TODO: debug or info for how many contigs are kept and thrown
-        for _processed_single_contig in _processed_contigs:
-            # returned None from process single contig means either length
-            # too short or contains illegal character
-            if not _processed_single_contig:
-                continue
 
-            # otherwise add the genome contigs into class dict
-            _genome_contig_id, _num_seq, _indexed_seq, _padding_mask_seq = \
-                _processed_single_contig
-            self._genome_contig_seq_dict[_genome_contig_id] = \
-                (_num_seq, _indexed_seq, _padding_mask_seq)
+        # pick a single contig with about the certain length
+        if dry_run:
+            _dry_run_contig: Tuple[str, int, np.ndarray, np.ndarray]
+            _min_contig_len_diff: Union[int, float] = float('inf')
+            for _processed_single_contig in _processed_contigs:
+                if not _processed_single_contig:
+                    continue
+
+                _, _, _indexed_seq, _padding_mask_seq \
+                    = _processed_single_contig
+                _genome_contig_len = \
+                    len(_indexed_seq) - self._max_num_paddings
+                if abs(dry_run_contig_len - _genome_contig_len) \
+                        < _min_contig_len_diff:
+                    _min_contig_len_diff = \
+                        abs(dry_run_contig_len - _genome_contig_len)
+                    _dry_run_contig = _processed_single_contig
+
+            self._genome_contig_seq_dict[_dry_run_contig[0]] = \
+                _dry_run_contig[1:]
+            print(_dry_run_contig[0])
+            print(len(_dry_run_contig[2]))
+
+        else:
+            for _processed_single_contig in _processed_contigs:
+                # returned None from process single contig means either length
+                # too short or contains illegal character
+                if not _processed_single_contig:
+                    continue
+
+                # otherwise add the genome contigs into class dict
+                _genome_contig_id, _num_seq, _indexed_seq, _padding_mask_seq \
+                    = _processed_single_contig
+                self._genome_contig_seq_dict[_genome_contig_id] = \
+                    (_num_seq, _indexed_seq, _padding_mask_seq)
 
         # get the tuple of genome contig IDs, and the accumulative number of
         # sequences of all the genome contigs; for example:
@@ -307,7 +339,9 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
             genome_dir_paths: Iterable[str],
             seq_len: int,
             max_num_paddings: int,
-            strict_iteration: bool = False,
+            strict_iteration: bool,
+            dry_run: bool,
+            dry_run_contig_len: int,
     ):
         """create a genome iterable dataset of segmented genome sequences
 
@@ -330,13 +364,19 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
         :param strict_iteration: indicator for strict iteration, which means
         that for a single iteration, an index will not be traversed twice;
         if set to False, the iterative dataset will randomly grab a sample
-        without any bookkeeping action; set to False by default
+        without any bookkeeping action
         :type strict_iteration: bool
+        :param dry_run: TODO
+        :type dry_run: bool
+        :param dry_run_contig_len: TODO
+        :type dry_run_contig_len: int
         """
         super(GenomeIterDataset, self).__init__(
             genome_dir_paths=genome_dir_paths,
             seq_len=seq_len,
             max_num_paddings=max_num_paddings,
+            dry_run=dry_run,
+            dry_run_contig_len=dry_run_contig_len,
         )
         self._strict_iteration: bool = strict_iteration
         if self._strict_iteration:

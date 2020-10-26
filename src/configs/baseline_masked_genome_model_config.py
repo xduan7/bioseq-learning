@@ -7,13 +7,10 @@ File Description:
 """
 import logging
 from math import sqrt
-from functools import partial
 from types import MappingProxyType
 from typing import Optional, List, Dict, Union, Any
 
 from src import MODEL_DIR_PATH
-from src.optimization.lr_scheduler_function import \
-    cosine_annealing_warm_restarts
 
 
 __LOGGER = logging.getLogger(__name__)
@@ -31,7 +28,8 @@ _nni_search: bool = True
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
-_dry_run: bool = False
+_dry_run: bool = True
+_dry_run_contig_len: int = 20000
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -56,12 +54,12 @@ _nvidia_amp_opt_level: str = 'O3'
 # dataset and dataloader parameters
 _vld_ratio: float = 0.01
 _tst_ratio: float = 0.01
-_seq_len: int = 2000
+_seq_len: int = 1000
 _num_masks: float = 0.10
 _max_num_paddings: Union[int, float] = 0.5
 _dataloader_batch_size: int = 32
 _dataloader_num_workers: int = _dataloader_batch_size
-_max_num_trn_batches_per_epoch: int = 10000
+_max_num_trn_batches_per_epoch: int = 100000
 _max_num_vld_batches_per_epoch: int = 10000
 _max_num_tst_batches: int = 50000
 
@@ -73,19 +71,19 @@ _kmer_len: int = 3
 # the embedding dimension for each "word"(A, T, G, C, and <padding>)
 # - must be dividable by the number of attention heads
 # - must be dividable by 2 with positional encoding
-_emb_dim: int = 16
+_emb_dim: int = 48
 # boolean indicator for positional encoding
 _pos_enc: bool = True
 _pos_enc_dropout: float = 0.0
 _pos_enc_emb_scale: float = sqrt(_emb_dim)
 # the number of attention heads must be a factor of the embedding dimension
-_xfmr_enc_layer_num_attn_heads: int = 4
+_xfmr_enc_layer_num_attn_heads: int = 8
 _xfmr_enc_layer_feedforward_dim: int = 1024
 _xfmr_enc_layer_activation: str = 'relu'
 # TODO: need to investigate xfmr dropout (no effect)
 _xfmr_enc_layer_dropout: float = 0.0
-_xfmr_enc_layer_norm: bool = True
-_xfmr_enc_num_layers: int = 8
+_xfmr_enc_layer_norm: bool = False
+_xfmr_enc_num_layers: int = 3
 _xfmr_attn_mask: bool = False
 _xfmr_padding_mask: bool = False
 
@@ -104,16 +102,12 @@ _optimizer_kwargs: Dict[str, Any] = {
     # 'weight_decay': 1e-5,
 }
 _max_grad_norm: Union[int, float] = 10
-_lr_scheduler: str = 'LambdaLR'
+_lr_scheduler: str = 'ReduceLROnPlateau'
 _lr_scheduler_kwargs: Dict[str, Any] = {
-    'lr_lambda': partial(
-        cosine_annealing_warm_restarts,
-        eta_max=1.0,
-        eta_min=0.1,
-        t_0=16.0,
-        t_mult=1.002,
-        gamma=0.998,
-    ),
+    'factor': 0.2,
+    'patience': 8,
+    'threshold': 1e-3,
+    'cooldown': 8,
 }
 # logging configurations
 _num_trn_logs: int = 10
@@ -130,14 +124,14 @@ if _dry_run:
         f'by a factor of {__dry_run_factor} for dry run ... '
     __LOGGER.warning(__warning_msg)
 
-    _seq_len //= __dry_run_factor
-    _max_num_paddings = (_max_num_paddings // __dry_run_factor) \
-        if isinstance(_max_num_paddings, int) else _max_num_paddings
-    _max_num_trn_batches_per_epoch //= __dry_run_factor
-    _max_num_vld_batches_per_epoch //= __dry_run_factor
-    _max_num_tst_batches //= __dry_run_factor
-    _max_num_epochs //= __dry_run_factor
-    _early_stopping_patience //= __dry_run_factor
+    # _seq_len //= __dry_run_factor
+    # _max_num_paddings = (_max_num_paddings // __dry_run_factor) \
+    #     if isinstance(_max_num_paddings, int) else _max_num_paddings
+    # _max_num_trn_batches_per_epoch //= __dry_run_factor
+    # _max_num_vld_batches_per_epoch //= __dry_run_factor
+    # _max_num_tst_batches //= __dry_run_factor
+    # _max_num_epochs //= __dry_run_factor
+    # _early_stopping_patience //= __dry_run_factor
 
 
 # dictionary that maps names of each configuration to their object
