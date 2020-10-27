@@ -214,7 +214,8 @@ class GenomeDataset(Dataset):
         # pick a single contig with about the certain length
         if dry_run:
             _dry_run_contig: Tuple[str, int, np.ndarray, np.ndarray]
-            _min_contig_len_diff: Union[int, float] = float('inf')
+            # _min_contig_len_diff: Union[int, float] = float('inf')
+            _max_contig_len: int = 0
             for _processed_single_contig in _processed_contigs:
                 if not _processed_single_contig:
                     continue
@@ -223,14 +224,20 @@ class GenomeDataset(Dataset):
                     = _processed_single_contig
                 _genome_contig_len = \
                     len(_indexed_seq) - self._max_num_paddings
-                if abs(dry_run_contig_len - _genome_contig_len) \
-                        < _min_contig_len_diff:
-                    _min_contig_len_diff = \
-                        abs(dry_run_contig_len - _genome_contig_len)
+                # if abs(dry_run_contig_len - _genome_contig_len) \
+                #         < _min_contig_len_diff:
+                if _genome_contig_len > _max_contig_len:
+                    # _min_contig_len_diff = \
+                    #     abs(dry_run_contig_len - _genome_contig_len)
+                    _max_contig_len = _genome_contig_len
                     _dry_run_contig = _processed_single_contig
 
-            self._genome_contig_seq_dict[_dry_run_contig[0]] = \
-                _dry_run_contig[1:]
+            self._genome_contig_seq_dict[_dry_run_contig[0]] = (
+                dry_run_contig_len - self._seq_len + 1,
+                _dry_run_contig[2][:dry_run_contig_len],
+                _dry_run_contig[3][:dry_run_contig_len],
+            )
+
         else:
             for _processed_single_contig in _processed_contigs:
                 # returned None from process single contig means either length

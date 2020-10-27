@@ -1,15 +1,7 @@
 {
-  "num_masks": {
-    "_type": "choice",
-    "_value": [0.05]
-  },
-  "pos_enc": {
-    "_type": "choice",
-    "_value": [0]
-  },
   "xfmr_enc_num_layers": {
     "_type": "choice",
-    "_value": [6]
+    "_value": [3]
   },
   "seq_len": {
     "_type": "choice",
@@ -25,15 +17,7 @@
   },
   "emb_dim": {
     "_type": "choice",
-    "_value": [32]
-  },
-  "xfmr_enc_layer_norm": {
-    "_type": "choice",
-    "_value": [0]
-  },
-  "xfmr_attn_mask": {
-    "_type": "choice",
-    "_value": [0]
+    "_value": [64]
   },
   "dry_run_contig_len": {
     "_type": "choice",

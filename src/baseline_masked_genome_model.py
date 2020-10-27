@@ -148,7 +148,7 @@ if config['dry_run']:
     # use the same training and validation set to see if the model works
     # trn_genome_dir_paths = trn_genome_dir_paths
     vld_genome_dir_paths = trn_genome_dir_paths
-    tst_genome_dir_paths = tst_genome_dir_paths[:1]
+    tst_genome_dir_paths = trn_genome_dir_paths
 
 _max_num_paddings: int = config['max_num_paddings'] \
     if isinstance(config['max_num_paddings'], int) else \
@@ -172,7 +172,7 @@ vld_iter_dataset = GenomeIterDataset(
     vld_genome_dir_paths,
     strict_iteration=False,
     **masked_genome_dataset_kwargs,
-) if vld_genome_dir_paths != trn_genome_dir_paths else trn_iter_dataset
+) if (vld_genome_dir_paths != trn_genome_dir_paths) else trn_iter_dataset
 print(f'Generating testing dataset from '
       f'{len(tst_genome_dir_paths)} genomes ...')
 tst_dataset = GenomeDataset(
