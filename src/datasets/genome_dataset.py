@@ -131,6 +131,8 @@ class GenomeDataset(Dataset):
             max_num_paddings: int,
             dry_run: bool,
             dry_run_contig_len: int,
+            dry_run_num_contigs: int,
+            dry_run_num_ins_per_contig: int,
     ):
         """create a simple dataset of segmented genome sequences
 
@@ -155,6 +157,10 @@ class GenomeDataset(Dataset):
         :type dry_run: bool
         :param dry_run_contig_len: TODO
         :type dry_run_contig_len: int
+        :param dry_run_num_contigs: TODO
+        :type dry_run_num_contigs: int
+        :param dry_run_num_ins_per_contig: TODO
+        :type dry_run_num_ins_per_contig: int
         """
         # sanity check for the sequence length and number of paddings
         assert 0 <= max_num_paddings < seq_len
@@ -213,6 +219,7 @@ class GenomeDataset(Dataset):
 
         # pick a single contig with about the certain length
         if dry_run:
+            # TODO: put this part in another function
             _dry_run_contig: Tuple[str, int, np.ndarray, np.ndarray]
             # _min_contig_len_diff: Union[int, float] = float('inf')
             _max_contig_len: int = 0
@@ -232,11 +239,28 @@ class GenomeDataset(Dataset):
                     _max_contig_len = _genome_contig_len
                     _dry_run_contig = _processed_single_contig
 
-            self._genome_contig_seq_dict[_dry_run_contig[0]] = (
-                dry_run_contig_len - self._seq_len + 1,
-                _dry_run_contig[2][:dry_run_contig_len],
-                _dry_run_contig[3][:dry_run_contig_len],
-            )
+            for __i in range(dry_run_num_contigs):
+
+                __s = dry_run_contig_len * __i + __i
+                __e = dry_run_contig_len * (__i + 1) + __i \
+                    - dry_run_num_ins_per_contig
+
+                __k = f'{_dry_run_contig[0]}({__i + 1:2d})'
+                __indexed_seq = _dry_run_contig[2][__s:__e]
+                __padding_mask_seq = _dry_run_contig[3][__s:__e]
+
+                for _ in range(dry_run_num_ins_per_contig):
+                    __k = random.randint(0, len(__indexed_seq))
+                    __n = random.sample([1, 2, 3, 4], 1)[0]
+                    __indexed_seq = np.insert(__indexed_seq, __k, __n)
+                    __padding_mask_seq \
+                        = np.insert(__padding_mask_seq, __k, False)
+
+                self._genome_contig_seq_dict[__k] = (
+                    dry_run_contig_len - self._seq_len + 1,
+                    __indexed_seq,
+                    __padding_mask_seq,
+                )
 
         else:
             for _processed_single_contig in _processed_contigs:
@@ -346,6 +370,8 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
             strict_iteration: bool,
             dry_run: bool,
             dry_run_contig_len: int,
+            dry_run_num_contigs: int,
+            dry_run_num_ins_per_contig: int,
     ):
         """create a genome iterable dataset of segmented genome sequences
 
@@ -374,6 +400,10 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
         :type dry_run: bool
         :param dry_run_contig_len: TODO
         :type dry_run_contig_len: int
+        :param dry_run_num_contigs: TODO
+        :type dry_run_num_contigs: int
+        :param dry_run_num_ins_per_contig: TODO
+        :type dry_run_num_ins_per_contig: int
         """
         super(GenomeIterDataset, self).__init__(
             genome_dir_paths=genome_dir_paths,
@@ -381,6 +411,8 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
             max_num_paddings=max_num_paddings,
             dry_run=dry_run,
             dry_run_contig_len=dry_run_contig_len,
+            dry_run_num_contigs=dry_run_num_contigs,
+            dry_run_num_ins_per_contig=dry_run_num_ins_per_contig,
         )
         self._strict_iteration: bool = strict_iteration
         if self._strict_iteration:

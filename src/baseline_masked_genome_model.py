@@ -158,6 +158,8 @@ masked_genome_dataset_kwargs = {
     'max_num_paddings': _max_num_paddings,
     'dry_run': config['dry_run'],
     'dry_run_contig_len': config['dry_run_contig_len'],
+    'dry_run_num_contigs': config['dry_run_num_contigs'],
+    'dry_run_num_ins_per_contig': config['dry_run_num_ins_per_contig'],
 }
 print(f'Generating training dataset from '
       f'{len(trn_genome_dir_paths)} genomes ...')
@@ -237,7 +239,7 @@ model = get_transformer_encoder_model(
     emb_dim=config['emb_dim'],
     pos_enc=config['pos_enc'],
     pos_enc_dropout=config['pos_enc_dropout'],
-    pos_enc_emb_scale=config['pos_enc_emb_scale'],
+    pos_enc_emb_scale=math.sqrt(config['emb_dim']),
     xfmr_enc_layer_num_attn_heads=config['xfmr_enc_layer_num_attn_heads'],
     xfmr_enc_layer_feedforward_dim=config['xfmr_enc_layer_feedforward_dim'],
     xfmr_enc_layer_activation=config['xfmr_enc_layer_activation'],
@@ -302,6 +304,7 @@ lr_scheduler = get_torch_lr_scheduler(
 
 # intervals between batches for training log
 _num_trn_batches: int = \
+    config['max_num_trn_batches_per_epoch'] if config['dry_run'] else \
     min(len(trn_dataloader), config['max_num_trn_batches_per_epoch'])
 _trn_log_interval: int = int(_num_trn_batches / config['num_trn_logs'])
 
@@ -514,7 +517,13 @@ if __name__ == '__main__':
                         checkpoint_path,
                     )
                 elif epoch - best_epoch >= config['early_stopping_patience']:
-                    print('exiting from training early for early stopping ... ')
+                    print('exiting from training early '
+                          'for early stopping ... ')
+                    break
+
+                elif epoch_vld_acc > 0.8:
+                    print('exiting from dry run training early '
+                          'for > 80% accuracy ... ')
                     break
 
                 if math.isnan(epoch_vld_loss):

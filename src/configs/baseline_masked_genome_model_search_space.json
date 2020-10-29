@@ -1,28 +1,14 @@
 {
-  "xfmr_enc_num_layers": {
-    "_type": "choice",
-    "_value": [3]
-  },
-  "seq_len": {
-    "_type": "choice",
-    "_value": [1000]
-  },
-  "kmer_len": {
-    "_type": "choice",
-    "_value": [3]
-  },
-  "xfmr_enc_layer_num_attn_heads": {
-    "_type": "choice",
-    "_value": [8]
-  },
-  "emb_dim": {
-    "_type": "choice",
-    "_value": [64]
-  },
   "dry_run_contig_len": {
     "_type": "choice",
-    "_value": [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000,
-      50000, 55000, 60000, 65000, 70000, 75000, 80000, 85000, 90000, 95000,
-      100000]
+    "_value": [5000]
+  },
+  "dry_run_num_contigs": {
+    "_type": "choice",
+    "_value": [1, 2, 4, 8, 16]
+  },
+  "dry_run_num_ins_per_contig": {
+    "_type": "choice",
+    "_value": [0, 1, 5]
   }
 }
