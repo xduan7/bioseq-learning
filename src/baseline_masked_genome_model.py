@@ -15,7 +15,7 @@ import math
 import time
 import logging
 import traceback
-from typing import Any, Dict, List
+from typing import Any, Dict
 from types import MappingProxyType
 
 import numpy as np
@@ -24,6 +24,7 @@ import torch.onnx
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+from pytorch_model_summary import summary
 
 from src import E_COLI_GENOME_PARENT_DIR_PATH
 from src.datasets.split_genome_dir_paths import split_genome_dir_paths
@@ -146,7 +147,7 @@ trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
 if config['dry_run']:
     # could pick genome 1033813.3 for one-contig genome
     # use the same training and validation set to see if the model works
-    # trn_genome_dir_paths = trn_genome_dir_paths
+    trn_genome_dir_paths = trn_genome_dir_paths[:10]
     vld_genome_dir_paths = trn_genome_dir_paths
     tst_genome_dir_paths = trn_genome_dir_paths
 
@@ -156,6 +157,7 @@ _max_num_paddings: int = config['max_num_paddings'] \
 masked_genome_dataset_kwargs = {
     'seq_len': config['seq_len'],
     'max_num_paddings': _max_num_paddings,
+    'padding_mask': config['xfmr_padding_mask'],
     'dry_run': config['dry_run'],
     'dry_run_contig_len': config['dry_run_contig_len'],
     'dry_run_num_contigs': config['dry_run_num_contigs'],
@@ -195,7 +197,7 @@ tst_dataset = GenomeDataset(
 dataloader_kwargs = {
     'batch_size': config['dataloader_batch_size'],
     'num_workers': config['dataloader_num_workers'],
-    'pin_memory': (devices[0].type == 'cuda'),
+    # 'pin_memory': (devices[0].type == 'cuda'),
     # shuffle should be set to False for training adn validation:
     # (0) shuffling all the genome sequences takes extremely long and a good
     #     chunk of memory (> 150 G)
@@ -255,11 +257,17 @@ kmer2seq = Kmer2Seq(
     num_tokens=num_tokens,
 )
 
+# print model with sampled input
+_batch = next(iter(vld_dataloader))
+_masked_indexed_seqs, _attn_mask = masker(_batch[0])
+_input_sample = seq2kmer((_masked_indexed_seqs, _attn_mask, _batch[1]))
+print(summary(model, _input_sample, show_input=True))
+
 if config['multi_gpu_flag']:
     from src.utilities.shard_module import shard_module
-    _batch = next(iter(vld_dataloader))
-    _masked_indexed_seqs, _attn_mask = masker(_batch[0])
-    _input_sample = seq2kmer((_masked_indexed_seqs, _attn_mask, _batch[1]))
+    # _batch = next(iter(vld_dataloader))
+    # _masked_indexed_seqs, _attn_mask = masker(_batch[0])
+    # _input_sample = seq2kmer((_masked_indexed_seqs, _attn_mask, _batch[1]))
     model, devices = shard_module(
         module=model,
         input_sample=_input_sample,
@@ -470,11 +478,12 @@ if __name__ == '__main__':
 
     # train the model over the epochs and evaluate on the validation set
     best_vld_loss, best_vld_acc, best_epoch = float('inf'), 0., 0
+    num_epochs: int = 0
     print('=' * 80)
     while True:
         try:
             for epoch in range(1, config['max_num_epochs']):
-
+                num_epochs += 1
                 epoch_start_time = time.time()
                 train(epoch)
                 epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
@@ -521,7 +530,7 @@ if __name__ == '__main__':
                           'for early stopping ... ')
                     break
 
-                elif epoch_vld_acc > 0.8:
+                if config['dry_run'] and (epoch_vld_acc > 0.8):
                     print('exiting from dry run training early '
                           'for > 80% accuracy ... ')
                     break
@@ -555,6 +564,7 @@ if __name__ == '__main__':
         nni.report_final_result({
             'default': tst_acc,
             # 'tst_acc': tst_acc,
+            'num_epochs': num_epochs,
             'tst_loss': tst_loss,
         })
 

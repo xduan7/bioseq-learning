@@ -45,6 +45,7 @@ def _process_single_contig(
         _max_num_paddings: int,
         _nucleotide_char_index_dict: Dict[str, int],
         _padding_index: int,
+        _padding_mask: bool,
 ) -> Optional[Tuple[str, int, np.ndarray, np.ndarray]]:
     """process a single contig sequence, which includes sanity check for
     length and characters, and then transform/index the contig into indices
@@ -66,6 +67,8 @@ def _process_single_contig(
     :type _nucleotide_char_index_dict: Dict[str, np.uint8]
     :param _padding_index: index for the padding character
     :type _padding_index: np.uint8
+    :param _padding_mask: TODO
+    :type _padding_mask: bool
     :return: if contig sequence is valid in terms of length and nucleotide
     bases, then return a tuple of ID, number of sequences for the contig in
     total, and numpy array of indexes sequence and the padding mask;
@@ -105,7 +108,7 @@ def _process_single_contig(
         _padding_mask_seq: np.ndarray = np.array(
             [False] * len(_seq) + [True] * _max_num_paddings,
             dtype=np.bool
-        )
+        ) if _padding_mask else np.array([], dtype=np.bool)
         # transforming the indexed sequence into PyTorch tensor might
         # cause: 'RuntimeError: received 0 items of ancdata'
         # _indexed_seq_tensor: torch.LongTensor = \
@@ -129,6 +132,7 @@ class GenomeDataset(Dataset):
             genome_dir_paths: Iterable[str],
             seq_len: int,
             max_num_paddings: int,
+            padding_mask: bool,
             dry_run: bool,
             dry_run_contig_len: int,
             dry_run_num_contigs: int,
@@ -153,6 +157,8 @@ class GenomeDataset(Dataset):
         :param max_num_paddings: maximum number of padding characters in a
         genome sequence
         :type max_num_paddings: int
+        :param padding_mask: TODO
+        :type padding_mask: bool
         :param dry_run: TODO
         :type dry_run: bool
         :param dry_run_contig_len: TODO
@@ -168,6 +174,7 @@ class GenomeDataset(Dataset):
         self._len: int = 0
         self._seq_len: int = seq_len
         self._max_num_paddings: int = max_num_paddings
+        self._padding_mask: bool = padding_mask
 
         # get a list of argument for single contig processing
         # _process_single_contig_arg_list: \
@@ -198,6 +205,7 @@ class GenomeDataset(Dataset):
                         # all the processes during multiprocessing
                         NUCLEOTIDE_CHAR_INDEX_DICT.copy(),
                         PADDING_INDEX,
+                        self._padding_mask,
                     ))
 
         # multi-processing the genome contigs
@@ -367,6 +375,7 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
             genome_dir_paths: Iterable[str],
             seq_len: int,
             max_num_paddings: int,
+            padding_mask: bool,
             strict_iteration: bool,
             dry_run: bool,
             dry_run_contig_len: int,
@@ -391,6 +400,8 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
         :param max_num_paddings: maximum number of padding characters in a
         genome sequence
         :type max_num_paddings: int
+        :param padding_mask: TODO
+        :type padding_mask: bool
         :param strict_iteration: indicator for strict iteration, which means
         that for a single iteration, an index will not be traversed twice;
         if set to False, the iterative dataset will randomly grab a sample
@@ -409,6 +420,7 @@ class GenomeIterDataset(IterableDataset, GenomeDataset):
             genome_dir_paths=genome_dir_paths,
             seq_len=seq_len,
             max_num_paddings=max_num_paddings,
+            padding_mask=padding_mask,
             dry_run=dry_run,
             dry_run_contig_len=dry_run_contig_len,
             dry_run_num_contigs=dry_run_num_contigs,
