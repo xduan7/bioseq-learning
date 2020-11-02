@@ -62,6 +62,8 @@ class PositionalEncoding(nn.Module):
 
         # embedding dimension must be even for both sin and cos terms
         assert emb_dim % 2 == 0
+        self._seq_len: int = seq_len
+        self._emb_dim: int = emb_dim
 
         # scaling embedded vector to prevent it from getting diminished after
         # adding positional encoding
@@ -103,3 +105,23 @@ class PositionalEncoding(nn.Module):
         """
         x = x * self._emb_scale + self.positional_encoding[:x.size(0), :]
         return self._dropout(x)
+
+    def plot(self, file_path: str):
+        """TODO
+
+        :param file_path:
+        :type file_path:
+        :return:
+        :rtype:
+        """
+        import numpy as np
+        import matplotlib.pyplot as plt
+        from torch.autograd import Variable
+
+        plt.figure(figsize=(32, 8))
+        _device = self.positional_encoding.device
+        _input = Variable(torch.zeros(self._seq_len, 1, self._emb_dim))
+        _output = self.forward(_input.to(_device)).cpu()
+        plt.plot(np.arange(self._seq_len), _output[:, 0, :].data.numpy())
+
+        plt.savefig(file_path)
