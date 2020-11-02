@@ -241,6 +241,7 @@ model = get_transformer_encoder_model(
     emb_dim=config['emb_dim'],
     pos_enc=config['pos_enc'],
     pos_enc_dropout=config['pos_enc_dropout'],
+    pos_enc_trainable=config['pos_enc_trainable'],
     pos_enc_emb_scale=math.sqrt(config['emb_dim']),
     xfmr_enc_layer_num_attn_heads=config['xfmr_enc_layer_num_attn_heads'],
     xfmr_enc_layer_feedforward_dim=config['xfmr_enc_layer_feedforward_dim'],

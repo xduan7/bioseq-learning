@@ -184,7 +184,10 @@ class _Embedding(nn.Module):
         self._init_weights()
 
     def _init_weights(self):
-        nn.init.normal_(self._emb.weight, mean=0.0, std=1.0)
+        # nn.init.normal_(self._emb.weight, mean=0.0, std=1.0)
+        for __p in self._emb.parameters():
+            if __p.dim() > 1:
+                nn.init.orthogonal_(__p)
 
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
         src, attn_mask, padding_mask = \
@@ -201,6 +204,7 @@ class _PositionalEncoding(nn.Module):
             pos_enc: bool,
             pos_enc_dropout: float,
             pos_enc_emb_scale: float,
+            pos_enc_trainable: bool,
     ):
         super(_PositionalEncoding, self).__init__()
         self._pos_enc = PositionalEncoding(
@@ -208,6 +212,7 @@ class _PositionalEncoding(nn.Module):
             emb_dim=emb_dim,
             dropout=pos_enc_dropout,
             emb_scale=pos_enc_emb_scale,
+            trainable=pos_enc_trainable,
         ) if pos_enc else None
 
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
@@ -239,6 +244,13 @@ class _TransformerEncoderLayer(nn.Module):
             activation=xfmr_enc_layer_activation,
             dropout=xfmr_enc_layer_dropout,
         )
+        self._init_weights()
+
+    def _init_weights(self):
+        for __p in self._xfmr_enc_layer.parameters():
+            if __p.dim() > 1:
+                nn.init.orthogonal_(__p)
+                # nn.init.normal_(__p, mean=0.0, std=1.0)
 
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
         src, attn_mask, padding_mask = \
@@ -275,11 +287,17 @@ class _Decoder(nn.Module):
             emb_dim: int,
     ):
         super(_Decoder, self).__init__()
-        self._dec = nn.Linear(emb_dim, num_tokens)
+        self._dec = nn.Sequential(
+            # nn.Linear(emb_dim, emb_dim),
+            nn.Linear(emb_dim, num_tokens),
+        )
         self._init_weights()
 
     def _init_weights(self):
-        nn.init.normal_(self._dec.weight, mean=0.0, std=1.0)
+        for __p in self._dec.parameters():
+            if __p.dim() > 1:
+                nn.init.orthogonal_(__p)
+                # nn.init.normal_(__p, mean=0.0, std=1.0)
 
     def forward(self, xfmr_input: TransformerInput) -> torch.Tensor:
         src = xfmr_input[0]
@@ -331,6 +349,7 @@ def get_transformer_encoder_model(
         emb_dim: int,
         pos_enc: bool,
         pos_enc_dropout: float,
+        pos_enc_trainable: bool,
         pos_enc_emb_scale: float,
         xfmr_enc_layer_num_attn_heads: int,
         xfmr_enc_layer_feedforward_dim: int,
@@ -359,6 +378,7 @@ def get_transformer_encoder_model(
         pos_enc=pos_enc,
         pos_enc_dropout=pos_enc_dropout,
         pos_enc_emb_scale=pos_enc_emb_scale,
+        pos_enc_trainable=pos_enc_trainable,
     )
     for _i in range(1, xfmr_enc_num_layers + 1):
         _layers[f'xfmr_enc_layer_{_i}'] = _TransformerEncoderLayer(

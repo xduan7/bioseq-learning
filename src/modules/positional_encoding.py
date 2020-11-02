@@ -30,7 +30,7 @@ class PositionalEncoding(nn.Module):
             emb_dim: int,
             dropout: float = 0.1,
             emb_scale: float = 1.0,
-
+            trainable: bool = False,
     ):
         """constructor for positional encoding
 
@@ -54,6 +54,8 @@ class PositionalEncoding(nn.Module):
         :param emb_scale: scaling factor for embedded vectors to prevent
         them from getting diminishing after adding positional encodings
         :type emb_scale: float
+        :param trainable: TODO
+        :type trainable: bool
         :return: None
         """
         super(PositionalEncoding, self).__init__()
@@ -78,9 +80,15 @@ class PositionalEncoding(nn.Module):
         positional_encoding = \
             positional_encoding.unsqueeze(0).transpose(0, 1)
 
-        # use register_buffer (returns tensor) instead of nn.Parameter()
-        # so that the matrix is not learnable/trainable
-        self.register_buffer('positional_encoding', positional_encoding)
+        if trainable:
+            self.register_parameter(
+                'positional_encoding',
+                nn.Parameter(positional_encoding, requires_grad=True),
+            )
+        else:
+            # use register_buffer (returns tensor) instead of nn.Parameter()
+            # so that the matrix is not learnable/trainable
+            self.register_buffer('positional_encoding', positional_encoding)
 
     def forward(
             self,
