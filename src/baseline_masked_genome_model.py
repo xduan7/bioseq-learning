@@ -26,7 +26,7 @@ from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from pytorch_model_summary import summary
 
-from src import E_COLI_GENOME_PARENT_DIR_PATH
+from src import E_COLI_GENOME_PARENT_DIR_PATH, DOC_DIR_PATH
 from src.datasets.split_genome_dir_paths import split_genome_dir_paths
 from src.datasets.genome_dataset import \
     PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT, \
@@ -86,7 +86,7 @@ else:
     )
     nni_search: bool = False
     checkpoint_path: str = os.path.join(
-        config['model_directory'], f'temporary.pt')
+        config['model_directory'], f'temp.pt')
 
 set_random_seed(
     random_seed=config['random_seed'],
@@ -324,6 +324,12 @@ def train(cur_epoch: int):
     _total_trn_loss = 0.
     _start_time = time.time()
 
+    # _pos_enc_img_dir_path = \
+    #     os.path.join(DOC_DIR_PATH, 'images/position_encoding/normal')
+    # os.makedirs(_pos_enc_img_dir_path, exist_ok=True)
+    # model.pos_enc._pos_enc.plot(os.path.join(
+    #     _pos_enc_img_dir_path, f'epoch_{cur_epoch:03d}.png'))
+
     for _batch_index, _batch in enumerate(trn_dataloader):
 
         # stop this epoch if there has been too many batches already
@@ -380,7 +386,7 @@ def train(cur_epoch: int):
             _trn_avg_time_in_ms: float = \
                 (time.time() - _start_time) * 1000 / _trn_log_interval
             print(
-                f'| epoch {cur_epoch:3d} '
+                f'| epoch {cur_epoch:5d} '
                 f'| {(_batch_index + 1):6d} / {_num_trn_batches:<d} batches '
                 f'| learning rate {optimizer.param_groups[0]["lr"]:1.2E} '
                 f'| loss {_trn_avg_loss:7.4f} '
@@ -504,7 +510,7 @@ if __name__ == '__main__':
 
                 print('-' * 80)
                 print(
-                    f'| end of epoch {epoch:3d} '
+                    f'| end of epoch {epoch:5d} '
                     f'| time {epoch_time_in_sec:>5.0f} s '
                     f'| validation loss {epoch_vld_loss:5.4f} '
                     f'| validation accuracy {(epoch_vld_acc * 100):3.3f}% '
@@ -531,9 +537,9 @@ if __name__ == '__main__':
                           'for early stopping ... ')
                     break
 
-                if config['dry_run'] and (epoch_vld_acc > 0.8):
+                if config['dry_run'] and (epoch_vld_acc > 0.9):
                     print('exiting from dry run training early '
-                          'for > 80% accuracy ... ')
+                          'for > 90% accuracy ... ')
                     break
 
                 if math.isnan(epoch_vld_loss):

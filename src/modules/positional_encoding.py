@@ -118,10 +118,11 @@ class PositionalEncoding(nn.Module):
         import matplotlib.pyplot as plt
         from torch.autograd import Variable
 
-        plt.figure(figsize=(32, 8))
+        plt.figure(figsize=(48, 8))
         _device = self.positional_encoding.device
         _input = Variable(torch.zeros(self._seq_len, 1, self._emb_dim))
         _output = self.forward(_input.to(_device)).cpu()
-        plt.plot(np.arange(self._seq_len), _output[:, 0, :].data.numpy())
+        plt.plot(np.arange(self._seq_len), _output[:, 0, 0::64].data.numpy())
 
         plt.savefig(file_path)
+        plt.close('all')

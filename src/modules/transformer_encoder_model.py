@@ -396,3 +396,86 @@ def get_transformer_encoder_model(
     )
     _layers['dec'] = _Decoder(num_tokens=num_tokens, emb_dim=emb_dim)
     return nn.Sequential(_layers)
+
+
+def visualize_embedding(
+        model: nn.Sequential,
+        k: int,
+        num_tokens: int,
+):
+    """TODO: move it somewhere else
+
+    :param model:
+    :type model:
+    :param k:
+    :type k:
+    :param num_tokens:
+    :type num_tokens:
+    :return:
+    :rtype:
+    """
+    import os
+    import pandas as pd
+    import seaborn as sns
+    from copy import deepcopy
+    from itertools import product
+    import matplotlib.pyplot as plt
+
+    from umap import UMAP
+    from Bio.Seq import Seq
+
+    from datasets.genome_dataset import NUCLEOTIDE_CHAR_INDEX_DICT
+
+    _model = deepcopy(model).to('cpu')
+    _seq2kmer = Seq2Kmer(
+        k=k,
+        seq_len=3,
+        num_tokens=num_tokens,
+        attn_mask=False,
+        padding_mask=False,
+    )
+    _emb = _model.emb
+
+    _codons = [''.join(__p) for __p in product('atgc', repeat=3)]
+    _codon_names = [f'{Seq(__c).translate()}({__c})' for __c in _codons]
+    _codon_index_seqs = [
+        [NUCLEOTIDE_CHAR_INDEX_DICT[__b] for __b in __c] for __c in _codons
+    ]
+
+    _codon_index_seqs = torch.LongTensor(_codon_index_seqs).to()
+    _codon_kmer_seq, _, _ = _seq2kmer((_codon_index_seqs, None, None))
+    _emb_kmer_seq, _, _ = _emb((_codon_kmer_seq, None, None))
+    _emb_kmer_seq = _emb_kmer_seq.detach().view(len(_codons), -1).numpy()
+
+
+    fig_dir_path = './docs/images/embedding/trainable'
+    os.makedirs(fig_dir_path, exist_ok=True)
+
+    for __n_neighbors in [2, 3, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32]:
+        for __min_dist in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]:
+            umap = UMAP(
+                n_neighbors=__n_neighbors,
+                min_dist=__min_dist,
+                init='random',
+            )
+            _emb_kmer_coord = umap.fit_transform(_emb_kmer_seq)
+            _emb_kmer_coord_df = pd.DataFrame(
+                _emb_kmer_coord,
+                index=_codon_names,
+                columns=['x', 'y'],
+            )
+            _emb_kmer_coord_df['animo acid'] = \
+                _emb_kmer_coord_df.index.str.split('(').str.get(0)
+
+            plt.figure(figsize=(8, 6))
+            sns.scatterplot(
+                data=_emb_kmer_coord_df,
+                x='x', y='y',
+                hue='animo acid',
+            )
+            plt.legend(bbox_to_anchor=(1, 1), loc='upper left')
+
+            fig_name = \
+                f'umap_n_neighbors_{__n_neighbors:06d}_' \
+                f'umap_min_dist_{__min_dist:.3f}.png'
+            plt.savefig(os.path.join(fig_dir_path, fig_name))
