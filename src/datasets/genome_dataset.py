@@ -180,7 +180,7 @@ class GenomeDataset(Dataset):
         # _process_single_contig_arg_list: \
         #     List[Tuple[str, str, int, int, Dict[str, int], int]] = []
         _process_single_contig_arg_list: \
-            List[Tuple[str, str, int, int, Dict[str, int], int]] = []
+            List[Tuple[str, str, int, int, Dict[str, int], int, bool]] = []
         for _genome_dir_path in genome_dir_paths:
 
             _genome_id: str = os.path.basename(_genome_dir_path.rstrip('/'))

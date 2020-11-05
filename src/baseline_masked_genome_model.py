@@ -142,6 +142,8 @@ trn_genome_dir_paths, vld_genome_dir_paths, tst_genome_dir_paths = \
         vld_ratio=config['vld_ratio'],
         tst_ratio=config['tst_ratio']
     )
+trn_genome_dir_paths = \
+    trn_genome_dir_paths[:int(len(trn_genome_dir_paths) * config['trn_ratio'])]
 # if experimental (dry-run) indicator is set to True, then use only one
 # genome for training, validation and testing separately
 if config['dry_run']:
