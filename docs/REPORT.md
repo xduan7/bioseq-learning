@@ -65,7 +65,7 @@ I'm sticking with nucleotide sequences for the following reasons:
         -   [x] ~~RSAT compare-matrices (not accepting PSSM format)~~
         -   [x] ~~MEME-Tomtom motif comparison (not working because PSSMs have no motif)~~
     -   [ ] featurize conserved domain with descriptors
--   [ ] genome contigs and genes length histogram (pangenome)
+-   [ ] genome contigs and genome length histogram (pangenome)
 -   [ ] conserved domain occurrence histogram
 -   [ ] conserved domain length histogram
 -   [ ] conserved domain length versus occurrence?
