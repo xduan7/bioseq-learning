@@ -13,7 +13,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from Bio import SeqIO, SeqRecord
 
-from src import DOC_DIR_PATH, E_COLI_GENOME_PARENT_DIR_PATH
+from src import DOC_DIR_PATH, E_COLI_GENOME_PARENT_DIR_PATH, \
+    INTERIM_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH
 
 image_dir_path = os.path.join(os.path.join(DOC_DIR_PATH, 'images'))
 genome_dir_paths: List[str] = [
@@ -159,6 +160,171 @@ if not os.path.exists(gene_len_hist_path):
     plt.savefig(gene_len_hist_path)
 
 
+# create conserved domain hits
+cd_hit_csv_path = os.path.join(
+    PROCESSED_DATA_DIR_PATH, 'genomes', 'cd_hit.csv')
+if not os.path.exists(cd_hit_csv_path):
+    CDD_SUPERFAMILY_PATH = os.path.join(
+        INTERIM_DATA_DIR_PATH, 'CDD_metadata/family_superfamily_links')
+    cdd_superfamily_df = pd.read_table(
+        CDD_SUPERFAMILY_PATH,
+        header=None,
+        names=[
+            'accession',
+            'pssm_id',
+            'superfamily_accession',
+            'superfamily_pssm_id'
+        ],
+        dtype={
+            'accession': str,
+            'pssm_id': str,
+            'superfamily_accession': str,
+            'superfamily_pssm_id': str,
+        },
+    )
+    cdd_superfamily_df['superfamily'] = \
+        (cdd_superfamily_df['pssm_id'] ==
+         cdd_superfamily_df['superfamily_pssm_id'])
+
+    CDD_ID_PATH = os.path.join(INTERIM_DATA_DIR_PATH, 'CDD_metadata/cddid.tbl')
+    cdd_id_df = pd.read_table(
+        CDD_ID_PATH,
+        sep='\t',
+        header=None,
+        names=[
+            'pssm_id',
+            'accession',
+            'short_name',
+            'description',
+            'length'
+        ],
+        dtype={
+            'pssm_id': str,
+            'accession': str,
+            'short_name': str,
+            'description': str,
+            'length': int,
+        },
+    )
+
+    cd_hit_df = pd.merge(
+        cdd_id_df,
+        cdd_superfamily_df[['accession', 'superfamily']],
+        how='outer',
+        on=['accession'],
+    )
+    cd_hit_df = cd_hit_df.fillna(True)
+    cd_hit_df = cd_hit_df.set_index('pssm_id')
+    cd_hit_df['length'] = cd_hit_df['length'] * 3
+    cd_hit_df[['specific_hits', 'nonspecific_hits', 'other_hits']] = 0
+
+    os.makedirs(os.path.dirname(cd_hit_csv_path), exist_ok=True)
+    __unkown_pssm_ids = set()
+
+    for __genome_dir_path in genome_dir_paths:
+
+        __genome_contig_cd_dir_path: str = \
+            os.path.join(__genome_dir_path, 'conserved_domains')
+
+        for __contig_cd_file_name in os.listdir(__genome_contig_cd_dir_path):
+            if not __contig_cd_file_name.endswith('.csv'):
+                continue
+
+            __contig_cd_file_path = os.path.join(
+                __genome_contig_cd_dir_path,
+                __contig_cd_file_name,
+            )
+            __contig_cd_df = pd.read_csv(
+                __contig_cd_file_path,
+                usecols=['pssm_id', 'accession', 'hit_type'],
+                dtype={
+                    'pssm_id': str,
+                    'accession': str,
+                    'hit_type': str,
+                },
+            )
+            for __hit in __contig_cd_df.itertuples():
+
+                if __hit.pssm_id not in cd_hit_df.index:
+                    __unkown_pssm_ids.add(__hit.pssm_id)
+                    continue
+
+                if __hit.hit_type == 'Specific':
+                    cd_hit_df.at[__hit.pssm_id, 'specific_hits'] \
+                        = 1 + cd_hit_df.at[__hit.pssm_id, 'specific_hits']
+                elif __hit.hit_type == 'Non-specific':
+                    cd_hit_df.at[__hit.pssm_id, 'nonspecific_hits'] \
+                        = 1 + cd_hit_df.at[__hit.pssm_id, 'nonspecific_hits']
+                else:
+                    cd_hit_df.at[__hit.pssm_id, 'other_hits'] \
+                        = 1 + cd_hit_df.at[__hit.pssm_id, 'other_hits']
+
+    print(f'{len(__unkown_pssm_ids)} PSSM IDs not found: {__unkown_pssm_ids}')
+    cd_hit_df.to_csv(cd_hit_csv_path)
+
+
 # conserved domain histogram in terms of length
+cd_len_hist_path = os.path.join(image_dir_path, 'cd_len_hist.png')
+if not os.path.exists(cd_len_hist_path):
+    cd_hit_df = pd.read_csv(
+        cd_hit_csv_path,
+        index_col='pssm_id',
+        dtype={
+            'pssm_id': str,
+            'accession': str,
+            'short_name': str,
+            'description': str,
+            'length': int,
+            'superfamily': bool,
+            'specific_hits': int,
+            'nonspecific_hits': int,
+            'other_hits': int,
+        },
+    )
+    cd_hit_df.index = cd_hit_df.index.astype(str)
+    cd_hit_df['total_hits'] = (
+            cd_hit_df['specific_hits'] +
+            cd_hit_df['nonspecific_hits'] +
+            cd_hit_df['other_hits']
+    )
+    cd_hit_df['has_hits'] = (cd_hit_df['total_hits'] > 0)
+
+    __hit_percentage = 100 * len(cd_hit_df[cd_hit_df["has_hits"]]) / len(cd_hit_df)
+    print(f'{len(cd_hit_df[cd_hit_df["has_hits"]])} out of {len(cd_hit_df)} '
+          f'({__hit_percentage:2.3f}%) conserved domains are found '
+          f'in {len(genome_dir_paths)} high quality E coli genomes ...')
+    __super_family_hit_percentage = \
+        100 * len(cd_hit_df[cd_hit_df["has_hits"] & cd_hit_df["superfamily"]]) \
+        / len(cd_hit_df[cd_hit_df["superfamily"]])
+    print(f'{len(cd_hit_df[cd_hit_df["has_hits"] & cd_hit_df["superfamily"]])} '
+          f'out of {len(cd_hit_df[cd_hit_df["superfamily"]])} ('
+          f'{__super_family_hit_percentage:2.3f}%) conserved domains '
+          f'superfamilies are found in {len(genome_dir_paths)} '
+          f'high quality E coli genomes ...')
+
+    plt.figure(figsize=(16, 9))
+    _max_cd_len = 5000
+    sns.histplot(
+        cd_hit_df[cd_hit_df['length'] <= _max_cd_len],
+        x='length',
+        hue='has_hits',
+        multiple='stack',
+        bins=60,
+        color='steelblue',
+        edgecolor=None,
+        alpha=1,
+    )
+    plt.legend(title='in e coli genomes')
+    plt.xlim(0)
+    __num_cds = len(cd_hit_df[cd_hit_df['length'] <= _max_cd_len])
+    plt.title(
+        f'length histogram plot for {__num_cds} conserved domains '
+        f'with length less than {_max_cd_len} (out of {len(cd_hit_df)} CDs)'
+    )
+    plt.xlabel('conserved domain length')
+    plt.ylabel('number of conserved domains')
+    plt.savefig(cd_len_hist_path)
+
+
 # conserved domain histogram in terms of occurrence
 # conserved domain root histogram in terms of occurrences
