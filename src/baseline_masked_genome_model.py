@@ -590,6 +590,8 @@ if __name__ == '__main__':
             'default': tst_acc,
             # 'tst_acc': tst_acc,
             'num_epochs': num_epochs,
+            'num_epochs_without_warmup':
+                num_epochs - config['num_warmup_epochs'],
             'tst_loss': tst_loss,
         })
 
