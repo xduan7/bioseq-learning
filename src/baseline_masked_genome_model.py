@@ -68,6 +68,8 @@ if default_config['nni_search']:
         preferred_gpu_list='all',
         multi_gpu_flag=config['multi_gpu_flag'],
     )
+    assert devices[0].type == 'cuda'
+
     nni_search: bool = True
     checkpoint_dir_path: str = os.path.join(
         config['model_directory'],
@@ -308,7 +310,6 @@ lr_scheduler = get_torch_lr_scheduler(
     lr_scheduler_kwargs=config['lr_scheduler_kwargs'],
 )
 
-
 ###############################################################################
 # Training code
 ###############################################################################
@@ -494,6 +495,20 @@ if __name__ == '__main__':
             for epoch in range(1, config['max_num_epochs']):
                 num_epochs += 1
                 epoch_start_time = time.time()
+
+                if epoch <= config['num_warmup_epochs']:
+                    for _pg in optimizer.param_groups:
+                        _base_lr = config['optimizer_kwargs']['lr']
+                        _num_warmup_epochs = config['num_warmup_epochs']
+                        _pg['lr'] = _base_lr * \
+                            ((epoch - 1) / _num_warmup_epochs) + \
+                            _base_lr * config['warmup_factor'] * \
+                            ((_num_warmup_epochs - epoch + 1) /
+                             _num_warmup_epochs)
+                elif epoch == config['num_warmup_epochs'] + 1:
+                    for _pg in optimizer.param_groups:
+                        _pg['lr'] = config['optimizer_kwargs']['lr']
+
                 train(epoch)
                 epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
                 if nni_search:
@@ -503,10 +518,11 @@ if __name__ == '__main__':
                         'vld_avg_loss': epoch_vld_loss,
                     })
 
-                if isinstance(lr_scheduler, ReduceLROnPlateau):
-                    lr_scheduler.step(metrics=epoch_vld_loss)
-                else:
-                    lr_scheduler.step()
+                if epoch > config['num_warmup_epochs']:
+                    if isinstance(lr_scheduler, ReduceLROnPlateau):
+                        lr_scheduler.step(metrics=epoch_vld_loss)
+                    else:
+                        lr_scheduler.step()
 
                 epoch_time_in_sec = time.time() - epoch_start_time
 

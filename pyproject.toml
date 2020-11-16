@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-torch = "^1.6.0"
+torch = "^1.7.0"
 notebook = "^6.1.3"
 tabulate = "^0.8.7"
 GPUtil = "^1.4.0"
@@ -24,6 +24,7 @@ nni = "^1.8"
 dvc = "^1.8.2"
 paramiko = "^2.7.2"
 torchgpipe = "^0.0.7"
+pytorch_warmup = "^0.0.4"
 pytorch-model-summary = {git = "https://github.com/amarczew/pytorch_model_summary.git"}
 
 [tool.poetry.dev-dependencies]
