@@ -13,20 +13,23 @@ import os
 import sys
 import math
 import time
+import string
+import random
 import logging
 import traceback
+from datetime import date
 from typing import Any, Dict
 from types import MappingProxyType
 
-import numpy as np
 import torch
 import torch.onnx
 import torch.nn as nn
+import numpy as np
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from pytorch_model_summary import summary
 
-from src import E_COLI_GENOME_PARENT_DIR_PATH, DOC_DIR_PATH
+from src import E_COLI_GENOME_PARENT_DIR_PATH, DOC_DIR_PATH, LOG_DIR_PATH
 from src.datasets.split_genome_dir_paths import split_genome_dir_paths
 from src.datasets.genome_dataset import \
     PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT, \
@@ -35,6 +38,7 @@ from src.modules.transformer_encoder_model import \
     Masker, Seq2Kmer, Kmer2Seq, get_transformer_encoder_model
 from src.optimization import get_torch_optimizer, get_torch_lr_scheduler
 from src.utilities import set_random_seed, get_computation_devices
+from src.utilities.tee import Tee
 from src.utilities.merge_nni_config import merge_nni_config
 from src.configs.baseline_masked_genome_model_config import config as \
     default_config
@@ -68,18 +72,34 @@ if default_config['nni_search']:
         preferred_gpu_list='all',
         multi_gpu_flag=config['multi_gpu_flag'],
     )
-    assert devices[0].type == 'cuda'
+    # assert devices[0].type == 'cuda'
 
     nni_search: bool = True
+    trial_id: str = \
+        f'nni-{date.today().strftime("%m%d")}-' \
+        f'{nni.get_experiment_id()}-{nni.get_trial_id()}'
+
     checkpoint_dir_path: str = os.path.join(
         config['model_directory'],
-        f'nni/{nni.get_experiment_id()}'
+        f'nni/{date.today().strftime("%m%d")}/{nni.get_experiment_id()}'
     )
     os.makedirs(checkpoint_dir_path, exist_ok=True)
     checkpoint_path: str = os.path.join(
         checkpoint_dir_path,
         f'{nni.get_trial_id()}.pt',
     )
+
+    plot_dir_path: str = os.path.join(
+        DOC_DIR_PATH, 'images',
+        f'nni/{date.today().strftime("%m%d")}/{nni.get_experiment_id()}'
+    )
+    log_dir_path: str = os.path.join(
+        LOG_DIR_PATH,
+        f'nni/{date.today().strftime("%m%d")}/{nni.get_experiment_id()}'
+    )
+    os.makedirs(checkpoint_dir_path, exist_ok=True)
+    log_path: str = os.path.join(log_dir_path, f'{nni.get_trial_id()}.txt')
+
 else:
     config: MappingProxyType = default_config
     devices = get_computation_devices(
@@ -87,8 +107,21 @@ else:
         multi_gpu_flag=config['multi_gpu_flag'],
     )
     nni_search: bool = False
+
+    _trial_id_chars = string.ascii_letters + string.digits
+    trial_id: str = \
+        f'{date.today().strftime("%m%d")}-' \
+        f'{"".join(random.choice(_trial_id_chars) for _ in range(8))}'
+
     checkpoint_path: str = os.path.join(
-        config['model_directory'], f'temp.pt')
+        config['model_directory'], f'{trial_id}.pt')
+
+    plot_dir_path: str = os.path.join(DOC_DIR_PATH, 'images', f'{trial_id}')
+    log_path: str = os.path.join(LOG_DIR_PATH, f'{trial_id}.txt')
+
+os.makedirs(plot_dir_path, exist_ok=True)
+tee = Tee(log_path)
+sys.stdout = tee
 
 set_random_seed(
     random_seed=config['random_seed'],
@@ -239,6 +272,7 @@ seq2kmer = Seq2Kmer(
 )
 model = get_transformer_encoder_model(
     # number of tokens shall not include the padding token
+    k=config['kmer_len'],
     num_tokens=num_kmer_tokens,
     padding_index=PADDING_INDEX,
     seq_len=(config['seq_len'] - config['kmer_len'] + 1),
@@ -282,6 +316,7 @@ if config['multi_gpu_flag']:
         # size. Should i simply use broadcast instead?
         num_chunks=1 if config['xfmr_attn_mask']
         else config['num_gpipe_chunks'],
+        using_min_num_gpus=False,
     )
     masker = masker.to(devices[0])
     seq2kmer = seq2kmer.to(devices[0])
