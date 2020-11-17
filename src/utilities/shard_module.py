@@ -25,7 +25,32 @@ def shard_module(
         input_sample: Union[Tensor, Sequence[Tensor]],
         devices: Sequence[device],
         num_chunks: int,
+        using_min_num_gpus: bool = True,
 ) -> Tuple[Union[GPipe, nn.Sequential], List[device]]:
+    """shard a sequential module based on the memory usage of the components,
+    profiled with the input sample from the argument, to a list of GPUs,
+    that are assumed to have the same memory capacity.
+
+    :param module: PyTorch sequential module
+    :type module: nn.Sequential
+    :param input_sample: batched input sample of one or more tensors used to
+    profile the memory usage of each components in the sequential module
+    :type input_sample: Union[Tensor, Sequence[Tensor]]
+    :param devices: a list of PyTorch devices available
+    :type devices: Sequence[device]
+    :param num_chunks: number of chunks for GPipe sharded module; more
+    chunks = better GPU utilization - more parallelization overhead
+    :type num_chunks: int
+    :param using_min_num_gpus: option for using minimum number of GPUs; if
+    set to True, the function will select only the first few GPUs that are
+    necessary for the whole module, instead of using all of the GPUs
+    :type using_min_num_gpus: bool
+    :return: a tuple made of a module and the list of used GPUs; if the
+    module is sharded into a GPipe module, then the list would contain at
+    least 2 GPUs; otherwise the module will be imported to the only
+    computation device (GPUs or CPU) and returned
+    :rtype: Tuple[Union[GPipe, nn.Sequential], List[device]]
+    """
 
     # if more than 1 devices is necessary for the run ...
     # gpipe model on 1 gpu is much slower compared to ordinary model
@@ -65,7 +90,7 @@ def shard_module(
                 f'combined memory capacity of all computation devices ' \
                 f'({devices}). Proceeding with caution ...'
             _LOGGER.warning(_warning_msg)
-        elif _num_devices < len(devices):
+        elif _num_devices < len(devices) and using_min_num_gpus:
             _warning_msg = \
                 f'Using only {_num_devices} device(s) (' \
                 f'{devices[:_num_devices]}) out of {len(devices)} ' \
@@ -82,7 +107,6 @@ def shard_module(
                 _module_layer_sizes_in_byte,
                 partitions=len(devices),
             )]
-            # TODO: maybe not using gpipe?
             # since we are not actually chunking the batches ...
             module = GPipe(
                 module=module,
