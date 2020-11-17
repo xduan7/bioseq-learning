@@ -9,8 +9,6 @@ import logging
 from types import MappingProxyType
 from typing import Optional, List, Dict, Union, Any
 
-from src import MODEL_DIR_PATH
-
 
 __LOGGER = logging.getLogger(__name__)
 
@@ -23,14 +21,14 @@ _experiment_name: str = \
 # indicator for Microsoft NNI hyper-parameter search
 # note that the searching parameters from NNI would replace some of the
 # parameters listed below in this file
-_nni_search: bool = True
+_nni_search: bool = False
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
 _dry_run: bool = True
-_dry_run_contig_len: int = 10
-_dry_run_num_contigs: int = 2
-_dry_run_num_ins_per_contig: int = 5
+_dry_run_contig_len: int = 10000
+_dry_run_num_contigs: int = 10
+_dry_run_num_ins_per_contig: int = 0
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -40,12 +38,12 @@ _deterministic_cudnn_flag: bool = True
 # to use CPU only, set to None or empty list []; otherwise, set to a list
 # of integers representing preferred GPUs for this experiment
 _preferred_gpu_list: Optional[Union[List[int], str]] = \
-    'all' if _nni_search else [0, 1, 2, 3]
+    'all' if _nni_search else [0, 1, 2, 3, 4, 5, 6, 7]
 # flag for using multiple GPUs (nn.DataParallel) for this experiment
 _multi_gpu_flag: bool = True
 # number of chunks for GPipe pipeline parallelization, only works when
 # multi-GPU is enabled and necessary, must be a factor of batch size
-_num_gpipe_chunks: int = 8
+_num_gpipe_chunks: int = 16
 
 # Nvidia apex mixed-precision training
 _nvidia_amp_opt: bool = False
@@ -53,6 +51,7 @@ _nvidia_amp_opt_level: str = 'O3'
 
 
 # dataset and dataloader parameters
+_trn_ratio: float = 0.01
 _vld_ratio: float = 0.01
 _tst_ratio: float = 0.01
 _seq_len: int = 1000
@@ -60,9 +59,9 @@ _num_masks: float = 0.05
 _max_num_paddings: Union[int, float] = 0.0
 _dataloader_batch_size: int = 32
 _dataloader_num_workers: int = _dataloader_batch_size
-_max_num_trn_batches_per_epoch: int = 500
-_max_num_vld_batches_per_epoch: int = 500
-_max_num_tst_batches: int = 100000
+_max_num_trn_batches_per_epoch: int = 1000
+_max_num_vld_batches_per_epoch: int = 1000
+_max_num_tst_batches: int = 10000
 
 
 # length of k-mer conversion for genomes
@@ -76,9 +75,10 @@ _emb_dim: int = 128
 # boolean indicator for positional encoding
 _pos_enc: bool = True
 _pos_enc_dropout: float = 0.0
+_pos_enc_trainable: bool = False
 # _pos_enc_emb_scale: float = sqrt(_emb_dim)
 # the number of attention heads must be a factor of the embedding dimension
-_xfmr_enc_layer_num_attn_heads: int = 8
+_xfmr_enc_layer_num_attn_heads: int = max(_emb_dim // 32, 2)
 _xfmr_enc_layer_feedforward_dim: int = 1024
 _xfmr_enc_layer_activation: str = 'relu'
 # TODO: need to investigate xfmr dropout (no effect)
@@ -90,30 +90,30 @@ _xfmr_padding_mask: bool = False
 
 
 # training configurations
-_max_num_epochs: int = 500
-_early_stopping_patience: int = 32
+_max_num_epochs: int = 10000
+_early_stopping_patience: int = 1000
 # similar optimizer to the original BERT
 # reference: https://arxiv.org/pdf/1706.03762.pdf
-_optimizer: str = 'Adam'
+_optimizer: str = 'AdamW'
 _optimizer_kwargs: Dict[str, Any] = {
     'lr': 1e-3,
-    'betas': (0.9, 0.98),
-    'eps': 1e-9,
+    # 'betas': (0.9, 0.98),
+    # 'eps': 1e-9,
     # 'momentum': 0.9,
     # 'weight_decay': 1e-5,
 }
 _max_grad_norm: Union[int, float] = 10
+_warmup_factor: float = 0.01
+_num_warmup_epochs: int = _early_stopping_patience // 50
 _lr_scheduler: str = 'ReduceLROnPlateau'
 _lr_scheduler_kwargs: Dict[str, Any] = {
     'factor': 0.2,
-    'patience': 16,
+    'patience': _early_stopping_patience // 2,
     'threshold': 1e-3,
     'cooldown': 0,
 }
 # logging configurations
 _num_trn_logs: int = 10
-# model checkpoint directory
-_model_directory: str = MODEL_DIR_PATH
 
 # # adjust configurations if it's a dry run
 # if _dry_run:

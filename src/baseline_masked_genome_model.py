@@ -29,7 +29,8 @@ from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from pytorch_model_summary import summary
 
-from src import E_COLI_GENOME_PARENT_DIR_PATH, DOC_DIR_PATH, LOG_DIR_PATH
+from src import E_COLI_GENOME_PARENT_DIR_PATH, \
+    DOC_DIR_PATH, LOG_DIR_PATH, MODEL_DIR_PATH
 from src.datasets.split_genome_dir_paths import split_genome_dir_paths
 from src.datasets.genome_dataset import \
     PADDING_INDEX, NUCLEOTIDE_CHAR_INDEX_DICT, \
@@ -80,7 +81,7 @@ if default_config['nni_search']:
         f'{nni.get_experiment_id()}-{nni.get_trial_id()}'
 
     checkpoint_dir_path: str = os.path.join(
-        config['model_directory'],
+        MODEL_DIR_PATH,
         f'nni/{date.today().strftime("%m%d")}/{nni.get_experiment_id()}'
     )
     os.makedirs(checkpoint_dir_path, exist_ok=True)
@@ -113,13 +114,12 @@ else:
         f'{date.today().strftime("%m%d")}-' \
         f'{"".join(random.choice(_trial_id_chars) for _ in range(8))}'
 
-    checkpoint_path: str = os.path.join(
-        config['model_directory'], f'{trial_id}.pt')
-
+    checkpoint_path: str = os.path.join(MODEL_DIR_PATH, f'{trial_id}.pt')
     plot_dir_path: str = os.path.join(DOC_DIR_PATH, 'images', f'{trial_id}')
     log_path: str = os.path.join(LOG_DIR_PATH, f'{trial_id}.txt')
 
 os.makedirs(plot_dir_path, exist_ok=True)
+# set up Tee for logging the stdout
 tee = Tee(log_path)
 sys.stdout = tee
 
@@ -158,7 +158,12 @@ _config_key_max_len: int = max([len(_k) for _k in config.keys()])
 for _key, _value in config.items():
     print(f'{_key:{_config_key_max_len + 4}s}: {_value}')
 print('=' * 80)
-
+print('Paths:')
+print('-' * 80)
+print(f'{"checkpoint_path":{_config_key_max_len + 4}s}: {checkpoint_path}')
+print(f'{"plot_dir_path":{_config_key_max_len + 4}s}: {plot_dir_path}')
+print(f'{"log_path":{_config_key_max_len + 4}s}: {log_path}')
+print('=' * 80)
 
 ###############################################################################
 # Load data
@@ -638,3 +643,6 @@ if __name__ == '__main__':
         f'| test accuracy {(tst_acc * 100):3.2f}% '
     )
     print('=' * 80)
+
+    # plot the embedding space for amino aids
+    model.emb.plot(plot_dir_path=plot_dir_path)

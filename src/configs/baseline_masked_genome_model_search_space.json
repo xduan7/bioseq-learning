@@ -1,14 +1,14 @@
 {
   "dry_run_contig_len": {
     "_type": "choice",
-    "_value": [5000]
+    "_value": [5000, 7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000]
   },
   "dry_run_num_contigs": {
     "_type": "choice",
-    "_value": [1, 2, 4, 8, 16]
+    "_value": [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
   },
-  "dry_run_num_ins_per_contig": {
+  "xfmr_enc_num_layers": {
     "_type": "choice",
-    "_value": [0, 1, 5]
+    "_value": [6, 8, 10, 12, 14, 16]
   }
 }

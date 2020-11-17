@@ -33,7 +33,7 @@ tuner:
 
 trial:
   command: CUDA_DEVICE_ORDER=PCI_BUS_ID PYTHONPATH="${HOME}/projects/bioseq-learning:${PYTHONPATH}" ${HOME}/anaconda3/envs/bioseq/bin/python ${HOME}/projects/bioseq-learning/src/baseline_masked_genome_model.py
-  gpuNum: 1  # number of GPUs used for a single trial
+  gpuNum: 2  # number of GPUs used for a single trial
   codeDir: nni_code_dir
 
 ###############################################################################
