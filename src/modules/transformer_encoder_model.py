@@ -5,14 +5,26 @@ Project:            bioseq-learning
 File Description:
 
 """
-import logging
+import os
 import random
+import logging
+from copy import deepcopy
+from itertools import product
 from collections import OrderedDict
 from typing import Iterable, Optional, Tuple
 
 import torch
 import torch.nn as nn
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from umap import UMAP
+from Bio.Seq import Seq
+from sklearn.manifold import TSNE
+from sklearn.decomposition import PCA
 
+from datasets.genome_dataset import NUCLEOTIDE_CHAR_INDEX_DICT
 from src.modules.positional_encoding import PositionalEncoding
 
 
@@ -171,11 +183,14 @@ class Seq2Kmer(nn.Module):
 class _Embedding(nn.Module):
     def __init__(
             self,
+            k: int,
             num_tokens: int,
             emb_dim: int,
             padding_index: int,
     ):
         super(_Embedding, self).__init__()
+        self._k = k
+        self._num_tokens = num_tokens
         self._emb = nn.Embedding(
             num_embeddings=num_tokens,
             embedding_dim=emb_dim,
@@ -185,6 +200,7 @@ class _Embedding(nn.Module):
 
     def _init_weights(self):
         # nn.init.normal_(self._emb.weight, mean=0.0, std=1.0)
+        # TODO: init with amino acid codon info
         for __p in self._emb.parameters():
             if __p.dim() > 1:
                 nn.init.orthogonal_(__p)
@@ -194,6 +210,85 @@ class _Embedding(nn.Module):
             xfmr_input[0], xfmr_input[1], xfmr_input[2]
         _tmp = self._emb(src)
         return _tmp, attn_mask, padding_mask
+
+    def plot(self, plot_dir_path: str):
+
+        _emb = deepcopy(self).to('cpu')
+        _seq2kmer = Seq2Kmer(
+            k=self._k,
+            seq_len=3,
+            num_tokens=self._num_tokens,
+            attn_mask=False,
+            padding_mask=False,
+        )
+
+        _codons = [''.join(__p) for __p in product('atgc', repeat=3)]
+        _codon_names = [f'{Seq(__c).translate()}({__c})' for __c in _codons]
+        _codon_index_seqs = [
+            [NUCLEOTIDE_CHAR_INDEX_DICT[__b] for __b in __c] for __c in _codons
+        ]
+
+        _codon_index_seqs = torch.LongTensor(_codon_index_seqs).to()
+        _codon_kmer_seq, _, _ = _seq2kmer((_codon_index_seqs, None, None))
+        _emb_kmer_seq, _, _ = _emb((_codon_kmer_seq, None, None))
+        _emb_kmer_seq = _emb_kmer_seq.detach().view(len(_codons), -1).numpy()
+
+        os.makedirs(plot_dir_path, exist_ok=True)
+
+        for __n_neighbors in range(2, len(_codons) // 2 + 1):
+            for __min_dist in np.arange(0.1, 1, 0.1):
+                umap = UMAP(
+                    n_neighbors=__n_neighbors,
+                    min_dist=__min_dist,
+                    init='random',
+                )
+                _emb_kmer_coord = umap.fit_transform(_emb_kmer_seq)
+                _emb_kmer_coord_df = pd.DataFrame(
+                    _emb_kmer_coord,
+                    index=_codon_names,
+                    columns=['x', 'y'],
+                )
+                _emb_kmer_coord_df['amino-acid'] = \
+                    _emb_kmer_coord_df.index.str.split('(').str.get(0)
+
+                plt.figure(figsize=(8, 6))
+                sns.scatterplot(
+                    data=_emb_kmer_coord_df,
+                    x='x', y='y',
+                    hue='amino-acid',
+                )
+                plt.legend(bbox_to_anchor=(1, 1), loc='upper left')
+
+                _plot_name = \
+                    f'umap_n_neighbors_{__n_neighbors:03d}_' \
+                    f'umap_min_dist_{__min_dist:.2f}.png'
+                plt.savefig(os.path.join(plot_dir_path, _plot_name))
+
+        for __n_components in range(2, len(_codons), 2):
+
+            pca = PCA(n_components=__n_components)
+            tsne = TSNE(n_components=2)
+
+            _emb_kmer_coord = tsne.fit_transform(
+                pca.fit_transform(_emb_kmer_seq))
+            _emb_kmer_coord_df = pd.DataFrame(
+                _emb_kmer_coord,
+                index=_codon_names,
+                columns=['x', 'y'],
+            )
+            _emb_kmer_coord_df['amino-acid'] = \
+                _emb_kmer_coord_df.index.str.split('(').str.get(0)
+
+            plt.figure(figsize=(8, 6))
+            sns.scatterplot(
+                data=_emb_kmer_coord_df,
+                x='x', y='y',
+                hue='amino-acid',
+            )
+            plt.legend(bbox_to_anchor=(1, 1), loc='upper left')
+
+            _plot_name = f'pca_n_components_{__n_components:03d}.png'
+            plt.savefig(os.path.join(plot_dir_path, _plot_name))
 
 
 class _PositionalEncoding(nn.Module):
@@ -343,6 +438,7 @@ class Kmer2Seq(nn.Module):
 
 
 def get_transformer_encoder_model(
+        k: int,
         num_tokens: int,
         padding_index: int,
         seq_len: int,
@@ -368,6 +464,7 @@ def get_transformer_encoder_model(
     # only good for load-balancing between multiple GPUs
     _layers = OrderedDict()
     _layers['emb'] = _Embedding(
+        k=k,
         num_tokens=num_tokens,
         emb_dim=emb_dim,
         padding_index=padding_index,
@@ -446,7 +543,6 @@ def visualize_embedding(
     _codon_kmer_seq, _, _ = _seq2kmer((_codon_index_seqs, None, None))
     _emb_kmer_seq, _, _ = _emb((_codon_kmer_seq, None, None))
     _emb_kmer_seq = _emb_kmer_seq.detach().view(len(_codons), -1).numpy()
-
 
     fig_dir_path = './docs/images/embedding/trainable'
     os.makedirs(fig_dir_path, exist_ok=True)
