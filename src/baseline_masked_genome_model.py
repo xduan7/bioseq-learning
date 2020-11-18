@@ -24,6 +24,7 @@ from types import MappingProxyType
 import torch
 import torch.onnx
 import torch.nn as nn
+import torch.nn.functional as F
 import numpy as np
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
@@ -414,10 +415,12 @@ def train(cur_epoch: int):
                 to(devices[-1], non_blocking=True).view(-1),
         )
         _trn_loss.backward()
-        nn.utils.clip_grad_norm_(
-            parameters=model.parameters(),
-            max_norm=config['max_grad_norm'],
-        )
+
+        if config['max_grad_norm']:
+            nn.utils.clip_grad_norm_(
+                parameters=model.parameters(),
+                max_norm=config['max_grad_norm'],
+            )
         optimizer.step()
 
         _trn_loss: float = _trn_loss.item()
@@ -433,7 +436,7 @@ def train(cur_epoch: int):
                 f'| {(_batch_index + 1):6d} / {_num_trn_batches:<d} batches '
                 f'| learning rate {optimizer.param_groups[0]["lr"]:1.2E} '
                 f'| loss {_trn_avg_loss:7.4f} '
-                f'| {_trn_avg_time_in_ms:>4.0f} ms/batch |'
+                f'| {_trn_avg_time_in_ms:>5.0f} ms/batch |'
             )
 
             _total_trn_loss = 0.
@@ -444,6 +447,7 @@ def evaluate(_dataloader, test=False):
 
     model.eval()
     _total_loss = 0.
+    _total_perplexity = 0.
     _num_total_predictions = 0
     _num_correct_predictions = 0
 
@@ -489,7 +493,15 @@ def evaluate(_dataloader, test=False):
             _loss = criterion(input=_output, target=_target)
             _total_loss += _loss.item()
 
-            # collect the accuracy
+            # calculate the perplexity
+            _perplexity = torch.exp(F.cross_entropy(
+                input=_output,
+                target=_target,
+                ignore_index=PADDING_INDEX,
+            ))
+            _total_perplexity += _perplexity
+
+            # calculate the accuracy
             _, _prediction = torch.max(_output, 1)
 
             # prediction masks over the whole batch is defined by where the
@@ -520,8 +532,9 @@ def evaluate(_dataloader, test=False):
         min(len(_dataloader), config['max_num_tst_batches']) if test else \
         min(len(_dataloader), config['max_num_vld_batches_per_epoch'])
     _loss = _total_loss / _num_batches
+    _perplexity = _total_perplexity / _num_batches
     _acc = _num_correct_predictions / _num_total_predictions
-    return _loss, _acc
+    return _loss, _acc, _perplexity
 
 
 if __name__ == '__main__':
@@ -550,12 +563,14 @@ if __name__ == '__main__':
                         _pg['lr'] = config['optimizer_kwargs']['lr']
 
                 train(epoch)
-                epoch_vld_loss, epoch_vld_acc = evaluate(vld_dataloader)
+                epoch_vld_loss, epoch_vld_acc, epoch_vld_perplexity = \
+                    evaluate(vld_dataloader)
                 if nni_search:
                     nni.report_intermediate_result({
                         'default': epoch_vld_acc,
                         # 'vld_acc': epoch_vld_acc,
-                        'vld_avg_loss': epoch_vld_loss,
+                        'vld_loss': epoch_vld_loss,
+                        'vld_perplexity': epoch_vld_perplexity
                     })
 
                 if epoch > config['num_warmup_epochs']:
@@ -570,8 +585,10 @@ if __name__ == '__main__':
                 print(
                     f'| end of epoch {epoch:5d} '
                     f'| time {epoch_time_in_sec:>5.0f} s '
-                    f'| validation loss {epoch_vld_loss:5.4f} '
-                    f'| validation accuracy {(epoch_vld_acc * 100):3.3f}% '
+                    f'| validation '
+                    f'| loss {epoch_vld_loss:5.4f} '
+                    f'| accuracy {(epoch_vld_acc * 100):3.3f}% '
+                    f'| perplexity {epoch_vld_perplexity:3.3f} '
                 )
                 print('-' * 80)
 
@@ -622,7 +639,7 @@ if __name__ == '__main__':
     # evaluate the model on the test set
     model.load_state_dict(torch.load(checkpoint_path)['model_state_dict'])
     tst_start_time = time.time()
-    tst_loss, tst_acc = evaluate(tst_dataloader, test=True)
+    tst_loss, tst_acc, tst_perplexity = evaluate(tst_dataloader, test=True)
     tst_time_in_sec = time.time() - tst_start_time
 
     if nni_search:
@@ -633,14 +650,17 @@ if __name__ == '__main__':
             'num_epochs_without_warmup':
                 num_epochs - config['num_warmup_epochs'],
             'tst_loss': tst_loss,
+            'tst_perplexity': tst_perplexity,
         })
 
     print('=' * 80)
     print(
         f'| end of training '
-        f'| test time {tst_time_in_sec:>5.0f} s '
-        f'| test loss {tst_loss:5.4f} '
-        f'| test accuracy {(tst_acc * 100):3.2f}% '
+        f'| time {tst_time_in_sec:>5.0f} s '
+        f'| test '
+        f'| loss {tst_loss:5.4f} '
+        f'| accuracy {(tst_acc * 100):3.3f}% '
+        f'| perplexity {tst_perplexity:3.3f} '
     )
     print('=' * 80)
 
