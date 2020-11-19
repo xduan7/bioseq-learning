@@ -8,6 +8,7 @@ File Description:
 import os
 import random
 import logging
+import resource
 from bisect import bisect
 from multiprocessing import Pool, cpu_count
 from typing import Tuple, List, Set, Dict, Iterable, Iterator, Optional, Union
@@ -36,6 +37,10 @@ NUCLEOTIDE_CHAR_VOCAB_SIZE: int = len(NUCLEOTIDE_CHAR_INDEX_DICT)
 PADDING_INDEX: int = NUCLEOTIDE_CHAR_INDEX_DICT[PADDING_CHAR]
 
 _LOGGER = logging.getLogger(__name__)
+resource.setrlimit(
+    resource.RLIMIT_NOFILE,
+    (4096, resource.getrlimit(resource.RLIMIT_NOFILE)[1]),
+)
 
 
 def _process_single_contig(

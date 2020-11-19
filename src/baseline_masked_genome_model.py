@@ -295,6 +295,7 @@ model = get_transformer_encoder_model(
     xfmr_enc_num_layers=config['xfmr_enc_num_layers'],
     xfmr_attn_mask=config['xfmr_attn_mask'],
     xfmr_padding_mask=config['xfmr_padding_mask'],
+    xfmr_init_gain=config['xfmr_init_gain'],
 )
 kmer2seq = Kmer2Seq(
     k=config['kmer_len'],
@@ -612,9 +613,11 @@ if __name__ == '__main__':
                           'for early stopping ... ')
                     break
 
-                if config['dry_run'] and (epoch_vld_acc > 0.9):
-                    print('exiting from dry run training early '
-                          'for > 90% accuracy ... ')
+                if config['dry_run'] and \
+                        (epoch_vld_acc > config['dry_run_acc_target']):
+                    print(f'exiting from dry run training early for '
+                          f'> {config["dry_run_acc_target"] * 100:.0f}% '
+                          f' accuracy ... ')
                     break
 
                 if math.isnan(epoch_vld_loss):

@@ -335,6 +335,7 @@ class _TransformerEncoderLayer(nn.Module):
             xfmr_enc_layer_dropout: float,
             xfmr_attn_mask: bool,
             xfmr_padding_mask: bool,
+            xfmr_init_gain: float,
     ):
         super(_TransformerEncoderLayer, self).__init__()
         self._attn_mask: bool = xfmr_attn_mask
@@ -346,12 +347,12 @@ class _TransformerEncoderLayer(nn.Module):
             activation=xfmr_enc_layer_activation,
             dropout=xfmr_enc_layer_dropout,
         )
-        self._init_weights()
+        self._init_weights(init_gain=xfmr_init_gain)
 
-    def _init_weights(self):
+    def _init_weights(self, init_gain: float):
         for __p in self._xfmr_enc_layer.parameters():
             if __p.dim() > 1:
-                nn.init.orthogonal_(__p)
+                nn.init.orthogonal_(__p, gain=init_gain)
                 # nn.init.normal_(__p, mean=0.0, std=1.0)
 
     def forward(self, xfmr_input: TransformerInput) -> TransformerInput:
@@ -462,6 +463,7 @@ def get_transformer_encoder_model(
         xfmr_enc_num_layers: int,
         xfmr_attn_mask: bool,
         xfmr_padding_mask: bool,
+        xfmr_init_gain: float,
 ) -> nn.Sequential:
     # this function returns a model suitable for GPipe parallelization
     # which means that the input of the model should be a single tensor or a
@@ -493,6 +495,7 @@ def get_transformer_encoder_model(
             xfmr_enc_layer_dropout=xfmr_enc_layer_dropout,
             xfmr_attn_mask=xfmr_attn_mask,
             xfmr_padding_mask=xfmr_padding_mask,
+            xfmr_init_gain=xfmr_init_gain,
         )
     _layers['xfmr_enc_layer_norm'] = _LayerNorm(
         emb_dim=emb_dim,
