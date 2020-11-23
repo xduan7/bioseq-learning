@@ -8,6 +8,7 @@ File Description:
     system device availability.
 
 """
+import os
 import logging
 from typing import Optional, Union, List
 
@@ -21,7 +22,7 @@ except (ImportError, ModuleNotFoundError):
 
 # criteria for GPU availability checking
 _MAX_NUM_GPUS = float('inf')    # max number of GPUs available
-_MAX_GPU_LOAD = 0.05            # max load to be considered as available
+_MAX_GPU_LOAD = 0.2             # max load to be considered as available
 _MAX_GPU_MEM_USED = 0.2         # max memory usage considered as available
 
 _LOGGER = logging.getLogger(__name__)
@@ -43,7 +44,8 @@ def get_computation_devices(
     :type preferred_gpu_list: Optional[Union[List[int], str]]
     :param multi_gpu_flag: boolean flag for multi-GPU training and testing
     :type multi_gpu_flag: bool
-    :return: list of available computation devices (CPU & GPUs)
+    :return: list of available computation devices (CPU & GPUs) visible to
+    PyTorch (not hardware indices from PCIe)
     :rtype: List[Device]
     """
 
@@ -61,7 +63,7 @@ def get_computation_devices(
         # specification so that the 'available' GPUs are actually ready
         # for deep learning runs (https://github.com/anderskm/gputil)
         _available_gpu_list = getAvailable(
-            limit=min(_MAX_NUM_GPUS, torch.cuda.device_count()),
+            limit=_MAX_NUM_GPUS,
             maxLoad=_MAX_GPU_LOAD,
             maxMemory=_MAX_GPU_MEM_USED,
         )
@@ -74,6 +76,27 @@ def get_computation_devices(
             f'and ready for training ... '
         _LOGGER.warning(_warning_msg)
 
+    print(_available_gpu_list)
+
+    # if CUDA_VISIBLE_DEVICES is set as an environment variable, then make
+    # sure that the list of available GPUs are visible, and re-index them in
+    # the way that PyTorch can access. For example:
+    # CUDA_VISIBLE_DEVICES = [4, 5, 6, 7]
+    # GPUs not in use = [1, 4, 7]
+    # available GPUs = [4, 7]
+    # available GPUs for PyTorch = [0, 3]
+    if 'CUDA_VISIBLE_DEVICES' in os.environ:
+        _available_gpu_list_: List[int] = []
+        _cuda_visible_devices: List[int] = \
+            [int(_i) for _i in os.environ['CUDA_VISIBLE_DEVICES'].split(',')]
+        for __available_gpu_id in _available_gpu_list:
+            if __available_gpu_id in _cuda_visible_devices:
+                _available_gpu_list_.append(
+                    _cuda_visible_devices.index(__available_gpu_id))
+        _available_gpu_list = _available_gpu_list_
+
+    print(_available_gpu_list)
+
     # double check to make sure that all GPUs are accessible for PyTorch
     _available_gpu_list_: List[int] = []
     for __available_gpu_id in _available_gpu_list:
@@ -84,6 +107,7 @@ def get_computation_devices(
                 f'CUDA device {__available_gpu_id}, despite in the range ' \
                 f'of PyTorch GPU count, is not available.'
             _LOGGER.warning(_warning_msg)
+            print(_warning_msg)
         else:
             _available_gpu_list_.append(__available_gpu_id)
     _available_gpu_list = _available_gpu_list_
