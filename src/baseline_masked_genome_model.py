@@ -74,7 +74,7 @@ if default_config['nni_search']:
         preferred_gpu_list='all',
         multi_gpu_flag=config['multi_gpu_flag'],
     )
-    # assert devices[0].type == 'cuda'
+    assert devices[0].type == 'cuda'
 
     nni_search: bool = True
     trial_id: str = \
@@ -541,7 +541,9 @@ def evaluate(_dataloader, test=False):
 if __name__ == '__main__':
 
     # train the model over the epochs and evaluate on the validation set
-    best_vld_loss, best_vld_acc, best_epoch = float('inf'), 0., 0
+    best_vld_loss, best_vld_acc, best_vld_perplexity, best_epoch = \
+        float('inf'), 0., float('inf'), 0
+    last_vld_acc = 0.
     num_epochs: int = 0
     print('=' * 80)
     while True:
@@ -566,6 +568,7 @@ if __name__ == '__main__':
                 train(epoch)
                 epoch_vld_loss, epoch_vld_acc, epoch_vld_perplexity = \
                     evaluate(vld_dataloader)
+                last_vld_acc = epoch_vld_acc
                 if nni_search:
                     nni.report_intermediate_result({
                         'default': epoch_vld_acc,
@@ -598,6 +601,7 @@ if __name__ == '__main__':
                 if epoch_vld_acc > best_vld_acc:
                     best_vld_loss = epoch_vld_loss
                     best_vld_acc = epoch_vld_acc
+                    best_vld_perplexity = epoch_vld_perplexity
                     best_epoch = epoch
                     # best_model = copy.deepcopy(model)
                     torch.save(
@@ -652,6 +656,7 @@ if __name__ == '__main__':
             'num_epochs': num_epochs,
             'num_epochs_without_warmup':
                 num_epochs - config['num_warmup_epochs'],
+            'last_vld_acc': last_vld_acc,
             'tst_loss': tst_loss,
             'tst_perplexity': tst_perplexity,
         })
@@ -668,4 +673,10 @@ if __name__ == '__main__':
     print('=' * 80)
 
     # plot the embedding space for amino aids
-    model.emb.plot(plot_dir_path=plot_dir_path)
+    if config['emb_plot']:
+        try:
+            model.emb.plot(plot_dir_path)
+        except AttributeError:
+            # GPipe modules cannot be accessed by name
+            # access the first partition of GPipe model for embedding
+            model._modules['partitions'][0].emb.plot(plot_dir_path)
