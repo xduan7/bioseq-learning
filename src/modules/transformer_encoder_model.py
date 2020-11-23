@@ -18,12 +18,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-from umap import UMAP
 from Bio.Seq import Seq
-from sklearn.manifold import TSNE
-from sklearn.decomposition import PCA
 
 from datasets.genome_dataset import NUCLEOTIDE_CHAR_INDEX_DICT
 from src.modules.positional_encoding import PositionalEncoding
@@ -217,6 +212,13 @@ class _Embedding(nn.Module):
 
         warnings.filterwarnings('ignore', module='numba')
         warnings.filterwarnings('ignore', module='matplotlib')
+
+        from umap import UMAP
+        from sklearn.manifold import TSNE
+        from sklearn.decomposition import PCA
+
+        import seaborn as sns
+        import matplotlib.pyplot as plt
 
         _emb = deepcopy(self).to('cpu')
         _seq2kmer = Seq2Kmer(
