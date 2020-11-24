@@ -1,12 +1,12 @@
-# Biological Sequence Learning with Conserved Domain
-This project contains deep learning experiments on biological sequences (amino acid or nucleotide sequences) using conserved domain information. 
-Please refer to the [REPORT](docs/REPORT.md) file for more technical details.
+# Biological Sequence Learning
+This project contains deep learning experiments on biological sequences (amino acid or nucleotide sequences), 
+focusing in the learning of ultra-long sequences, and the biological context and hierarchy of the sequences.
+Please refer to the [REPORT](docs/REPORT.md) file for more technical details and weekly progress.
 
 
 ## Table of Contents  
 -   [Getting Started](#getting-started)
--   [Template Layout](#template-layout)
--   [Future Tasks](#future-tasks)
+-   [Porject Layout](#project-layout)
 -   [Authors](#authors)
 -   [License](#license)
 
@@ -22,7 +22,7 @@ poetry install
 
 
 ---
-## Template Layout
+## Project Layout
 The project layout with the usage for each folder is shown below:
 ```text
 dl-project-template
@@ -43,7 +43,7 @@ dl-project-template
 │   └── processed       # processed data (features and targets) ready for learning
 |
 ├── notebooks           # Jupyter Notebooks for data processing experiments and visualization
-├── scripts             # shell scripts for data download and processing
+├── scripts             # shell/Python scripts for data downloading. pre-processing, and visualization
 │── src    
 │   │── ...             # top-level scripts for training, testing and global tasks
 │   ├── configs         # configuration files for deep learning experiments
@@ -57,11 +57,6 @@ dl-project-template
 ├── logs                # logs for deep learning experiments
 └── models              # saved models with optimizer states
 ```
-
-
----
-## Future Tasks
-<!-- TODO -->
 
 
 ---

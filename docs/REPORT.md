@@ -1,143 +1,100 @@
-# Biological Sequence Learning with Conserved Domain
+# Biological Sequence Learning with Deep Learning
 
 
 ## Table of Contents
--   [Motivation and Rationale](#motivation-and-rationale)
--   [Input Format and Scale](#input-format-and-scale)
--   [Sequence Data Processing](#sequence-data-processing)
--   [Predictive Target](#predictive-target)
+-   [Introduction](#introduction)
+-   [Data Hierarchy](#data-hierarchy)
+    -   [Biological Segmentation](#biological-segmentation)
+    -   [Statistical Segmentation](#statistical-segmentation)
 -   [Learning Model](#learning-model)
--   [Experiment Design](#experiment-design)
--   [Results and Analysis](#results-and-analysis)
--   [Conclusion](#conclusion)
+    -   [Network Architecture](#network-architecture)
+    -   [Training Task](#training-task)
+-   [Evaluation Method](#evaluation-method)
 
 
 ---
-## Motivation and Rationale 
+## Introduction
 
+This project applies the state-of-the-art deep learning models to biological sequences (amino acid or nucleotide sequences). 
+There are several notable challenges for learning on biological sequences:
+-   **biological sequences, especially nucleotide ones, could be extremely long**
+-   **knowledge is buried deep inside the sequences, and therefore hard to learn**
+-   the sheer amount of data and the quality issues;
 
-### What is conserved domain and CDD
-
-[Wikipedia: Conserved Domain Database](https://en.wikipedia.org/wiki/Conserved_Domain_Database):
-> Domains can be thought of as distinct functional and/or structural units of a protein. These two classifications coincide rather often, as a matter of fact, and what is found as an independently folding unit of a polypeptide chain also carries specific function. Domains are often identified as recurring (sequence or structure) units, which may exist in various contexts. In molecular evolution such domains may have been utilized as building blocks, and may have been recombined in different arrangements to modulate protein function. CDD defines conserved domains as recurring units in molecular evolution, the extents of which can be determined by sequence and structure analysis.
-> The goal of the NCBI conserved domain curation project is to provide database users with insights into how patterns of residue conservation and divergence in a family relate to functional properties, and to provide useful links to more detailed information that may help to understand those sequence/structure/function relationships. To do this, CDD Curators include the following types of information in order to supplement and enrich the traditional multiple sequence alignments that form the foundation of domain models: 3-dimensional structures and conserved core motifs, conserved features/sites, phylogenetic organization, links to electronic literature resources.
-
-
-### Why Conserved Domain as Prediction Target
--   [ ] what can this model do other than predict CD
--   [ ] what does this model understand
--   [ ] any other long-term goals
+The first two challenges are more relevant to the research of machine learning and its application in biology, and interestingly enough, despite being two distinct challenges, they could be solved at the same time with [a better model](#learning-model) and/or [data hierarchy](#data-hierarchy).
 
 
 ---
-## Input Format and Scale
+## Data Hierarchy
+
+In the context of this project, the hierarchy for biological sequences indicates the inner relation and structure of smaller segments. For instance, the protein coding regions on top of genome sequences is a level of hierarchy.
+
+The hierarchical structure of the biological sequences makes the learning easier in two ways: 
+1.  sequences are presented in a more structured and hopefully more "understandable" way for machine learning models
+2.  longer sequences could be segmented into shorter chunks, which are easier to process and learn
+
+The segmentation could be either [biological](#biological-segmentation) or [statistical](#statistical-segmentation), as explained separably in the subsections below.
 
 
-### Nucleotide or Protein Sequences as Input 
-I'm sticking with nucleotide sequences for the following reasons:
-- there are potentially more information, since the translation from nucleotide to protein is one-directional
-- non-protein-encoding nucleotide sequences are still sometimes useful (RNA, missed encoding parts, etc.)
-- might help us find something new in the genome that are not currently marked as gene
+### Biological Segmentation
+
+This segmentation method is based on the human understanding of biological sequences. 
+For example, a genome can be segmented into coding regions and non-coding regions for proteins; and on coding regions, there could be [conserved domains]((https://en.wikipedia.org/wiki/Conserved_Domain_Database)), which is an extra level of hierarchy. 
+Another good example is the [secondary structure](https://en.wikipedia.org/wiki/Protein_secondary_structure) of protein, which segments the sequences into alpha-helix, beta-sheet, etc. 
+
+The applied biological knowledge for this segmentation method is very likely to benefit the learning process. However, the segmented sequence could still be too long for learning. Some coding regions in E. Coli genomes have more than 5,000 nucleotide bases, which cannot easily fit into some deep learning models, especially the ones that rely on self-attention.
+
+#### Conserved Domain as Biological Segmentation
+
+Conserved domains "can be thought of as distinct functional and/or structural units of a protein". Ideally, if one can segment the genomes or proteins sequences based on conserved domain, the data hierarchy might provide the model with valuable information. 
+
+However, the "distribution", for lack of a better word, of different conserved domains are rather skewed. There are more than 13,000 different conserved domains found in E. Coli genomes, but most of them are rather rare, appearing less then 500 times across more than 1,000 whole genomes. So training with conserved domains as if they are words in natural languages is probably not feasible. 
+Not to mention that the occurrences of conserved domains are relatively rare already. 
+And the definition of conserved domain is not clear-cut, but largely defined on the database to perform conserved domain search with.
+
+Combine all the factors together, conserved domains are probably not the best way to provide hierarchy. If we are going to try segmenting the sequences with conserved domains anyway, we should focus only on the most common conserved domains from our dataset.
+
+### Statistical Segmentation
+
+Unlike biological segmentation, this segmentation method is purely based on the statistical property of the sequences. 
+For example, one can segment a long genome sequence into multiple smaller ones within some pre-defined length. Another good example is to segment a genome sequence with the occurrence of start and stop codon.
+
+The biggest disadvantage of this method is that it provides little if none biological knowledge to the learning model, but it is easily to implement. Moreover, the segmented sequences could be shorter and faster to learn.
 
 
-### Type and Scale of Sequences for Training
--   [ ] on the smaller scale
--   [ ] on the bigger scale 
--   [ ] ultimately ... 
-
-
----
-## Data Processing
-
-### CD Search 
--   [ ] which CD database(s) to use? There are around 16,000 NCBI-curated CDs, while other 40,000 CDs are sourced from elsewhere. Use NCBI-curated CDs only will limit the search, which means less computation during the training and less knowledgable for trained the model
--   [ ] computation feasibility
-
-### Input Annotations and the Potential Usage
--   [ ] annotation for NCBI-curated CDs. There are binding sites, loop/helix and other region annotation ...
--   [ ] protein family label
--   [ ] other annotations
-
-### Visualization and Data Analysis
--   [ ] conserved domain space visualization (and potentially classification) with PCA, t-SNE, or UMAP 
-    -   [x] featurize conserved domain with statistical distances
-        -   [x] psiblast/blastp the FASTA of CD representatives or master sequences
-        -   [x] ~~RSAT compare-matrices (not accepting PSSM format)~~
-        -   [x] ~~MEME-Tomtom motif comparison (not working because PSSMs have no motif)~~
-    -   [ ] featurize conserved domain with descriptors
--   [ ] genome contigs and genome length histogram (pangenome)
--   [ ] conserved domain occurrence histogram
--   [ ] conserved domain length histogram
--   [ ] conserved domain length versus occurrence?
-
----
-## Predictive Target
-
--  [ ] choose between the following predictive targets for training
-
-
-- position-based predictions
-    - what are the masked base(s)? *how many percentages of bases are masked? and are they weighted in some way?*
-    - does a given base belongs to any protein-encoding region?
-    - does a given base belongs to any motif/conserved domain? *binary or multi-class (which conserved domain) prediction?*
-- sequence-based predictions
-    - where are the protein-encoding regions in the given genome segment
-    - what are the motif/conserved domains in the given genome segment
-- contrastive learning?
-
-
-There are multiple advantages of the position-based learning tasks. 
-First of all, they could be easily combined into a single task. Secondly, the output space is small and already well-defined.
-
-For sequence-based learning tasks, we have to define the output in a way that (1) it's manageable in size, and (2) easy enough for learning models. 
-If we are going for the sequence-based learning tasks, it's better that we start off with something simple, 
-like predicting all the CDs in order (like a translation task), 
-then move on to something like the start and end of each and every CD.
-
-
----
+--- 
 ## Learning Model
 
--   [ ] choose between the following NLP models 
+A model suitable for the learning task of biological sequences should be able to digest ultra-long sequences and provided good performance at the same time. The definition of learning model can be boiled down to two orthogonal components: the [network architecture](#network-architecture) and the [training task](#training-task).
 
-* BERT
-* Transformer-XL
-* GPT/minGPT
-* ...
+### Network Architecture
 
+There are several network architecture suitable for learning on biological sequences:
+-   dense neural network (baseline)
+-   **1-D convolution neural network**
+-   transformer (BERT) encoder
+    - **transformer (BERT) encoder with sparse attention**
 
----
-## Experiment Design
-
-before large-scale experiment:
--   [x] learning solely on simple masked language model (without any annotation)
--   [x] learning on a small fraction of genome
-    -   [x] test with training set if necessary, to make sure that the loss could be trained to zero 
-    
-parameters to tune:
--   [ ] input length 
--   [ ] masked percentage (continuous)
--   [ ] transformer layer/dimension/structure
--   [ ] contrastive learning target 
-
-metric: check for NLP metric ... 
-tested on hold-out e coli and perhaps salmonella (evolutionary distance)
+Out of all the models listed above, dense models and the original transformer (with dense self-attention) are not as suitable as the other two because of the length of the biological sequences. Some level of sparsity like convolution might be the only solution.
+Note that recurrent neural network might not be a good idea here because the information might be lost as the recurrent process continues on the ultra-long sequences.
 
 
----
-## Evaluation Target
+### Training Task
+
+Since there is an enormous amount of genome/protein sequences available without too much informative labeling or easy supervised-learning task, it is only reasonable to apply unsupervised learning.
+
+**TODO: research on the unsupervised tasks for sequences.**
+
+
+--- 
+## Evaluation Method
+<!---  
 -   [ ] tSNE visualization of genetic codes
 -   [ ] faster conserved domain search (BLAST score)
 -   [ ] protein family/function classification
 -   [ ] protein structural similarity (TM alignment score) prediction 
--   [ ] mutation effect?
+-   [ ] mutation effect
 -   [ ] gene regulatory network prediction inference
-
-
----
-## Results and Analysis
-
-
----
-## Conclusion
+-   [ ] co-varying mutations 
+--->
 
