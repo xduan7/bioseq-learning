@@ -111,7 +111,7 @@ if (not os.path.exists(contig_cnt_hist_path)) or \
 
 
 # coding region (gene) histogram in terms of length
-gene_len_hist_path = os.path.join(image_dir_path, 'gene_cnt_hist.png')
+gene_len_hist_path = os.path.join(image_dir_path, 'gene_len_hist.png')
 if not os.path.exists(gene_len_hist_path):
     
     __cds_len_list = []
@@ -158,6 +158,50 @@ if not os.path.exists(gene_len_hist_path):
     plt.xlabel('CDS length')
     plt.ylabel('number of CDS')
     plt.savefig(gene_len_hist_path)
+
+# non-coding region histogram in terms of length
+non_coding_len_hist_path = \
+    os.path.join(image_dir_path, 'non_coding_len_hist.png')
+if not os.path.exists(non_coding_len_hist_path):
+    __non_coding_len_list = []
+    for __genome_dir_path in genome_dir_paths:
+        __genome_contig_features_dir_path: str = \
+            os.path.join(__genome_dir_path, 'features')
+
+        for __contig_feature_file_name in \
+                os.listdir(__genome_contig_features_dir_path):
+            __contig_features_path = os.path.join(
+                __genome_contig_features_dir_path,
+                __contig_feature_file_name,
+            )
+            __contig_feature_df = pd.read_csv(__contig_features_path, sep='\t')
+
+            __start = __contig_feature_df['start'].to_list()
+            __end = __contig_feature_df['end'].to_list()
+
+            __non_coding_len_list.extend([
+                (__start[__i + 1] - __end[__i])
+                for __i in range(len(__start) - 1)
+                if (__start[__i + 1] - __end[__i]) > 0
+            ])
+
+
+    plt.figure(figsize=(16, 9))
+    sns.histplot(
+        x=__non_coding_len_list,
+        bins=100,
+        color='steelblue',
+        edgecolor=None,
+        alpha=1,
+    )
+    plt.xlim(0, max(__non_coding_len_list))
+    plt.title(
+        f'length histogram plot for '
+        f'{len(__non_coding_len_list)} non-coding regions'
+    )
+    plt.xlabel('non-coding region length')
+    plt.ylabel('number of non-coding regions')
+    plt.savefig(non_coding_len_hist_path)
 
 
 # create conserved domain hits
