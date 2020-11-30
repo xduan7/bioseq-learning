@@ -361,6 +361,7 @@ _num_trn_batches: int = \
     config['max_num_trn_batches_per_epoch'] if config['dry_run'] else \
     min(len(trn_dataloader), config['max_num_trn_batches_per_epoch'])
 _trn_log_interval: int = int(_num_trn_batches / config['num_trn_logs'])
+_last_loss: Optional[float] = None
 
 
 def train(cur_epoch: int):
@@ -415,7 +416,13 @@ def train(cur_epoch: int):
             target=_indexed_kmer_seqs.
                 to(devices[-1], non_blocking=True).view(-1),
         )
-        _trn_loss.backward()
+        _trn_loss_: float = _trn_loss.item()
+        _total_trn_loss += _trn_loss_
+
+        # ignore the batch if the training loss is significantly too large
+        if (_last_loss is None) or (_last_loss * 10. > _trn_loss_):
+            _trn_loss.backward()
+            _last_loss = _trn_loss_
 
         if config['max_grad_norm']:
             nn.utils.clip_grad_norm_(
@@ -423,9 +430,6 @@ def train(cur_epoch: int):
                 max_norm=config['max_grad_norm'],
             )
         optimizer.step()
-
-        _trn_loss: float = _trn_loss.item()
-        _total_trn_loss += _trn_loss
 
         if (_batch_index + 1) % _trn_log_interval == 0:
 
