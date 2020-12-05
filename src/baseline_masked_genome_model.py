@@ -18,8 +18,8 @@ import random
 import logging
 import traceback
 from datetime import date
-from typing import Any, Dict
 from types import MappingProxyType
+from typing import Any, Dict, Optional
 
 import torch
 import torch.onnx
@@ -361,11 +361,12 @@ _num_trn_batches: int = \
     config['max_num_trn_batches_per_epoch'] if config['dry_run'] else \
     min(len(trn_dataloader), config['max_num_trn_batches_per_epoch'])
 _trn_log_interval: int = int(_num_trn_batches / config['num_trn_logs'])
-_last_loss: Optional[float] = None
+_last_loss: float = float('inf')
 
 
 def train(cur_epoch: int):
 
+    global _last_loss
     model.train()
     _total_trn_loss = 0.
     _start_time = time.time()
@@ -420,9 +421,11 @@ def train(cur_epoch: int):
         _total_trn_loss += _trn_loss_
 
         # ignore the batch if the training loss is significantly too large
-        if (_last_loss is None) or (_last_loss * 10. > _trn_loss_):
+        if _last_loss * 20. > _trn_loss_:
             _trn_loss.backward()
             _last_loss = _trn_loss_
+        else:
+            pass
 
         if config['max_grad_norm']:
             nn.utils.clip_grad_norm_(

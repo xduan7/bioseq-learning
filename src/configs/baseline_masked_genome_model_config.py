@@ -25,10 +25,11 @@ _nni_search: bool = False
 
 # indicator experimental with (much) smaller training set
 # and validation/test sets are the same as the training set
-_dry_run: bool = True
+_dry_run: bool = False
 _dry_run_contig_len: int = 10000
 _dry_run_num_contigs: int = 10
 _dry_run_num_ins_per_contig: int = 0
+_dry_run_acc_target: float = 0.85
 
 # random seed and deterministic flag for reproducible results
 _random_seed: int = 0
@@ -47,22 +48,21 @@ _num_gpipe_chunks: int = 16
 
 # Nvidia apex mixed-precision training
 _nvidia_amp_opt: bool = False
-_nvidia_amp_opt_level: str = 'O3'
+_nvidia_amp_opt_level: str = 'O1'
 
 
 # dataset and dataloader parameters
-_trn_ratio: float = 0.01
+_trn_ratio: float = 1.00
 _vld_ratio: float = 0.01
 _tst_ratio: float = 0.01
 _seq_len: int = 1000
 _num_masks: float = 0.05
 _max_num_paddings: Union[int, float] = 0.0
-_dataloader_batch_size: int = 32
+_dataloader_batch_size: int = 256
 _dataloader_num_workers: int = _dataloader_batch_size
 _max_num_trn_batches_per_epoch: int = 1000
 _max_num_vld_batches_per_epoch: int = 1000
 _max_num_tst_batches: int = 10000
-
 
 # length of k-mer conversion for genomes
 _kmer_len: int = 3
@@ -79,32 +79,34 @@ _pos_enc_trainable: bool = False
 # _pos_enc_emb_scale: float = sqrt(_emb_dim)
 # the number of attention heads must be a factor of the embedding dimension
 _xfmr_enc_layer_num_attn_heads: int = max(_emb_dim // 32, 2)
-_xfmr_enc_layer_feedforward_dim: int = 1024
+_xfmr_enc_layer_feedforward_dim: int = 256
 _xfmr_enc_layer_activation: str = 'relu'
 # TODO: need to investigate xfmr dropout (no effect)
 _xfmr_enc_layer_dropout: float = 0.0
 _xfmr_enc_layer_norm: bool = False
-_xfmr_enc_num_layers: int = 6
+_xfmr_enc_num_layers: int = 16
 _xfmr_attn_mask: bool = False
 _xfmr_padding_mask: bool = False
-
+_xfmr_init_gain: float = 1.0 / (_xfmr_enc_num_layers ** 0.5)
 
 # training configurations
 _max_num_epochs: int = 10000
-_early_stopping_patience: int = 1000
+_early_stopping_patience: int = 500
 # similar optimizer to the original BERT
 # reference: https://arxiv.org/pdf/1706.03762.pdf
 _optimizer: str = 'AdamW'
+_optimizer_weight_decay: float = 1e-4
 _optimizer_kwargs: Dict[str, Any] = {
     'lr': 1e-3,
+    # 'amsgrad': True,
     # 'betas': (0.9, 0.98),
     # 'eps': 1e-9,
     # 'momentum': 0.9,
-    # 'weight_decay': 1e-5,
+    'weight_decay': _optimizer_weight_decay,
 }
-_max_grad_norm: Union[int, float] = 10
+_max_grad_norm: Optional[Union[int, float]] = 10.0
 _warmup_factor: float = 0.01
-_num_warmup_epochs: int = _early_stopping_patience // 50
+_num_warmup_epochs: int = _early_stopping_patience // 10
 _lr_scheduler: str = 'ReduceLROnPlateau'
 _lr_scheduler_kwargs: Dict[str, Any] = {
     'factor': 0.2,
@@ -114,6 +116,9 @@ _lr_scheduler_kwargs: Dict[str, Any] = {
 }
 # logging configurations
 _num_trn_logs: int = 10
+
+# plot and other documentation/visualization configurations
+_emb_plot: bool = ((not _nni_search) and (not _dry_run))
 
 # # adjust configurations if it's a dry run
 # if _dry_run:

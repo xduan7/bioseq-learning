@@ -1,14 +1,18 @@
 {
-  "dry_run_contig_len": {
+  "xfmr_init_gain": {
     "_type": "choice",
-    "_value": [5000, 7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000]
+    "_value": [1.0, 0.8, 0.6, 0.4, 0.2]
   },
-  "dry_run_num_contigs": {
+  "optimizer": {
     "_type": "choice",
-    "_value": [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+    "_value": ["Adam", "AdamW"]
   },
-  "xfmr_enc_num_layers": {
+  "optimizer_weight_decay": {
     "_type": "choice",
-    "_value": [6, 8, 10, 12, 14, 16]
+    "_value": [0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
+  },
+  "num_warmup_epochs": {
+    "_type": "choice",
+    "_value": [0, 10, 50]
   }
 }
