@@ -53,7 +53,6 @@ if __name__ == '__main__':
         dtype={'Genome ID': str},
     )
     _genome_id_list = _genome_df['Genome ID'].tolist()
-    
     _project_src_dir = os.path.abspath(os.path.join(__file__, '../../'))
     sys.path.append(_project_src_dir)
     from src.utilities.download_patric_genomes import download_patric_genomes

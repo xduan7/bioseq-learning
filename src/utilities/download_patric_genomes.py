@@ -7,13 +7,15 @@ File Description:
 """
 import os
 import logging
+import subprocess
 from multiprocessing import Pool
-from subprocess import Popen, PIPE
 from typing import Optional, List, Tuple
 
 from tqdm import tqdm
 
 _LOGGER = logging.getLogger(__name__)
+MAX_NUM_ATTEMPTS = 10
+RECOMMENDED_NUM_WORKERS = 5
 PATRIC_GENOMES_FTP_URL = 'ftp://ftp.patricbrc.org/genomes'
 
 
@@ -28,23 +30,39 @@ def download_patric_genome(
         os.path.basename(genome_dir_path[:-1])
 
     # download the genome sequences from PATRIC
-    _wget_cmd = Popen(
-        [
-            'wget',
-            f'{PATRIC_GENOMES_FTP_URL}/{genome_id}/',
-            '--no-clobber',
-            '--recursive',
-            '--no-parent',
-            '--no-directories',
-            '--accept', f'{",".join(extensions)}',
-            '--quiet',
-            '--directory-prefix', genome_dir_path,
-        ],
-        stdout=PIPE,
-        stderr=PIPE,
-        stdin=PIPE,
-    )
-    _wget_cmd.communicate()
+    _wget_cmd_list = [
+        'wget',
+        '--no-clobber',
+        '--recursive',
+        '--no-parent',
+        '--no-directories',
+        '--accept', f'{",".join(extensions)}',
+        # '--quiet',  # not set to get the error message
+        '--directory-prefix', genome_dir_path,
+        f'{PATRIC_GENOMES_FTP_URL}/{genome_id}/',
+    ]
+    # _wget_cmd_str = ' '.join(_wget_cmd_list)
+    _num_attempt = 0
+    while _num_attempt < MAX_NUM_ATTEMPTS:
+        _wget_cmd = subprocess.Popen(
+            _wget_cmd_list,
+            text=True,
+            # shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        _wget_cmd.wait()
+        _wget_stdout, _wget_stderr = _wget_cmd.communicate()
+        if _wget_cmd.returncode != 0:
+            _LOGGER.warning(f'wget error: {_wget_stderr}')
+            _num_attempt += 1
+        else:
+            return
+
+    _warning_msg = \
+        f'Downloading failed for {genome_id}: ' \
+        f'maximum number of attempts exceeded.'
+    _LOGGER.warning(_warning_msg)
 
 
 def __download_patric_genome(arg):
@@ -62,6 +80,11 @@ def download_patric_genomes(
 
     # clamp the number of workers between range [1, number of CPU cores]
     num_workers: int = max(1, min(num_workers, os.cpu_count()))
+    if num_workers > RECOMMENDED_NUM_WORKERS:
+        _warning_msg = \
+            'Too many downloading workers, might raise the ' \
+            '\'incorrect login\' error from PATRIC FTP server.'
+        _LOGGER.warning(_warning_msg)
 
     # get all the arguments for genome downloading
     _genome_parent_dir_path = os.path.abspath(genome_parent_dir_path)
