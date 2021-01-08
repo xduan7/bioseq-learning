@@ -136,7 +136,7 @@ def parse_rpsbproc_output(
     return domain_superfamily_df[PARSED_RPSBPROC_DOMAIN_COLUMNS]
 
 
-def conserved_domain_search(
+def search_conserved_domains(
         nucleotide_seq_path: str,
         cd_ans_path: str,
         cd_xml_path: Optional[str],

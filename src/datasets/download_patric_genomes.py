@@ -4,6 +4,8 @@ Project:            bioseq-learning
 
 File Description:
 
+    This file implements the download methods for genomes on PTRAIC FTP site.
+
 """
 import os
 import logging
@@ -24,6 +26,20 @@ def download_patric_genome(
         extensions: List[str],
         genome_id: Optional[str],
 ):
+    """download a single genome from PATRIC FTP site
+
+    :param genome_dir_path: path to the directory that stores the genome
+    sequence files (e.g. faa, fna, etc.)
+    :type genome_dir_path: str
+    :param extensions: file extensions that will be downloaded (e.g.
+    PATRIC.faa, features.tab, fna, etc.)
+    :type extensions: List[str]
+    :param genome_id: PATRIC genome ID; if not given, it will be infereed
+    from the base path name of the genome_dir_path argument
+    :type genome_id: Optional[str]
+    :return: None
+    :rtype: None
+    """
     # get the genome ID if not given
     genome_dir_path: str = os.path.join(genome_dir_path, '')
     genome_id: str = genome_id if genome_id else \
@@ -75,6 +91,23 @@ def download_patric_genomes(
         extensions: List[str],
         num_workers: int = 1,
 ):
+    """download multiple patric genomes in parallel
+
+    :param genome_parent_dir_path: parent directory of all the downloaded
+    genomes; each genome will be stored inside the child directory named
+    after their PATRIC genome ID
+    :type genome_parent_dir_path: str
+    :param genome_id_list: list of PATRIC genome IDS to be downloaded
+    :type genome_id_list: List[str]
+    :param extensions: file extensions that will be downloaded (e.g.
+    PATRIC.faa, features.tab, fna, etc.)
+    :type extensions: List[str]
+    :param num_workers: number of workers for parallel downloading; note
+    that too many workers might result in login error from the FTP server
+    :type num_workers: int
+    :return: None
+    :rtype: None
+    """
     if not os.path.exists(genome_parent_dir_path):
         os.mkdir(genome_parent_dir_path)
 
