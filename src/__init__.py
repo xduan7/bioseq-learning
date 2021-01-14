@@ -52,6 +52,8 @@ CDD_DATA_DIR_PATH = os.path.abspath(
 E_COLI_GENOME_PARENT_DIR_PATH = os.path.abspath(
     os.path.join(INTERIM_DATA_DIR_PATH, 'genomes/escherichia_coli'))
 
+# add path to BLAST binaries
+os.environ['PATH'] += ':/home/xduan7/software/ncbi-blast/bin'
 
 logging.basicConfig(
     # filename=... (could use config['experiment_name'])

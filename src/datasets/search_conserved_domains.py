@@ -7,11 +7,13 @@ File Description:
 """
 import os
 import re
+import logging
 from enum import Enum
 from io import StringIO
-from typing import Union, Optional
 from subprocess import Popen, PIPE
+from typing import Any, Sequence, List, Optional, Union
 
+import numpy as np
 import pandas as pd
 from Bio.Blast.Applications import \
     NcbirpsblastCommandline, \
@@ -20,7 +22,8 @@ from Bio.Blast.Applications import \
 
 from src import CDD_DIR_PATH, CDD_DATA_DIR_PATH
 
-os.environ['PATH'] += ':/home/xduan7/software/ncbi-blast/bin'
+
+_LOGGER = logging.getLogger(__name__)
 
 # the following rpsblast/rpstblastn parameters are designed to replicate the
 # CDD search results on NCBI website, using the entire CDD database and the
@@ -37,6 +40,15 @@ RPSBLAST_KWARGS = {
 # share the exact same arguments for conserved domain search
 RPSTBLASTN_KWARGS = RPSBLAST_KWARGS
 
+RPSBPROC_QUERY_COLUMNS = [
+    '',
+    'query_id',
+    'seq_type',
+    'seq_length',
+    'fasta_comment',
+]
+
+# note that the domains columns are the same as superfamily's
 RPSBPROC_DOMAIN_COLUMNS = [
     'session',
     'query_id[reading_frame]',
@@ -53,6 +65,10 @@ RPSBPROC_DOMAIN_COLUMNS = [
 ]
 
 PARSED_RPSBPROC_DOMAIN_COLUMNS = [
+    'genome_id',
+    'genome_name',
+    'seq_id',
+    'seq_description',
     'hit_type',
     'reading_frame',
     'short_name',
@@ -81,62 +97,136 @@ class FASTAType(Enum):
     faa = '.faa'
 
 
-def parse_rpsbproc_output(
+def __insert_column_value(
+        target_dataframe: pd.DataFrame,
+        target_column_name: str,
+        source_seq: Sequence,
+        source_seq_index: int,
+        default_column_value: Any = '-',
+):
+    try:
+        target_dataframe[target_column_name] = source_seq[source_seq_index]
+        return
+    except IndexError:
+        _info_msg = \
+            f'cannot access index {source_seq_index} from source ' \
+            f'sequence {source_seq} for column {target_column_name}.'
+        _LOGGER.info(_info_msg)
+    except ValueError as __error:
+        _info_msg = \
+            f'cannot assign value {source_seq[source_seq_index]} to ' \
+            f'column {target_column_name} due to \'{__error}\'.'
+        _LOGGER.info(_info_msg)
+    finally:
+        target_dataframe[target_column_name] = default_column_value
+
+
+def __parse_rpsbproc_output(
         rpsbproc_output: str,
 ) -> pd.DataFrame:
+    """helper function to parse the rpsbproc (post-processing for rpsblast)
+    text, and return the result as a Pandas DataFrame
+
+    :param rpsbproc_output:
+    :type rpsbproc_output:
+    :return:
+    :rtype:
+    """
 
     # remove all the comments in rpsbproc (starts with #)
-    rpsbproc_output = \
+    _rpsbproc_output = \
         re.sub(r'^#.*\n?', '', rpsbproc_output, flags=re.MULTILINE)
 
-    # get the domains and superfamilies in the text
-    try:
-        domain_txt = re.search(
-            'DOMAINS(.*?)ENDDOMAINS',
-            rpsbproc_output,
-            re.DOTALL,
-        ).group(1)
-    except AttributeError:
-        domain_txt = ''
+    # get the queries, domains, and the superfamilies
+    _queries: List[str] = re.findall(
+        'QUERY(.*?)DOMAINS',
+        _rpsbproc_output,
+        re.DOTALL,
+    )
+    _domains: List[str] = re.findall(
+        'DOMAINS(.*?)ENDDOMAINS',
+        _rpsbproc_output,
+        re.DOTALL,
+    )
+    _superfamilies: List[str] = re.findall(
+        'SUPERFAMILIES(.*?)ENDSUPERFAMILIES',
+        _rpsbproc_output,
+        re.DOTALL,
+    )
+    assert len(_queries) == len(_domains) == len(_superfamilies)
 
-    try:
-        superfamily_txt = re.search(
-            'SUPERFAMILIES(.*?)ENDSUPERFAMILIES',
-            rpsbproc_output,
-            re.DOTALL,
-        ).group(1)
-    except AttributeError:
-        superfamily_txt = ''
+    _domain_superfamily_df = \
+        pd.DataFrame(columns=PARSED_RPSBPROC_DOMAIN_COLUMNS)
+    for __query, __domain, __superfamily in \
+            zip(_queries, _domains, _superfamilies):
 
-    try:
-        domain_superfamily_df = pd.read_csv(
-            StringIO(domain_txt + superfamily_txt),
+        # take the last part of query for FASTA definition
+        __query_df = pd.read_csv(
+            StringIO(__query),
+            sep='\t',
+            header=None,
+        )
+        __fasta_comment: str = \
+            __query_df[__query_df.columns[-1]].to_list()[0]
+
+        __domain_superfamily_df = pd.read_csv(
+            StringIO(__domain + __superfamily),
             sep='\t',
             header=None,
             names=RPSBPROC_DOMAIN_COLUMNS,
         )
 
+        # add information from FASTA comment
+        # format: sequence id, sequence description [genome name | genome ID]
+        __fasta_comment: List[str] = re.split(r' {2,}', __fasta_comment)
+        __insert_column_value(
+            target_dataframe=__domain_superfamily_df,
+            target_column_name='seq_id',
+            source_seq=__fasta_comment,
+            source_seq_index=0,
+        )
+        __insert_column_value(
+            target_dataframe=__domain_superfamily_df,
+            target_column_name='seq_description',
+            source_seq=__fasta_comment,
+            source_seq_index=1,
+        )
+        __genome_info = __fasta_comment[2].strip('[]').split(' | ')
+        __insert_column_value(
+            target_dataframe=__domain_superfamily_df,
+            target_column_name='genome_name',
+            source_seq=__genome_info,
+            source_seq_index=0,
+        )
+        __insert_column_value(
+            target_dataframe=__domain_superfamily_df,
+            target_column_name='genome_id',
+            source_seq=__genome_info,
+            source_seq_index=1,
+        )
+
         # add reading frame column
-        domain_superfamily_df['reading_frame'] = \
-            domain_superfamily_df['query_id[reading_frame]'].map(
+        # if there is no reading frame, fill the cell with NaN
+        __domain_superfamily_df['reading_frame'] = \
+            __domain_superfamily_df['query_id[reading_frame]'].map(
                 lambda _s:
                 re.search(r'\[(.*?)\]', _s, re.DOTALL).group(1)
-                if (('[' in _s) and (']' in _s)) else '-'
+                if (('[' in _s) and (']' in _s)) else np.nan
             )
 
         # fix the superfamily column
         # 45 is not a valid superfamily PSSM ID, but the ASCII of '-'
         # make sure that all PSSM IDs are strings not integers
-        domain_superfamily_df['pssm_id'] = \
-            domain_superfamily_df['pssm_id'].apply(str)
-        domain_superfamily_df['superfamily_pssm_id'] = \
-            domain_superfamily_df['superfamily_pssm_id'].map(
-                lambda _s: '-' if _s == '45' or _s == 45 else str(_s)
+        __domain_superfamily_df['pssm_id'] = \
+            __domain_superfamily_df['pssm_id'].apply(str)
+        __domain_superfamily_df['superfamily_pssm_id'] = \
+            __domain_superfamily_df['superfamily_pssm_id'].map(
+                lambda _s: np.nan if (_s == '45' or _s == 45) else str(_s)
             )
 
         # add superfamily accession short name columns
-        superfamily_df = domain_superfamily_df.loc[
-            domain_superfamily_df['hit_type'] == 'Superfamily']
+        superfamily_df = __domain_superfamily_df.loc[
+            __domain_superfamily_df['hit_type'] == 'Superfamily']
         superfamily_df = superfamily_df[
             ['short_name', 'accession', 'pssm_id']]
         superfamily_df.columns = [
@@ -144,24 +234,27 @@ def parse_rpsbproc_output(
             'superfamily_accession',
             'superfamily_pssm_id',
         ]
-        domain_superfamily_df = domain_superfamily_df.merge(
+        __domain_superfamily_df = __domain_superfamily_df.merge(
             superfamily_df, 'outer', on='superfamily_pssm_id',
-        ).fillna('-')
+        ).fillna(np.nan)
 
-    except pd.errors.EmptyDataError:
-        domain_superfamily_df = pd.DataFrame(
-            columns=PARSED_RPSBPROC_DOMAIN_COLUMNS)
+        # merge the dataframe for the sequence
+        # replace '-' for np.nan for empty/non-applicable cells
+        _domain_superfamily_df = pd.concat([
+            _domain_superfamily_df,
+            __domain_superfamily_df.replace('-', np.nan),
+        ])
 
-    return domain_superfamily_df[PARSED_RPSBPROC_DOMAIN_COLUMNS]
+    return _domain_superfamily_df[PARSED_RPSBPROC_DOMAIN_COLUMNS]
 
 
 def search_conserved_domains(
         fasta_file_path: str,
-        fasta_file_type: Optional[Union[FASTAType, str]],
         cd_ans_path: str,
-        cd_xml_path: Optional[str],
-        cd_txt_path: Optional[str],
-        cd_csv_path: Optional[str],
+        fasta_file_type: Optional[Union[FASTAType, str]] = None,
+        cd_xml_path: Optional[str] = None,
+        cd_txt_path: Optional[str] = None,
+        cd_csv_path: Optional[str] = None,
 ) -> None:
     """perform conserved domain search for a given FASTA sequence and parse
     the results into multiple formats
@@ -257,16 +350,5 @@ def search_conserved_domains(
     if cd_csv_path and (not os.path.exists(cd_csv_path)):
         with open(cd_txt_path, 'r') as _fh:
             rpsbproc_output = _fh.read()
-        rpsbproc_output_df = parse_rpsbproc_output(rpsbproc_output)
+        rpsbproc_output_df = __parse_rpsbproc_output(rpsbproc_output)
         rpsbproc_output_df.to_csv(cd_csv_path, index=False)
-
-
-# temporary test code
-search_conserved_domains(
-    fasta_file_path='./9.55.PATRIC.faa',
-    fasta_file_type=None,
-    cd_ans_path='./9.55.PATRIC.faa.ans',
-    cd_xml_path='./9.55.PATRIC.faa.xml',
-    cd_txt_path='./9.55.PATRIC.faa.txt',
-    cd_csv_path='./9.55.PATRIC.faa.csv',
-)
