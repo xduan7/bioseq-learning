@@ -139,17 +139,17 @@ def __parse_rpsbproc_output(
 
     # get the queries, domains, and the superfamilies
     _queries: List[str] = re.findall(
-        'QUERY(.*?)DOMAINS',
+        r'^QUERY(.*?)^DOMAINS',
         _rpsbproc_output,
         re.DOTALL,
     )
     _domains: List[str] = re.findall(
-        'DOMAINS(.*?)ENDDOMAINS',
+        r'^DOMAINS(.*?)^ENDDOMAINS',
         _rpsbproc_output,
         re.DOTALL,
     )
     _superfamilies: List[str] = re.findall(
-        'SUPERFAMILIES(.*?)ENDSUPERFAMILIES',
+        r'^SUPERFAMILIES(.*?)^ENDSUPERFAMILIES',
         _rpsbproc_output,
         re.DOTALL,
     )

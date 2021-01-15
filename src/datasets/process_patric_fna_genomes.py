@@ -21,13 +21,13 @@ from Bio import SeqIO, SeqRecord
 _LOGGER = logging.getLogger(__name__)
 
 
-def process_genome(
+def process_patric_fna_genome(
         genome_dir_path: str,
         output_dir_path: Optional[str] = None,
         genome_id: Optional[str] = None,
         no_cd_search: bool = False,
 ):
-    """process a PATRIC genome (nucleotide sequence)
+    """process a PATRIC *.fna genome (nucleotide sequence)
 
     the processing steps are listed as the following:
     - prepare the directories
@@ -134,7 +134,7 @@ def process_genome(
                 os.path.join(conserved_domain_dir_path, f'{_contig_id}.csv')
 
             search_conserved_domains(
-                nucleotide_seq_path=_contig_seq_path,
+                fasta_file_path=_contig_seq_path,
                 cd_ans_path=_contig_cd_ans_path,
                 cd_xml_path=_contig_cd_xml_path,
                 cd_txt_path=_contig_cd_txt_path,
@@ -152,7 +152,7 @@ def process_genome(
         json.dump(genome_info, _fh, indent=4)
 
 
-def __process_genome(arg):
+def __process_patric_fna_genome(arg):
     """wrapper function for process_genome that only takes one tuple argument
 
     :param arg: tuple argument for process_genome to be unpacked
@@ -160,10 +160,10 @@ def __process_genome(arg):
     :return: None
     """
 
-    return process_genome(*arg)
+    return process_patric_fna_genome(*arg)
 
 
-def process_genomes(
+def process_patric_fna_genomes(
         genome_parent_dir_path: str,
         output_parent_dir_path: Optional[str] = None,
         no_cd_search: bool = False,
@@ -202,7 +202,7 @@ def process_genomes(
     with Pool(num_workers) as _pool:
         for _ in tqdm(
                 _pool.imap_unordered(
-                    __process_genome,
+                    __process_patric_fna_genome,
                     process_genome_arguments,
                 ),
                 ncols=80,
@@ -241,7 +241,7 @@ if __name__ == '__main__':
     #      -i ~/data/PATRIC/genomes \
     #      -o ~/data/PATRIC/processed_genomes \
     #      -w 80
-    process_genomes(
+    process_patric_fna_genomes(
         genome_parent_dir_path=args.genome_parent_dir_path,
         output_parent_dir_path=args.output_parent_dir_path,
         num_workers=args.num_workers,
