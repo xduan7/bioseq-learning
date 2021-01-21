@@ -89,7 +89,6 @@ def process_patric_faa_genome(
             os.makedirs(_feature_dir_path, exist_ok=True)
             os.makedirs(_conserved_domain_dir_path, exist_ok=True)
 
-
             # load the amino acid sequences for the whole genome
             # note that they are not continuous unless split into contigs
             _seq_record_list: List[SeqRecord] = \
@@ -201,106 +200,102 @@ def process_patric_faa_genome(
             _LOGGER.info(_info_msg)
 
 
+def __process_patric_faa_genome(arg):
+    """wrapper function for process_genome that only takes one tuple argument
 
-# def __process_patric_faa_genome(arg):
-#     """wrapper function for process_genome that only takes one tuple argument
-#
-#     :param arg: tuple argument for process_genome to be unpacked
-#     :type arg: Tuple[str, Optional[str], Optional[str]]
-#     :return: None
-#     """
-#
-#     return process_patric_faa_genome(*arg)
-#
-#
-# def process_patric_fna_genomes(
-#         genome_parent_dir_path: str,
-#         output_parent_dir_path: Optional[str] = None,
-#         no_cd_search: bool = False,
-#         num_workers: int = 1,
-# ):
-#     """process PATRIC genomes in the given parent directory in parallel
-#
-#     :param genome_parent_dir_path: path to the parent directory of all
-#     the PATRIC genome directories to be processed
-#     :type genome_parent_dir_path: str
-#     :param output_parent_dir_path: optional path to the parent directory of
-#     all the processed genomes
-#     :type output_parent_dir_path: str
-#     :param num_workers: maximum number of workers for parallelization
-#     :type num_workers: int
-#     :return: None
-#     """
-#
-#     # clamp the number of workers between range [1, number of CPU cores]
-#     num_workers: int = max(1, min(num_workers, os.cpu_count()))
-#
-#     # get all the paths to genomes, and output paths if possible
-#     process_genome_arguments: List[Tuple[str, Optional[str], str, bool]] = []
-#     for _genome_id in os.listdir(genome_parent_dir_path):
-#         _genome_dir_path: str = \
-#             os.path.join(genome_parent_dir_path, _genome_id)
-#         if os.path.isdir(_genome_dir_path):
-#             _output_dir_path: Optional[str] = \
-#                 os.path.join(output_parent_dir_path, _genome_id) \
-#                 if output_parent_dir_path else None
-#             process_genome_arguments.append(
-#                 (_genome_dir_path, _output_dir_path, _genome_id, no_cd_search)
-#             )
-#
-#     # parallel genome processing with pool
-#     with Pool(num_workers) as _pool:
-#         for _ in tqdm(
-#                 _pool.imap_unordered(
-#                     __process_patric_fna_genome,
-#                     process_genome_arguments,
-#                 ),
-#                 ncols=80,
-#                 smoothing=0.1,
-#                 total=len(process_genome_arguments)):
-#             pass
-#
-#
-# # script (executable) for genome processing
-# if __name__ == '__main__':
-#
-#     parser = argparse.ArgumentParser(
-#         description='process PATRIC genomes in parallel')
-#
-#     parser.add_argument(
-#         '-i', '--genome_parent_dir_path', type=str,
-#         help='path to parent directory of all genomes)',
-#     )
-#     parser.add_argument(
-#         '-o', '--output_parent_dir_path', type=str, default=None,
-#         help='optional path to directory for processed genomes',
-#     )
-#     parser.add_argument(
-#         '-w', '--num_workers', type=int, default=1,
-#         help='number of workers for parallelization',
-#     )
-#     parser.add_argument(
-#         '-n', '--no_cd_search', action='store_true',
-#         help='disable the conserved domain searching',
-#     )
-#     args = parser.parse_args()
-#
-#     # usage example
-#     # $export PYTHONPATH=<project dir>:$PYTHONPATH
-#     # $python process_genomes.py \
-#     #      -i ~/data/PATRIC/genomes \
-#     #      -o ~/data/PATRIC/processed_genomes \
-#     #      -w 80
-#     process_patric_fna_genomes(
-#         genome_parent_dir_path=args.genome_parent_dir_path,
-#         output_parent_dir_path=args.output_parent_dir_path,
-#         num_workers=args.num_workers,
-#         no_cd_search=args.no_cd_search,
-#     )
+    :param arg: tuple argument for process_genome to be unpacked
+    :type arg: Tuple[str, Optional[str], Optional[str]]
+    :return: None
+    """
 
-seq_record, accession_feature_df = process_patric_faa_genome(
-    genome_dir_path=os.path.abspath(
-        '../../scripts/data/raw/genomes/bacteria/139.268'),
-    output_dir_path=os.path.abspath(
-        '../../scripts/data/interim/genomes/bacteria/139.268'),
-)
+    return process_patric_faa_genome(*arg)
+
+
+def process_patric_faa_genomes(
+        genome_parent_dir_path: str,
+        output_parent_dir_path: Optional[str] = None,
+        no_cd_search: bool = False,
+        num_workers: int = 1,
+):
+    """process PATRIC genomes in the given parent directory in parallel
+
+    :param genome_parent_dir_path: path to the parent directory of all
+    the PATRIC genome directories to be processed
+    :type genome_parent_dir_path: str
+    :param output_parent_dir_path: optional path to the parent directory of
+    all the processed genomes
+    :type output_parent_dir_path: str
+    :param no_cd_search: optional flag indicating no conserved domain
+    search, default set to False
+    :type no_cd_search: bool
+    :param num_workers: maximum number of workers for parallelization
+    :type num_workers: int
+    :return: None
+    """
+
+    # clamp the number of workers between range [1, number of CPU cores]
+    num_workers: int = max(1, min(num_workers, os.cpu_count()))
+
+    # get all the paths to genomes, and output paths if possible
+    process_patric_faa_genome_args: \
+        List[Tuple[str, Optional[str], str, bool]] = []
+    for _genome_id in os.listdir(genome_parent_dir_path):
+        _genome_dir_path: str = \
+            os.path.join(genome_parent_dir_path, _genome_id)
+        if os.path.isdir(_genome_dir_path):
+            _output_dir_path: Optional[str] = \
+                os.path.join(output_parent_dir_path, _genome_id) \
+                if output_parent_dir_path else None
+            process_patric_faa_genome_args.append(
+                (_genome_dir_path, _output_dir_path, _genome_id, no_cd_search)
+            )
+
+    # parallel genome processing with pool
+    with Pool(num_workers) as _pool:
+        for _ in tqdm(
+                _pool.imap_unordered(
+                    __process_patric_faa_genome,
+                    process_patric_faa_genome_args,
+                ),
+                ncols=80,
+                smoothing=0.1,
+                total=len(process_patric_faa_genome_args)):
+            pass
+
+
+# script (executable) for genome processing
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(
+        description='process PATRIC *.faa genomes in parallel')
+
+    parser.add_argument(
+        '-i', '--genome_parent_dir_path', type=str,
+        help='path to parent directory of all genomes)',
+    )
+    parser.add_argument(
+        '-o', '--output_parent_dir_path', type=str, default=None,
+        help='optional path to directory for processed genomes',
+    )
+    parser.add_argument(
+        '-w', '--num_workers', type=int, default=1,
+        help='number of workers for parallelization',
+    )
+    parser.add_argument(
+        '-n', '--no_cd_search', action='store_true',
+        help='disable the conserved domain searching',
+    )
+    args = parser.parse_args()
+
+    # usage example
+    # $export PYTHONPATH=<project dir>:$PYTHONPATH
+    # $python process_genomes.py \
+    #      -i ~/data/PATRIC/genomes \
+    #      -o ~/data/PATRIC/processed_genomes \
+    #      -w 80
+    process_patric_faa_genomes(
+        genome_parent_dir_path=args.genome_parent_dir_path,
+        output_parent_dir_path=args.output_parent_dir_path,
+        num_workers=args.num_workers,
+        no_cd_search=args.no_cd_search,
+    )

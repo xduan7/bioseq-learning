@@ -177,6 +177,9 @@ def process_patric_fna_genomes(
     :param output_parent_dir_path: optional path to the parent directory of
     all the processed genomes
     :type output_parent_dir_path: str
+    :param no_cd_search: optional flag indicating no conserved domain
+    search, default set to False
+    :type no_cd_search: bool
     :param num_workers: maximum number of workers for parallelization
     :type num_workers: int
     :return: None
@@ -186,7 +189,8 @@ def process_patric_fna_genomes(
     num_workers: int = max(1, min(num_workers, os.cpu_count()))
 
     # get all the paths to genomes, and output paths if possible
-    process_genome_arguments: List[Tuple[str, Optional[str], str, bool]] = []
+    process_patric_fna_genome_args: \
+        List[Tuple[str, Optional[str], str, bool]] = []
     for _genome_id in os.listdir(genome_parent_dir_path):
         _genome_dir_path: str = \
             os.path.join(genome_parent_dir_path, _genome_id)
@@ -194,7 +198,7 @@ def process_patric_fna_genomes(
             _output_dir_path: Optional[str] = \
                 os.path.join(output_parent_dir_path, _genome_id) \
                 if output_parent_dir_path else None
-            process_genome_arguments.append(
+            process_patric_fna_genome_args.append(
                 (_genome_dir_path, _output_dir_path, _genome_id, no_cd_search)
             )
 
@@ -203,11 +207,11 @@ def process_patric_fna_genomes(
         for _ in tqdm(
                 _pool.imap_unordered(
                     __process_patric_fna_genome,
-                    process_genome_arguments,
+                    process_patric_fna_genome_args,
                 ),
                 ncols=80,
                 smoothing=0.1,
-                total=len(process_genome_arguments)):
+                total=len(process_patric_fna_genome_args)):
             pass
 
 
@@ -215,7 +219,7 @@ def process_patric_fna_genomes(
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
-        description='process PATRIC genomes in parallel')
+        description='process PATRIC *.fna genomes in parallel')
 
     parser.add_argument(
         '-i', '--genome_parent_dir_path', type=str,

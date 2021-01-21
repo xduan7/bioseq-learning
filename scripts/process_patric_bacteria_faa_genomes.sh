@@ -5,8 +5,8 @@ PROJECT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
 
 # process genomes in parallel
 export PYTHONPATH=${PROJECT_DIR}:$PYTHONPATH
-nohup python ${PROJECT_DIR}/src/datasets/process_patric_fna_genomes.py \
-  -i ${PROJECT_DIR}/data/raw/genomes/escherichia_coli \
-  -o ${PROJECT_DIR}/data/interim/genomes/escherichia_coli \
+nohup python ${PROJECT_DIR}/src/datasets/process_patric_faa_genomes.py \
+  -i ${PROJECT_DIR}/data/raw/genomes/bacteria \
+  -o ${PROJECT_DIR}/data/interim/genomes/bacteria \
   -w 240 \
-  >> ${PROJECT_DIR}/logs/process_genomes.txt &
+  >> ${PROJECT_DIR}/logs/process_patric_faa_genomes.txt &

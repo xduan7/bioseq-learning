@@ -421,7 +421,7 @@ def train(cur_epoch: int):
         _total_trn_loss += _trn_loss_
 
         # ignore the batch if the training loss is significantly too large
-        if _last_loss * 20. > _trn_loss_:
+        if _last_loss * 10. > _trn_loss_:
             _trn_loss.backward()
             _last_loss = _trn_loss_
         else:

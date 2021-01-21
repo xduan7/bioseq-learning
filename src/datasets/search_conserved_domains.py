@@ -106,18 +106,17 @@ def __insert_column_value(
 ):
     try:
         target_dataframe[target_column_name] = source_seq[source_seq_index]
-        return
     except IndexError:
         _info_msg = \
             f'cannot access index {source_seq_index} from source ' \
             f'sequence {source_seq} for column {target_column_name}.'
         _LOGGER.info(_info_msg)
+        target_dataframe[target_column_name] = default_column_value
     except ValueError as __error:
         _info_msg = \
             f'cannot assign value {source_seq[source_seq_index]} to ' \
             f'column {target_column_name} due to \'{__error}\'.'
         _LOGGER.info(_info_msg)
-    finally:
         target_dataframe[target_column_name] = default_column_value
 
 
@@ -138,21 +137,24 @@ def __parse_rpsbproc_output(
         re.sub(r'^#.*\n?', '', rpsbproc_output, flags=re.MULTILINE)
 
     # get the queries, domains, and the superfamilies
+    # query is merely the header line for rpsbproc output
     _queries: List[str] = re.findall(
-        r'^QUERY(.*?)^DOMAINS',
+        r'\nQUERY(.*?)\nDOMAINS',
         _rpsbproc_output,
         re.DOTALL,
     )
     _domains: List[str] = re.findall(
-        r'^DOMAINS(.*?)^ENDDOMAINS',
+        r'\nDOMAINS(.*?)\nENDDOMAINS',
         _rpsbproc_output,
         re.DOTALL,
     )
     _superfamilies: List[str] = re.findall(
-        r'^SUPERFAMILIES(.*?)^ENDSUPERFAMILIES',
+        r'\nSUPERFAMILIES(.*?)\nENDSUPERFAMILIES',
         _rpsbproc_output,
         re.DOTALL,
     )
+    # the number of queries should equal to the number of domains and
+    # superfamilies; empty domains/superfamilies will be ''
     assert len(_queries) == len(_domains) == len(_superfamilies)
 
     _domain_superfamily_df = \

@@ -97,7 +97,7 @@ _early_stopping_patience: int = 500
 _optimizer: str = 'AdamW'
 _optimizer_weight_decay: float = 1e-4
 _optimizer_kwargs: Dict[str, Any] = {
-    'lr': 1e-3,
+    'lr': 1e-4,
     # 'amsgrad': True,
     # 'betas': (0.9, 0.98),
     # 'eps': 1e-9,
