@@ -19,6 +19,7 @@ from Bio.Blast.Applications import \
     NcbirpsblastCommandline, \
     NcbirpstblastnCommandline, \
     NcbiblastformatterCommandline
+from Bio.Application import ApplicationError
 
 from src import CDD_DIR_PATH, CDD_DATA_DIR_PATH
 
@@ -312,7 +313,13 @@ def search_conserved_domains(
                 f'conserved domains search has not been implemented for ' \
                 f'FASTA file type with extension \'{fasta_file_type.value}\'.'
             raise NotImplementedError(_error_msg)
-        cd_ans, _ = rpsblast_cmd()
+
+        try:
+            cd_ans, _ = rpsblast_cmd()
+        except ApplicationError as __error:
+            _warning_msg = f'error from rpsblast: {__error}; skipping ...'
+            _LOGGER.warning(_warning_msg)
+            return
 
         # write to result ANS.1 file if given
         if cd_ans_path:
