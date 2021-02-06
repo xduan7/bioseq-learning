@@ -10,10 +10,10 @@ import sys
 import json
 import logging
 import argparse
+import traceback
 from multiprocessing import Pool
-from typing import Optional, Iterator, List, Tuple
+from typing import Optional, List, Tuple
 
-import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from Bio import SeqIO
@@ -65,12 +65,12 @@ def process_patric_faa_genome(
             genome_dir_path,
             f'{genome_id}.{_annotation}.faa',
         )
-        _feature_path: str = os.path.join(
+        _feature_df_path: str = os.path.join(
             genome_dir_path,
             f'{genome_id}.{_annotation}.features.tab',
         )
 
-        if os.path.exists(_seq_path) and os.path.exists(_feature_path):
+        if os.path.exists(_seq_path) and os.path.exists(_feature_df_path):
 
             # create the subdirectories if not exist
             # - ./OUTPUT_DIR: output directory if given
@@ -84,10 +84,6 @@ def process_patric_faa_genome(
             _feature_dir_path: str = os.path.join(output_dir_path, 'features')
             _conserved_domain_dir_path: str = \
                 os.path.join(output_dir_path, 'conserved_domains')
-            os.makedirs(_output_dir_path, exist_ok=True)
-            os.makedirs(_contig_dir_path, exist_ok=True)
-            os.makedirs(_feature_dir_path, exist_ok=True)
-            os.makedirs(_conserved_domain_dir_path, exist_ok=True)
 
             # load the amino acid sequences for the whole genome
             # note that they are not continuous unless split into contigs
@@ -96,12 +92,21 @@ def process_patric_faa_genome(
 
             # load the feature table and split based on accession (contig)
             contig_info_dict: dict = {}
-            _feature_df: pd.DataFrame = pd.read_table(_feature_path)
+            _feature_df: pd.DataFrame = pd.read_table(_feature_df_path)
+            # make sure that the feature dataframe is not empty
+            if len(_feature_df) == 0:
+                continue
+
+            os.makedirs(_output_dir_path, exist_ok=True)
+            os.makedirs(_contig_dir_path, exist_ok=True)
+            os.makedirs(_feature_dir_path, exist_ok=True)
+            os.makedirs(_conserved_domain_dir_path, exist_ok=True)
+
             for _accession, _accession_feature_df \
                     in _feature_df.groupby('accession'):
 
                 # paths for the current accession
-                _accession_feature_path: str = \
+                _accession_feature_df_path: str = \
                     os.path.join(
                         _feature_dir_path,
                         f'{_accession}.{_annotation}.tsv'
@@ -116,29 +121,51 @@ def process_patric_faa_genome(
                 _source_mask: pd.Series = \
                     (_accession_feature_df['feature_type'] == 'source')
                 _accession_feature_df[~_source_mask].to_csv(
-                    _accession_feature_path, index=None, sep='\t')
+                    _accession_feature_df_path, index=None, sep='\t')
 
                 # get all the amino acid sequences in the accession (contig)
                 _accession_seq_records: List[SeqRecord] = []
                 for __seq_record in _seq_record_list:
                     if __seq_record.id.count('|') == 1:
-                        __seq_patric_id = __seq_record.id
-                    elif __seq_record.id.count('|') == 2:
-                        __seq_patric_id = __seq_record.id.rsplit('|', 1)[0]
+                        __seq_id = __seq_record.id
+                    elif __seq_record.id.count('|') >= 2 \
+                            and _annotation == 'PATRIC':
+                        __seq_id = \
+                            __seq_record.id.rstrip('|').rsplit('|', 1)[0]
+                    elif __seq_record.id.count('|') >= 2 \
+                            and _annotation == 'RefSeq':
+                        __seq_id = \
+                            __seq_record.id.rstrip('|').rsplit('|', 2)[1]
                     else:
                         _warning_msg = \
                             f'cannot parse the PATRIC ID from FASTA ' \
                             f'sequence record with name {__seq_record.id}.'
                         _LOGGER.warning(_warning_msg)
                         continue
-                    if __seq_patric_id in \
-                            _accession_feature_df['patric_id'].to_list():
+
+                    # seq Id could either be PATRIC ID or RefSeq locus tag
+                    # otherwise it does not belong to the current accession
+                    if _annotation == 'PATRIC' and __seq_id in \
+                            _accession_feature_df['patric_id'].values:
                         _accession_seq_records.append(__seq_record)
-                with open(_accession_seq_path, 'w') as __fh:
-                    SeqIO.write(_accession_seq_records, __fh, 'fasta')
-                contig_info_dict[_accession] = {
-                    'number_of_amino_acid_seqs': len(_accession_seq_records)
-                }
+                    elif _annotation == 'RefSeq' and __seq_id in \
+                            _accession_feature_df['refseq_locus_tag'].values:
+                        _accession_seq_records.append(__seq_record)
+                    else:
+                        _debug_msg = \
+                            f'faa sequence {__seq_id} in genome ' \
+                            f'{genome_id} is not included in ' \
+                            f'{_annotation} feature table.'
+                        _LOGGER.debug(_debug_msg)
+                        continue
+
+                if len(_accession_seq_records) > 0:
+                    with open(_accession_seq_path, 'w') as __fh:
+                        SeqIO.write(_accession_seq_records, __fh, 'fasta')
+                    contig_info_dict[_accession] = {
+                        'number_of_amino_acid_seqs':
+                            len(_accession_seq_records)
+                    }
 
             # iterate through all the contigs again for conserved domain search
             if not no_cd_search:
@@ -180,24 +207,31 @@ def process_patric_faa_genome(
                     )
 
             # save the genome information in json format
-            genome_info_path: str = os.path.join(
-                output_dir_path,
-                f'info.{_annotation}.json',
-            )
-            genome_info: dict = {
-                'genome_name': _feature_df['genome_name'].unique()[0],
-                'number_of_contigs': len(contig_info_dict),
-                'contig_info': contig_info_dict,
-            }
-            with open(genome_info_path, 'w+') as _fh:
-                json.dump(genome_info, _fh, indent=4)
+            try:
+                genome_info_path: str = os.path.join(
+                    output_dir_path,
+                    f'info.{_annotation}.json',
+                )
+                genome_info: dict = {
+                    'genome_name': _feature_df['genome_name'].unique()[0],
+                    'number_of_contigs': len(contig_info_dict),
+                    'contig_info': contig_info_dict,
+                }
+                with open(genome_info_path, 'w+') as _fh:
+                    json.dump(genome_info, _fh, indent=4)
+            except IndexError:
+                _warning_msg = \
+                    f'indexing error for genome {genome_id} with ' \
+                    f'{_annotation} annotation. Please check the feature ' \
+                    f'table {_feature_df_path}.'
+                _LOGGER.warning(_warning_msg)
 
-        else:
-            _info_msg = \
-                f'Genome {genome_id} does not have complete {_annotation} ' \
-                f'annotations, and therefore cannot be processed with the ' \
-                f'annotated features and amino acid sequences.'
-            _LOGGER.info(_info_msg)
+        # else:
+        #     _info_msg = \
+        #         f'Genome {genome_id} does not have complete {_annotation} ' \
+        #         f'annotations, and therefore cannot be processed with the ' \
+        #         f'annotated features and amino acid sequences.'
+        #     _LOGGER.info(_info_msg)
 
 
 def __process_patric_faa_genome(arg):
@@ -207,8 +241,15 @@ def __process_patric_faa_genome(arg):
     :type arg: Tuple[str, Optional[str], Optional[str]]
     :return: None
     """
-
-    return process_patric_faa_genome(*arg)
+    try:
+        return process_patric_faa_genome(*arg)
+    except Exception as _e:
+        _traceback_str = ''.join(traceback.format_tb(_e.__traceback__))
+        _warning_msg = \
+            f'failed to process the faa genome sequences in directory ' \
+            f'\'{arg[0]}\' due to {_e.__class__.__name__}; traceback ' \
+            f'of the exception:\n{_traceback_str}'
+        _LOGGER.warning(_warning_msg)
 
 
 def process_patric_faa_genomes(
