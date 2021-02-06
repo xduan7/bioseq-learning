@@ -222,3 +222,4 @@ dmypy.json
 data
 models
 poetry.lock
+/logs/
