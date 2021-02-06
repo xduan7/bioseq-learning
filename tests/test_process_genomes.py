@@ -10,13 +10,14 @@ import unittest
 from io import StringIO
 from filecmp import dircmp
 
-from src.datasets import process_genomes
+from src.datasets.process_patric_fna_genomes import \
+    process_patric_fna_genome
 
 
 _TEST_EXAMPLES_DIR_PATH: str = \
     os.path.join(os.path.dirname(os.path.realpath(__file__)), 'examples')
 _GENOME_PARENT_DIR_PATH: str = \
-    os.path.join(_TEST_EXAMPLES_DIR_PATH, 'genomes')
+    os.path.join(_TEST_EXAMPLES_DIR_PATH, 'genomes', 'escherichia_coli')
 _OUTPUT_PARENT_DIR_PATH: str = \
     os.path.join(_TEST_EXAMPLES_DIR_PATH, 'genome_processing_results')
 _REFERENCE_OUTPUT_PARENT_DIR_PATH: str = \
@@ -30,7 +31,7 @@ class TestProcessGenomes(unittest.TestCase):
     def test_process_genomes(self):
         """test 'process_genomes' function
         """
-        process_genomes(
+        process_patric_fna_genome(
             genome_parent_dir_path=_GENOME_PARENT_DIR_PATH,
             output_parent_dir_path=_OUTPUT_PARENT_DIR_PATH,
             no_cd_search=False,

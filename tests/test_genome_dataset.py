@@ -15,7 +15,7 @@ from typing import List
 from torch.utils.data import DataLoader
 
 from src import E_COLI_GENOME_PARENT_DIR_PATH
-from src.datasets import GenomeDataset, GenomeIterDataset
+from src.datasets.genome_dataset import GenomeDataset, GenomeIterDataset
 from src.datasets.genome_dataset import \
     PADDING_CHAR, NUCLEOTIDE_CHAR_INDEX_DICT
 
