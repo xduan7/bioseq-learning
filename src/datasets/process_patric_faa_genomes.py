@@ -12,8 +12,9 @@ import logging
 import argparse
 import traceback
 from multiprocessing import Pool
-from typing import Optional, List, Tuple
+from typing import Optional, Iterator, List, Tuple
 
+import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from Bio import SeqIO
@@ -85,6 +86,11 @@ def process_patric_faa_genome(
             _conserved_domain_dir_path: str = \
                 os.path.join(output_dir_path, 'conserved_domains')
 
+            os.makedirs(_output_dir_path, exist_ok=True)
+            os.makedirs(_contig_dir_path, exist_ok=True)
+            os.makedirs(_feature_dir_path, exist_ok=True)
+            os.makedirs(_conserved_domain_dir_path, exist_ok=True)
+
             # load the amino acid sequences for the whole genome
             # note that they are not continuous unless split into contigs
             _seq_record_list: List[SeqRecord] = \
@@ -93,15 +99,6 @@ def process_patric_faa_genome(
             # load the feature table and split based on accession (contig)
             contig_info_dict: dict = {}
             _feature_df: pd.DataFrame = pd.read_table(_feature_df_path)
-            # make sure that the feature dataframe is not empty
-            if len(_feature_df) == 0:
-                continue
-
-            os.makedirs(_output_dir_path, exist_ok=True)
-            os.makedirs(_contig_dir_path, exist_ok=True)
-            os.makedirs(_feature_dir_path, exist_ok=True)
-            os.makedirs(_conserved_domain_dir_path, exist_ok=True)
-
             for _accession, _accession_feature_df \
                     in _feature_df.groupby('accession'):
 
@@ -152,11 +149,18 @@ def process_patric_faa_genome(
                             _accession_feature_df['refseq_locus_tag'].values:
                         _accession_seq_records.append(__seq_record)
                     else:
-                        _debug_msg = \
-                            f'faa sequence {__seq_id} in genome ' \
-                            f'{genome_id} is not included in ' \
-                            f'{_annotation} feature table.'
-                        _LOGGER.debug(_debug_msg)
+                        # this debug message is not necessary considering
+                        # that we are analyzing the genome by
+                        # contig/accession, and the sequence IDs are
+                        # extracted from ALL the proteins on genome (not
+                        # contig), which means that it's completely normal
+                        # that we cannot find a sequence with its ID on the
+                        # feature table of the current contig
+                        # _debug_msg = \
+                        #     f'faa sequence {__seq_id} in genome ' \
+                        #     f'{genome_id} is not included in ' \
+                        #     f'{_annotation} feature table.'
+                        # _LOGGER.debug(_debug_msg)
                         continue
 
                 if len(_accession_seq_records) > 0:
