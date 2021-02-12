@@ -119,7 +119,7 @@ def __insert_column_value(
 
 def __parse_rpsbproc_output(
         rpsbproc_output: str,
-) -> pd.DataFrame:
+) -> Optional[pd.DataFrame]:
     """helper function to parse the rpsbproc (post-processing for rpsblast)
     text, and return the result as a Pandas DataFrame
     :param rpsbproc_output:
@@ -133,39 +133,64 @@ def __parse_rpsbproc_output(
         re.sub(r'^#.*\n?', '', rpsbproc_output, flags=re.MULTILINE)
 
     # get the queries, domains, and the superfamilies
-    # query is merely the header line for rpsbproc output
     _queries: List[str] = re.findall(
-        r'\nQUERY(.*?)\nDOMAINS',
+        r'\nQUERY(.*?)\nENDQUERY',
         _rpsbproc_output,
         re.DOTALL,
     )
-    _domains: List[str] = re.findall(
-        r'\nDOMAINS(.*?)\nENDDOMAINS',
-        _rpsbproc_output,
-        re.DOTALL,
-    )
-    _superfamilies: List[str] = re.findall(
-        r'\nSUPERFAMILIES(.*?)\nENDSUPERFAMILIES',
-        _rpsbproc_output,
-        re.DOTALL,
-    )
+    _headers: List[str] = []
+    _domains: List[str] = []
+    _superfamilies: List[str] = []
+    for __query in _queries:
+        __headers: List[str] = re.findall(
+            r'(.*?)\nDOMAINS',
+            __query,
+            re.DOTALL,
+        )
+        __domains: List[str] = re.findall(
+            r'\nDOMAINS(.*?)\nENDDOMAINS',
+            __query,
+            re.DOTALL,
+        )
+        __superfamilies: List[str] = re.findall(
+            r'\nSUPERFAMILIES(.*?)\nENDSUPERFAMILIES',
+            __query,
+            re.DOTALL,
+        )
+        try:
+            assert len(__headers) == len(__domains) == len(__superfamilies)
+        except AssertionError:
+            _error_msg = \
+                f'the lengths of header ({len(__headers)}), domains ' \
+                f'({len(__domains)}), and superfamilies ' \
+                f'({len(__superfamilies)}) do not align ' \
+                f'for query {__query}.'
+            raise pd.errors.ParserError(_error_msg)
+        if len(__headers) > 1:
+            _error_msg = \
+                f'multiple ({len(__headers)}) query headers within ' \
+                f'a query: {__query}. Skipping current rpsbproc parsing ...'
+            raise pd.errors.ParserError(_error_msg)
+        else:
+            _headers.extend(__headers)
+            _domains.extend(__domains)
+            _superfamilies.extend(__superfamilies)
+
     # the number of queries should equal to the number of domains and
     # superfamilies; empty domains/superfamilies will be ''
-    assert len(_queries) == len(_domains) == len(_superfamilies)
-
     _domain_superfamily_df = \
         pd.DataFrame(columns=PARSED_RPSBPROC_DOMAIN_COLUMNS)
-    for __query, __domain, __superfamily in \
-            zip(_queries, _domains, _superfamilies):
+    for __header, __domain, __superfamily in \
+            zip(_headers, _domains, _superfamilies):
 
         # take the last part of query for FASTA definition
-        __query_df = pd.read_csv(
-            StringIO(__query),
+        __header_df = pd.read_csv(
+            StringIO(__header),
             sep='\t',
             header=None,
         )
         __fasta_comment: str = \
-            __query_df[__query_df.columns[-1]].to_list()[0]
+            __header_df[__header_df.columns[-1]].to_list()[0]
 
         __domain_superfamily_df = pd.read_csv(
             StringIO(__domain + __superfamily),
@@ -354,4 +379,5 @@ def search_conserved_domains(
         with open(cd_txt_path, 'r') as _fh:
             rpsbproc_output = _fh.read()
         rpsbproc_output_df = __parse_rpsbproc_output(rpsbproc_output)
-        rpsbproc_output_df.to_csv(cd_csv_path, index=False)
+        if rpsbproc_output_df:
+            rpsbproc_output_df.to_csv(cd_csv_path, index=False)
