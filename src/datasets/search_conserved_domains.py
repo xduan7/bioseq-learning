@@ -119,7 +119,7 @@ def __insert_column_value(
 
 def __parse_rpsbproc_output(
         rpsbproc_output: str,
-) -> Optional[pd.DataFrame]:
+) -> pd.DataFrame:
     """helper function to parse the rpsbproc (post-processing for rpsblast)
     text, and return the result as a Pandas DataFrame
     :param rpsbproc_output:
@@ -379,5 +379,5 @@ def search_conserved_domains(
         with open(cd_txt_path, 'r') as _fh:
             rpsbproc_output = _fh.read()
         rpsbproc_output_df = __parse_rpsbproc_output(rpsbproc_output)
-        if rpsbproc_output_df:
+        if rpsbproc_output_df is not None:
             rpsbproc_output_df.to_csv(cd_csv_path, index=False)

@@ -8,5 +8,5 @@ export PYTHONPATH=${PROJECT_DIR}:$PYTHONPATH
 python ${PROJECT_DIR}/src/datasets/process_patric_faa_genomes.py \
   -i ${PROJECT_DIR}/data/raw/genomes/bacteria \
   -o ${PROJECT_DIR}/data/interim/genomes/bacteria \
-  -w 160 \
-  2> ${PROJECT_DIR}/logs/process_patric_faa_genomes.txt &
+  -w 60 \
+  2> ${PROJECT_DIR}/logs/process_patric_bacteria_faa_genomes.txt
