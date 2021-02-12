@@ -1,4 +1,0 @@
-[core]
-    remote = lambda
-['remote "lambda"']
-    url = ssh://lambda/home/xduan7/data/dvc/bioseq-learning
