@@ -26,10 +26,12 @@ import resource
 from glob import glob
 from enum import Enum
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from multiprocessing import Pool, cpu_count
+from typing import Dict, List, Optional, Tuple
 
 import torch
 import pandas as pd
+from tqdm import tqdm
 from torch.utils.data import Dataset
 
 from src import RAW_DATA_DIR_PATH
@@ -37,11 +39,18 @@ from src import RAW_DATA_DIR_PATH
 
 BACTERIA_GENOME_SUMMARY_CSV_FILE_PATH = os.path.join(
     RAW_DATA_DIR_PATH, 'genomes', 'bacteria.csv')
+REF_N_REP_BACTERIA_GENOME_SUMMARY_CSV_FILE_PATH = os.path.join(
+    RAW_DATA_DIR_PATH, 'genomes', 'reference_or_representative_bacteria.csv')
 _LOGGER = logging.getLogger(__name__)
 resource.setrlimit(
     resource.RLIMIT_NOFILE,
     (4096, resource.getrlimit(resource.RLIMIT_NOFILE)[1]),
 )
+
+# Default token for contig sequences
+DEFAULT_CODING_REGION_SEP_TOKEN: str = '<SEP>'
+DEFAULT_CONTIG_BEGIN_TOKEN: str = '<BOCTG>'
+DEFAULT_CONTIG_END_TOKEN: str = '<EOCTG>'
 
 
 class Annotation(Enum):
@@ -82,37 +91,58 @@ class Organism(Enum):
 
 
 @dataclass
-class ContigConservedDomains:
-    """Data class for a genome contig, annotated with conserved domains
+class ContigWithConservedDomains:
+    """Data class for a genome contig, annotated with features (PATRIC or
+    RefSeq) and the corresponding conserved domains.
     """
     genome_id: str
     genome_name: Optional[str]
     organism: Optional[Organism]
     annotation: Annotation
     contig_accession: str
+    contig_feature_df: pd.DataFrame
     contig_conserved_domain_df: pd.DataFrame
+    contig_feature_csv_file_path: str
     contig_conserved_domain_csv_file_path: str
 
 
-@dataclass
-class ContigConservedDomains:
-    pass
-
-
 def __get_organism_from_genome_name(genome_name: str) -> Organism:
+    """Get the organism from the name of the genome by naive string parse,
+    that is, if its name contains any of the organism strings, the genome
+    is of that particular organism.
+
+    :param genome_name:
+    :type genome_name:
+    :return:
+    :rtype:
+    """
     __lower_genome_name = genome_name.lower()
     for __organism in Organism:
         if __organism.value in __lower_genome_name:
             return __organism
     return Organism.OTHERS
 
-
-def __get_contig_conserved_domains(
+def _get_contigs_with_conserved_domains(
         annotation: Annotation,
         genome_parent_dir_path: str,
-        genome_summary_csv_file_path: Optional[str] =
-        BACTERIA_GENOME_SUMMARY_CSV_FILE_PATH,
-) -> List[ContigConservedDomains]:
+        genome_summary_csv_file_path: Optional[str] = None,
+) -> List[ContigWithConservedDomains]:
+    """Get all the contigs inside a parent directory path into a list of
+    ContigWithConservedDomains, which is essentially a data class
+    with all the information on features and conserved domain annotations.
+
+    :param annotation:
+    :type annotation:
+    :param genome_parent_dir_path:
+    :type genome_parent_dir_path:
+    :param genome_summary_csv_file_path: optional genome summary CSV file
+    path, which could be downloaded from PATRIC server. If given, this
+    function will only process the genomes included in the CSV file by
+    checking the "genome_id" column.
+    :type genome_summary_csv_file_path: str
+    :return:
+    :rtype:
+    """
 
     # load the genome summary dataframe
     try:
@@ -136,61 +166,147 @@ def __get_contig_conserved_domains(
         genome_parent_dir_path, '**', f'*.{annotation.value}.csv')
     _contig_conserved_domain_csv_file_paths: List[str] = glob(
         _contig_conserved_domain_csv_file_path_pattern, recursive=True)
-    print(_contig_conserved_domain_csv_file_paths)
 
     # construct conserved domain data class for every contig
     _contig_conserved_domains = []
     for __contig_conserved_domain_csv_file_path in \
-            _contig_conserved_domain_csv_file_paths:
+            tqdm(_contig_conserved_domain_csv_file_paths):
 
         __split_path = \
             __contig_conserved_domain_csv_file_path.split(os.sep)
         __genome_id = __split_path[-3]
+        __contig_feature_csv_file_path = \
+            __contig_conserved_domain_csv_file_path.replace(
+                '/conserved_domains/', '/features/').replace('.csv', '.tsv')
+
+        # skip the config the the feature does not exist (should not happen)
+        if not os.path.exists(__contig_feature_csv_file_path):
+            _warning_msg = \
+                f'The feature table file ({__contig_feature_csv_file_path}) ' \
+                f'for current contig is missing. Skipping ...'
+            _LOGGER.warning(_warning_msg)
 
         # skip the contig if the genome ID is not in the summary
-        if _genome_summary_df is None:
-            __genome_name, __organism = None, None
-        elif __genome_id not in _genome_summary_df['genome_id'].values:
+        __genome_name, __organism = None, None
+        if (_genome_summary_df is not None) and \
+                (__genome_id not in _genome_summary_df['genome_id'].values):
             _warning_msg = \
                 f'Genome {__genome_id} is not listed in the genome table ' \
                 f'located in {genome_summary_csv_file_path}. Skipping ...'
             _LOGGER.warning(_warning_msg)
             continue
-        else:
-            __genome_info = _genome_summary_df[
-                _genome_summary_df['genome_id'] == __genome_id]
-            if len(__genome_info) > 1:
-                _warning_msg = \
-                    f'Multiple {len(__genome_info)} records in the genome ' \
-                    f'table located in {genome_summary_csv_file_path} for ' \
-                    f'genome {__genome_id}. Skipping ...'
-                _LOGGER.warning(_warning_msg)
-                continue
-            __genome_name = __genome_info['genome_name'].tolist()[0]
-            __organism = __get_organism_from_genome_name(__genome_name)
 
         __contig_accession = __split_path[-1].split('.', 1)[0]
+        __contig_feature_df = pd.read_csv(
+            __contig_feature_csv_file_path,
+            sep='\t',
+            header=0,
+            index_col=None,
+            dtype={'genome_id': str},
+        )
+
         __contig_conserved_domain_df = pd.read_csv(
             __contig_conserved_domain_csv_file_path,
             header=0,
             index_col=None,
             dtype={
-                'genome_id': str,
-                'pssm_id': str,
-                'superfamily_pssm_id': str,
+                'genome_id':            str,
+                'pssm_id':              str,
+                'superfamily_pssm_id':  str,
             }
         )
-        __contig_conserved_domain = ContigConservedDomains(
+
+        # get the genome organism from genome name in the feature dataframe
+        if __genome_name is None:
+            __genome_names = __contig_feature_df.genome_name.unique().tolist()
+            if len(__genome_names) > 1:
+                _warning_msg = \
+                    f'More than one genome names ({__genome_names}) in ' \
+                    f'a single contig feature dataframe for contig ' \
+                    f'{__contig_accession} in genome with ID {__genome_id}. ' \
+                    f'Using the first genome name {__genome_names[0]} ...'
+                _LOGGER.warning(_warning_msg)
+            __genome_name = __genome_names[0]
+            __organism = __get_organism_from_genome_name(__genome_name)
+
+        # clean up the feature dataframe
+        __contig_feature_df = __contig_feature_df[
+            __contig_feature_df.accession == __contig_accession]
+        if len(__contig_feature_df) == 0:
+            _warning_msg = \
+                f'There are no features for accession {__contig_accession} ' \
+                f'in the feature table of genome with ID {__genome_id}.'
+            _LOGGER.warning(_warning_msg)
+            continue
+        __contig_feature_df.drop('genome_id', axis=1, inplace=True)
+        __contig_feature_df.drop('genome_name', axis=1, inplace=True)
+        __contig_feature_df.drop('accession', axis=1, inplace=True)
+        __contig_feature_df.drop('annotation', axis=1, inplace=True)
+
+        # clean up the conserved domain dataframe
+        __contig_conserved_domain_df.drop('genome_id', axis=1, inplace=True)
+        __contig_conserved_domain_df.drop('genome_name', axis=1, inplace=True)
+
+        __contig_with_conserved_domain = ContigWithConservedDomains(
             __genome_id,
             __genome_name,
             __organism,
             annotation,
             __contig_accession,
+            __contig_feature_df,
             __contig_conserved_domain_df,
+            __contig_feature_csv_file_path,
             __contig_conserved_domain_csv_file_path
         )
-        _contig_conserved_domains.append(__contig_conserved_domain)
+        _contig_conserved_domains.append(__contig_with_conserved_domain)
     return _contig_conserved_domains
+
+def __convert_single_contig_with_conserved_domains_to_sequence(
+        contig_with_conserved_domain: ContigWithConservedDomains,
+        coding_region_sep_token: str = DEFAULT_CODING_REGION_SEP_TOKEN,
+        contig_begin_token: Optional[str] = DEFAULT_CONTIG_BEGIN_TOKEN,
+        contig_end_token: Optional[str] = DEFAULT_CONTIG_END_TOKEN,
+) -> Tuple[str, List[str]]:
+
+    _genome_id: str = contig_with_conserved_domain.genome_id
+
+
+
+
+
+
+def _convert_contigs_with_conserved_domains_to_sequences(
+        contig_conserved_domains: List[ContigWithConservedDomains],
+        coding_region_sep_token: str = DEFAULT_CODING_REGION_SEP_TOKEN,
+        contig_begin_token: Optional[str] = DEFAULT_CONTIG_BEGIN_TOKEN,
+        contig_end_token: Optional[str] = DEFAULT_CONTIG_END_TOKEN,
+) -> Dict[str, List[str]]:
+
+
+    # get a list of arguments for
+    # __convert_single_contig_with_conserved_domains_to_sequence
+    __arg_list: List[Tuple[
+        ContigWithConservedDomains,
+        str,
+        Optional[str],
+        Optional[str],
+    ]] = []
+
+
+
+
+
+    # with Pool(cpu_count()) as _pool:
+    #     _processed_contigs: \
+    #         List[Optional[Tuple[str, int, np.ndarray, np.ndarray]]] = \
+    #         _pool.starmap(
+    #             __convert_single_contig_with_conserved_domains_to_sequence,
+    #             __arg_list,
+    #         )
+    #
+    #
+    #
+    # pass
 
 
 class GenomeDomainDataset(Dataset):
