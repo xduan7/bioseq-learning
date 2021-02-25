@@ -27,7 +27,7 @@ from glob import glob
 from enum import Enum
 from dataclasses import dataclass
 from multiprocessing import Pool, cpu_count
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 import torch
 import pandas as pd
@@ -98,6 +98,7 @@ class ContigWithConservedDomains:
     genome_id: str
     genome_name: Optional[str]
     organism: Optional[Organism]
+    ncbi_taxon_id: int
     annotation: Annotation
     contig_accession: str
     contig_feature_df: pd.DataFrame
@@ -122,6 +123,7 @@ def __get_organism_from_genome_name(genome_name: str) -> Organism:
             return __organism
     return Organism.OTHERS
 
+
 def _get_contigs_with_conserved_domains(
         annotation: Annotation,
         genome_parent_dir_path: str,
@@ -130,6 +132,21 @@ def _get_contigs_with_conserved_domains(
     """Get all the contigs inside a parent directory path into a list of
     ContigWithConservedDomains, which is essentially a data class
     with all the information on features and conserved domain annotations.
+
+    Usage:
+    contigs = _get_contigs_with_conserved_domains(
+        annotation=Annotation.PATRIC,
+        genome_parent_dir_path=
+            '/home/xduan7/projects/bioseq-learning/data'
+            '/interim/genomes/reference_or_representative_bacteria',
+        genome_summary_csv_file_path=
+            '/home/xduan7/projects/bioseq-learning'
+            '/data/raw/genomes/reference_or_representative_bacteria.csv',
+    )
+    import pickle
+    with open('reference_or_representative_bacteria_contigs_'
+              'with_conserved_domains.PATRIC.pickle', 'wb') as _fh:
+        pickle.dump(contigs, _fh)
 
     :param annotation:
     :type annotation:
@@ -149,10 +166,27 @@ def _get_contigs_with_conserved_domains(
         _genome_summary_df = pd.read_csv(
             genome_summary_csv_file_path,
             index_col=None,
-            usecols=['Genome ID', 'Genome Name'],
-            dtype={'Genome ID': str, 'Genome Name': str}
+            usecols=[
+                'Genome ID',
+                'Genome Name',
+                'Organism Name',
+                'NCBI Taxon ID',
+            ],
+            dtype={
+                'Genome ID': str,
+                'Genome Name': str,
+                'Organism Name': str,
+                'NCBI Taxon ID': int,
+            }
         )
-        _genome_summary_df.columns = ['genome_id', 'genome_name']
+        _genome_summary_df.columns = [
+            'genome_id',
+            'genome_name',
+            'organism_name',
+            'ncbi_taxon_id',
+        ]
+        _genome_summary_df = _genome_summary_df.set_index('genome_id')
+        _genome_ids: Set[str] = set(_genome_summary_df.index.values)
     except (ValueError, FileNotFoundError):
         _warning_msg = \
             f'Failed to load the summary dataframe for all the ' \
@@ -189,7 +223,7 @@ def _get_contigs_with_conserved_domains(
         # skip the contig if the genome ID is not in the summary
         __genome_name, __organism = None, None
         if (_genome_summary_df is not None) and \
-                (__genome_id not in _genome_summary_df['genome_id'].values):
+                (__genome_id not in _genome_ids):
             _warning_msg = \
                 f'Genome {__genome_id} is not listed in the genome table ' \
                 f'located in {genome_summary_csv_file_path}. Skipping ...'
@@ -220,13 +254,15 @@ def _get_contigs_with_conserved_domains(
         if __genome_name is None:
             __genome_names = __contig_feature_df.genome_name.unique().tolist()
             if len(__genome_names) > 1:
+                __genome_name = max(__genome_names, key=len)
                 _warning_msg = \
                     f'More than one genome names ({__genome_names}) in ' \
                     f'a single contig feature dataframe for contig ' \
                     f'{__contig_accession} in genome with ID {__genome_id}. ' \
-                    f'Using the first genome name {__genome_names[0]} ...'
+                    f'Using the longest genome name {__genome_name} ...'
                 _LOGGER.warning(_warning_msg)
-            __genome_name = __genome_names[0]
+            else:
+                __genome_name = __genome_names[0]
             __organism = __get_organism_from_genome_name(__genome_name)
 
         # clean up the feature dataframe
@@ -251,6 +287,7 @@ def _get_contigs_with_conserved_domains(
             __genome_id,
             __genome_name,
             __organism,
+            _genome_summary_df.loc[__genome_id, 'ncbi_taxon_id'],
             annotation,
             __contig_accession,
             __contig_feature_df,
@@ -260,6 +297,7 @@ def _get_contigs_with_conserved_domains(
         )
         _contig_conserved_domains.append(__contig_with_conserved_domain)
     return _contig_conserved_domains
+
 
 def __convert_single_contig_with_conserved_domains_to_sequence(
         contig_with_conserved_domain: ContigWithConservedDomains,
