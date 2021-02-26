@@ -26,6 +26,8 @@ paramiko = "^2.7.2"
 torchgpipe = "^0.0.7"
 pytorch-model-summary = {git = "https://github.com/amarczew/pytorch_model_summary.git"}
 taxonomy = "^0.7.0"
+plotly = "^4.14.3"
+kaleido = "0.1.0"
 
 [tool.poetry.dev-dependencies]
 

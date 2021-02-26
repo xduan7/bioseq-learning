@@ -98,7 +98,7 @@ class ContigWithConservedDomains:
     genome_id: str
     genome_name: Optional[str]
     organism: Optional[Organism]
-    ncbi_taxon_id: int
+    ncbi_taxon_id: str
     annotation: Annotation
     contig_accession: str
     contig_feature_df: pd.DataFrame

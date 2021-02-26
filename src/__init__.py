@@ -48,6 +48,10 @@ CDD_DIR_PATH = os.path.abspath(
 CDD_DATA_DIR_PATH = os.path.abspath(
     os.path.join(INTERIM_DATA_DIR_PATH, 'CDD_metadata'))
 
+# NCBI taxonomy directory path
+NCBI_TAX_DIR_PATH = os.path.abspath(
+    os.path.join(INTERIM_DATA_DIR_PATH, 'NCBI_taxonomy'))
+
 # path to the parent directory of all the preprocessed genomes
 E_COLI_GENOME_PARENT_DIR_PATH = os.path.abspath(
     os.path.join(INTERIM_DATA_DIR_PATH, 'genomes/escherichia_coli'))
