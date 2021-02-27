@@ -5,8 +5,8 @@ Project:            bioseq-learning
 File Description:
 
 Visualization of Reference or Representative Bacteria
-- [ ] organism distribution (pie chart)
-- [ ] organism distribution (pie chart)
+- [x] organism distribution (pie chart)
+- [x] organism distribution (sunburst)
 - [ ] number of contigs per genome distribution (histogram)
 - [ ] number of conserved domains per coding region
 - [ ] conserved domain frequency (maybe a pie chart)
@@ -17,8 +17,9 @@ import pickle
 
 import taxonomy
 import pandas as pd
-import plotly.express as px
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+
 from tqdm import tqdm
 from typing import List, Optional, Tuple
 
@@ -30,7 +31,7 @@ from src.datasets.genome_domain_dataset import (
 )
 
 
-ANNOTATION = Annotation.PATRIC
+ANNOTATION = Annotation.RefSeq
 COLORS = plt.cm.Pastel1.colors
 
 REF_OR_REP_BACTERIA_CONTIGS_WITH_CDS_FILE_PATH = \
@@ -122,10 +123,10 @@ if not os.path.exists(_fig1_path):
     plt.savefig(_fig1_path)
 
 
-# visualization of organism distribution sun burst
+# visualization of taxonomy distribution sun burst
 _fig2_path = \
     f'../docs/images/reference_or_representative_bacteria/' \
-    f'organism_sunburst.{ANNOTATION.value}.html'
+    f'taxonomy_sunburst.{ANNOTATION.value}.html'
 if not os.path.exists(_fig2_path):
     print(f'generating {ANNOTATION.value} organism distribution sun burst ...')
     tax = taxonomy.Taxonomy.from_ncbi(
@@ -135,8 +136,8 @@ if not os.path.exists(_fig2_path):
     taxon_ids = contig_info_df['ncbi_taxon_id'].drop_duplicates().tolist()
     taxon_info = []
     taxon_ranks = [
-        'species',
-        'genus',
+        # 'species',
+        # 'genus',
         # 'tribe',
         # 'subfamily',
         'family',
@@ -159,8 +160,61 @@ if not os.path.exists(_fig2_path):
         taxon_info,
         columns=['ncbi_taxon_id'] + taxon_ranks,
     )
-    fig2 = px.sunburst(
-        tax_info_df,
-        path=reversed(taxon_ranks),
+
+    # only keep the bacteria from common categories
+    taxon_rank_thresholds = [0.023, 0.018, 0.016]
+    for __rank, __thresh in zip(taxon_ranks, taxon_rank_thresholds):
+        __counts = tax_info_df[__rank].value_counts()
+        __remove_rank = __counts[
+            __counts < len(tax_info_df) * __thresh].index.to_list()
+        tax_info_df.loc[tax_info_df[__rank].isin(__remove_rank), __rank] \
+            = f'other {__rank}'
+
+    names, values, parents = [], [], []
+    for __rank, __next_rank in zip(taxon_ranks, taxon_ranks[1:] + [None]):
+
+        __value_count = tax_info_df[__rank].value_counts()
+
+        __names = __value_count.index.to_list()
+        __values = __value_count.to_list()
+
+        if f'other {__rank}' in __names:
+            __other_index = __names.index(f'other {__rank}')
+            del __names[__other_index]
+            del __values[__other_index]
+
+        if __next_rank is not None:
+            __parents = tax_info_df.loc[tax_info_df[__rank].isin(
+                __names)].drop_duplicates(subset=[__rank])[__next_rank].to_list()
+            assert len(__names) == len(__parents)
+        else:
+            __parents = ['bacteria', ] * len(__names)
+
+        names += __names
+        values += __values
+        parents += __parents
+
+    names += ['bacteria']
+    values += [len(tax_info_df)]
+    parents += ['']
+
+    # import plotly.express as px
+    # fig2 = px.sunburst(
+    #     names=[__n.lower() for __n in names],
+    #     values=values,
+    #     parents=[__p.lower() for __p in parents],
+    # )
+    fig2 = go.Figure(go.Sunburst(
+        labels=[__n.lower() for __n in names],
+        values=values,
+        parents=[__p.lower() for __p in parents],
+        insidetextfont={'size': 4},
+        insidetextorientation='radial',
+
+    ))
+    fig2.update_layout(
+        title=f'Ref & Rep Bacteria ({ANNOTATION.value}) Taxonomy',
+        title_x=0.5,
     )
     fig2.write_html(_fig2_path)
+    fig2.write_image(_fig2_path.replace('html', 'png'), scale=5.0)
