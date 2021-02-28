@@ -16,8 +16,10 @@ import os
 import pickle
 
 import taxonomy
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 import plotly.graph_objects as go
 
 from tqdm import tqdm
@@ -31,7 +33,7 @@ from src.datasets.genome_domain_dataset import (
 )
 
 
-ANNOTATION = Annotation.RefSeq
+ANNOTATION = Annotation.PATRIC
 COLORS = plt.cm.Pastel1.colors
 
 REF_OR_REP_BACTERIA_CONTIGS_WITH_CDS_FILE_PATH = \
@@ -153,7 +155,7 @@ if not os.path.exists(_fig2_path):
         __taxon_info = [__ncbi_taxon_id, ]
         for __rank in taxon_ranks:
             __parent = tax.parent(__ncbi_taxon_id, __rank)
-            __taxon_info.append(__parent.name if __parent else '')
+            __taxon_info.append(__parent.name if __parent else f'unknown {__rank}')
         taxon_info.append(__taxon_info)
 
     tax_info_df = pd.DataFrame(
@@ -162,11 +164,18 @@ if not os.path.exists(_fig2_path):
     )
 
     # only keep the bacteria from common categories
-    taxon_rank_thresholds = [0.023, 0.018, 0.016]
+    taxon_rank_thresholds = [0.01, 0.02, 0.04] if ANNOTATION == \
+        Annotation.RefSeq else [4, 8, 16]
     for __rank, __thresh in zip(taxon_ranks, taxon_rank_thresholds):
         __counts = tax_info_df[__rank].value_counts()
-        __remove_rank = __counts[
-            __counts < len(tax_info_df) * __thresh].index.to_list()
+
+        if isinstance(__thresh, float):
+            __remove_rank = __counts[
+                __counts < len(tax_info_df) * __thresh].index.to_list()
+        else:
+            __remove_rank = __counts[
+                __counts < __thresh].index.to_list()
+
         tax_info_df.loc[tax_info_df[__rank].isin(__remove_rank), __rank] \
             = f'other {__rank}'
 
@@ -198,23 +207,33 @@ if not os.path.exists(_fig2_path):
     values += [len(tax_info_df)]
     parents += ['']
 
-    # import plotly.express as px
-    # fig2 = px.sunburst(
-    #     names=[__n.lower() for __n in names],
-    #     values=values,
-    #     parents=[__p.lower() for __p in parents],
-    # )
-    fig2 = go.Figure(go.Sunburst(
-        labels=[__n.lower() for __n in names],
-        values=values,
-        parents=[__p.lower() for __p in parents],
-        insidetextfont={'size': 4},
-        insidetextorientation='radial',
+    fig2 = px.sunburst(
+        data_frame=tax_info_df,
+        path=['phylum', 'order', 'family'],
+    )
 
-    ))
+    ids = fig2.data[0]['ids']
+    labels = fig2.data[0]['labels']
+    values = fig2.data[0]['values']
+    parents = fig2.data[0]['parents']
+    _indices = np.array([
+        'other' not in __l and 'unknown' not in __l and
+        'other' not in __p and 'unknown' not in __p
+        for __l, __p in zip(labels, parents)
+    ])
+    fig2.update_traces(
+        ids=ids[_indices],
+        labels=labels[_indices],
+        values=values[_indices],
+        parents=parents[_indices],
+        insidetextorientation='radial',
+    )
     fig2.update_layout(
+        height=4000,
+        width=4000,
+        uniformtext=dict(minsize=10, mode='hide'),
         title=f'Ref & Rep Bacteria ({ANNOTATION.value}) Taxonomy',
         title_x=0.5,
     )
     fig2.write_html(_fig2_path)
-    fig2.write_image(_fig2_path.replace('html', 'png'), scale=5.0)
+    fig2.write_image(_fig2_path.replace('html', 'png'), scale=1.0)
