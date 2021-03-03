@@ -7,11 +7,12 @@ File Description:
 Visualization of Reference or Representative Bacteria
 - [x] organism distribution (pie chart)
 - [x] organism distribution (sunburst)
-- [x] number of conserved domains per coding region
-- [ ] conserved domain frequency (maybe a pie chart)
+- [x] number of conserved domains per coding region (histogram)
+- [x] conserved domain frequency (sunburst)
 
 """
 import os
+import math
 import pickle
 
 import taxonomy
@@ -32,7 +33,7 @@ from src.datasets.genome_domain_dataset import (
 )
 
 
-ANNOTATION = Annotation.RefSeq
+ANNOTATION = Annotation.PATRIC
 COLORS = plt.cm.Pastel1.colors
 
 REF_OR_REP_BACTERIA_CONTIGS_WITH_CDS_FILE_PATH = \
@@ -306,7 +307,6 @@ if not os.path.exists(_fig3_path):
     _fig3.write_image(_fig3_path.replace('html', 'png'), scale=1.0)
 
 
-
 # visualization of the conserved domain sunburst
 _fig4_path = \
     f'../docs/images/reference_or_representative_bacteria/' \
@@ -323,22 +323,29 @@ if not os.path.exists(_fig4_path):
         conserved_domain_df = pd.concat(
             [conserved_domain_df, __conserved_domain_df])
 
-    conserved_domain_df = conserved_domain_df.fillna('')
+    # conserved_domain_df = \
+    #     conserved_domain_df.drop_duplicates(subset=['accession'])
+    conserved_domain_df = conserved_domain_df.reset_index()[__cols]
 
-    accession_thresholds = [0.0005, 0.0005]
+    # conserved_domain_df = conserved_domain_df.fillna('')
+    for __row in conserved_domain_df.copy().itertuples():
+        if isinstance(__row.superfamily_accession, float) and \
+                math.isnan(__row.superfamily_accession):
+            conserved_domain_df.loc[__row.Index] = \
+                [__row.accession, __row.accession]
+
+    accession_thresholds = [0.0002, 0.0001]
     for __acc, __thresh in zip(__cols, accession_thresholds):
         __counts = conserved_domain_df[__acc].value_counts()
-
         if isinstance(__thresh, float):
             __remove_rank = __counts[
                 __counts < len(conserved_domain_df) * __thresh].index.to_list()
         else:
             __remove_rank = __counts[
                 __counts < __thresh].index.to_list()
-
         conserved_domain_df.loc[
             conserved_domain_df[__acc].isin(__remove_rank), __acc] = \
-            f'other accessions'
+            f'other {__acc}s'
 
     _fig4 = px.sunburst(
         data_frame=conserved_domain_df,
@@ -348,8 +355,9 @@ if not os.path.exists(_fig4_path):
     labels = _fig4.data[0]['labels']
     values = _fig4.data[0]['values']
     parents = _fig4.data[0]['parents']
+
     _indices = np.array([
-        'other' not in __l or __p == ''
+        'other accessions' not in __l
         for __l, __p in zip(labels,  parents)
     ])
     _fig4.update_traces(
