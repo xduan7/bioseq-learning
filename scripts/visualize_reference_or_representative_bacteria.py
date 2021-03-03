@@ -8,7 +8,7 @@ Visualization of Reference or Representative Bacteria
 - [x] organism distribution (pie chart)
 - [x] organism distribution (sunburst)
 - [x] number of conserved domains per coding region (histogram)
-- [x] conserved domain frequency (sunburst)
+- [x] conserved domain occurrence/frequency (sunburst)
 
 """
 import os
@@ -371,7 +371,8 @@ if not os.path.exists(_fig4_path):
         height=4000,
         width=4000,
         uniformtext=dict(minsize=10, mode='hide'),
-        title=f'Conserved Domains Distribution ({ANNOTATION.value}) ',
+        title=f'Conserved Domains Occurrence Distribution '
+              f'({ANNOTATION.value}) ',
         title_x=0.5,
     )
     _fig4.write_html(_fig4_path)
