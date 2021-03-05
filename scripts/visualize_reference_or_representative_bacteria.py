@@ -9,6 +9,9 @@ Visualization of Reference or Representative Bacteria
 - [x] organism distribution (sunburst)
 - [x] number of conserved domains per coding region (histogram)
 - [x] conserved domain occurrence/frequency (sunburst)
+- [ ] conserved domain coverage vs number of domains (
+        x scale: number of domains as words,
+        y scale: percentage of covered domains )
 
 """
 import os
@@ -377,3 +380,52 @@ if not os.path.exists(_fig4_path):
     )
     _fig4.write_html(_fig4_path)
     _fig4.write_image(_fig4_path.replace('html', 'png'), scale=1.0)
+
+
+# visualization of the number fo conserved domain versus the coverage
+_fig5_path = \
+    f'../docs/images/reference_or_representative_bacteria/' \
+    f'num_conserved_domains_vs_coverage.{ANNOTATION.value}.html'
+if not os.path.exists(_fig5_path):
+
+    conserved_domain_df = pd.DataFrame([], columns=['accession'])
+    for __contig_with_cds in tqdm(contigs_with_cds):
+        __contig_with_cds: ContigWithConservedDomains
+        __conserved_domain_df = \
+            __contig_with_cds.contig_conserved_domain_df[
+                __contig_with_cds.contig_conserved_domain_df[
+                    'hit_type'] == 'Specific'][['accession']]
+        conserved_domain_df = pd.concat(
+            [conserved_domain_df, __conserved_domain_df])
+
+    conserved_domain_df = conserved_domain_df.reset_index()[['accession']]
+
+    conserved_domain_counts = conserved_domain_df.value_counts()
+
+    _sum = conserved_domain_counts.sum()
+
+    coverage = []
+    count = 0
+    for __i, __v in enumerate(conserved_domain_counts):
+        count += __v
+        coverage.append([__i + 1, count])
+    coverage_df = pd.DataFrame(
+        coverage, columns=['number_of_cd', 'coverage']
+    )
+    coverage_df['coverage'] = coverage_df['coverage'] / _sum
+
+    _fig5 = px.line(
+        coverage_df,
+        x='number_of_cd',
+        y='coverage',
+    )
+    _fig5.update_layout(
+        height=4000,
+        width=4000,
+        title=f'Number of Conserved Domains V.S. Coverage '
+              f'({ANNOTATION.value}) ',
+        title_x=0.5,
+    )
+    _fig5.write_html(_fig5_path)
+    _fig5.write_image(_fig5_path.replace('html', 'png'), scale=1.0)
+
