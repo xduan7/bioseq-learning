@@ -304,13 +304,106 @@ def __convert_single_contig_with_conserved_domains_to_sequence(
         coding_region_sep_token: str = DEFAULT_CODING_REGION_SEP_TOKEN,
         contig_begin_token: Optional[str] = DEFAULT_CONTIG_BEGIN_TOKEN,
         contig_end_token: Optional[str] = DEFAULT_CONTIG_END_TOKEN,
+        include_superfamily: bool = True,
 ) -> Tuple[str, List[str]]:
+    # contig_with_conserved_domain = contigs_with_cds[0]
 
-    _genome_id: str = contig_with_conserved_domain.genome_id
+    _id: str = \
+        f'{contig_with_conserved_domain.genome_id}/' \
+        f'{contig_with_conserved_domain.contig_accession}'
+    _annotation: Annotation = contig_with_conserved_domain.annotation
 
+    _feature_df: pd.DataFrame = \
+        contig_with_conserved_domain.contig_feature_df
+    _feature_df: pd.DataFrame = _feature_df[
+        _feature_df['feature_type'] == 'CDS'
+    ]
+    if _annotation == Annotation.PATRIC:
+        _feature_df: pd.DataFrame = \
+            _feature_df[['patric_id']]
+    else:
+        _feature_df: pd.DataFrame = \
+            _feature_df[['refseq_locus_tag']]
+    _feature_df: pd.DataFrame = _feature_df.reset_index(drop=True)
+    _feature_df.columns = ['seq_id']
 
+    _conserved_domain_df: pd.DataFrame = \
+        contig_with_conserved_domain.contig_conserved_domain_df
 
+    _hit_types = {'Specific', 'Superfamily'} \
+        if include_superfamily else {{'Specific'}}
+    _conserved_domain_df: pd.DataFrame = _conserved_domain_df[
+        _conserved_domain_df['hit_type'].isin(_hit_types)
+    ]
+    _conserved_domain_df: pd.DataFrame = _conserved_domain_df[[
+        'seq_id', 'accession', 'hit_type', 'pssm_id',
+        'start', 'end', 'e_value', 'bitscore',
+    ]]
+    _conserved_domain_df: pd.DataFrame = \
+        _conserved_domain_df.reset_index(drop=True)
 
+    def __get_seq_id(__seq_id: str):
+        if __seq_id.count('|') == 1:
+            return __seq_id
+        elif __seq_id.count('|') >= 2 and \
+                _annotation == Annotation.PATRIC:
+            return __seq_id.rstrip('|').rsplit('|', 1)[0]
+        elif __seq_id.count('|') >= 2 and \
+                _annotation == Annotation.RefSeq:
+            return __seq_id.rstrip('|').rsplit('|', 2)[1]
+        else:
+            _warning_msg = \
+                f'cannot parse the PATRIC ID from FASTA ' \
+                f'sequence record with name {__seq_id}.'
+            print(_warning_msg)
+            return ''
+
+    _conserved_domain_df['seq_id'] = \
+        _conserved_domain_df['seq_id'].apply(__get_seq_id)
+
+    _cds_seq_ids = _feature_df['seq_id'].values
+    _ret_seq: List[str] = [contig_begin_token, ]
+    for __cds_seq_id in _cds_seq_ids:
+        __cds_conserved_domain_df = _conserved_domain_df[
+            _conserved_domain_df['seq_id'] == __cds_seq_id
+        ].copy()
+        __cds_conserved_domain_df.sort_values(
+            by=['e_value', 'bitscore'],
+            ascending=[True, False],
+            inplace=True,
+        )
+        __cds_proc_conserved_domain_df = \
+            pd.DataFrame([], columns=__cds_conserved_domain_df.columns)
+
+        while len(__cds_conserved_domain_df) > 0:
+            __curr_conserved_domain = \
+                __cds_conserved_domain_df.iloc[0]
+            __curr_start = __curr_conserved_domain.start
+            __curr_end = __curr_conserved_domain.end
+
+            __cds_proc_conserved_domain_df = \
+                __cds_proc_conserved_domain_df.append(
+                    __curr_conserved_domain,
+                    ignore_index=True,
+                )
+            __cds_conserved_domain_df.drop(
+                __cds_conserved_domain_df[(
+                    (__cds_conserved_domain_df.start < __curr_end) &
+                    (__cds_conserved_domain_df.end > __curr_start)
+                )].index,
+                inplace=True,
+            )
+            __cds_conserved_domain_df.reset_index(drop=True, inplace=True)
+
+        __cds_proc_conserved_domain_df.sort_values(
+            by=['start', 'bitscore'],
+            inplace=True,
+        )
+        _ret_seq.append(coding_region_sep_token)
+        _ret_seq.extend(__cds_proc_conserved_domain_df['accession'].to_list())
+
+    _ret_seq.append(contig_end_token)
+    return _id, _ret_seq
 
 
 def _convert_contigs_with_conserved_domains_to_sequences(
