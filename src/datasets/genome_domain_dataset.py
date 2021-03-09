@@ -362,7 +362,8 @@ def __convert_single_contig_with_conserved_domains_to_sequence(
         _conserved_domain_df['seq_id'].apply(__get_seq_id)
 
     _cds_seq_ids = _feature_df['seq_id'].values
-    _ret_seq: List[str] = [contig_begin_token, ]
+    _ret_seq: List[str] = \
+        [contig_begin_token] if contig_begin_token is not None else []
     for __cds_seq_id in _cds_seq_ids:
         __cds_conserved_domain_df = _conserved_domain_df[
             _conserved_domain_df['seq_id'] == __cds_seq_id
@@ -380,7 +381,6 @@ def __convert_single_contig_with_conserved_domains_to_sequence(
                 __cds_conserved_domain_df.iloc[0]
             __curr_start = __curr_conserved_domain.start
             __curr_end = __curr_conserved_domain.end
-
             __cds_proc_conserved_domain_df = \
                 __cds_proc_conserved_domain_df.append(
                     __curr_conserved_domain,
@@ -402,42 +402,42 @@ def __convert_single_contig_with_conserved_domains_to_sequence(
         _ret_seq.append(coding_region_sep_token)
         _ret_seq.extend(__cds_proc_conserved_domain_df['accession'].to_list())
 
-    _ret_seq.append(contig_end_token)
+    if contig_end_token is not None:
+        _ret_seq.append(contig_end_token)
+
     return _id, _ret_seq
 
 
 def _convert_contigs_with_conserved_domains_to_sequences(
-        contig_conserved_domains: List[ContigWithConservedDomains],
+        contigs_with_conserved_domains: List[ContigWithConservedDomains],
         coding_region_sep_token: str = DEFAULT_CODING_REGION_SEP_TOKEN,
         contig_begin_token: Optional[str] = DEFAULT_CONTIG_BEGIN_TOKEN,
         contig_end_token: Optional[str] = DEFAULT_CONTIG_END_TOKEN,
+        include_superfamily: bool = True,
 ) -> Dict[str, List[str]]:
-
-
-    # get a list of arguments for
-    # __convert_single_contig_with_conserved_domains_to_sequence
-    __arg_list: List[Tuple[
+    __arg_list_for_single_contig: List[Tuple[
         ContigWithConservedDomains,
         str,
         Optional[str],
         Optional[str],
+        bool,
     ]] = []
-
-
-
-
-
-    # with Pool(cpu_count()) as _pool:
-    #     _processed_contigs: \
-    #         List[Optional[Tuple[str, int, np.ndarray, np.ndarray]]] = \
-    #         _pool.starmap(
-    #             __convert_single_contig_with_conserved_domains_to_sequence,
-    #             __arg_list,
-    #         )
-    #
-    #
-    #
-    # pass
+    for __contig_conserved_domains in contigs_with_conserved_domains:
+        __arg_list_for_single_contig.append((
+            __contig_conserved_domains,
+            coding_region_sep_token,
+            contig_begin_token,
+            contig_end_token,
+            include_superfamily,
+        ))
+    print('Converting contigs into sequences of conserved domains ...')
+    with Pool(cpu_count()) as _pool:
+        _contig_seq: List[Tuple[str, List[str]]] = \
+            _pool.starmap(
+                __convert_single_contig_with_conserved_domains_to_sequence,
+                tqdm(__arg_list_for_single_contig),
+            )
+    return {__c[0]: __c[1] for __c in _contig_seq}
 
 
 class GenomeDomainDataset(Dataset):
