@@ -21,10 +21,13 @@ The workflow of this dataset class initialization is shown below:
 
 """
 import os
+import pickle
 import logging
 import resource
 from glob import glob
 from enum import Enum
+from bisect import bisect
+from collections import Counter
 from dataclasses import dataclass
 from multiprocessing import Pool, cpu_count
 from typing import Dict, List, Optional, Set, Tuple
@@ -34,23 +37,51 @@ import pandas as pd
 from tqdm import tqdm
 from torch.utils.data import Dataset
 
-from src import RAW_DATA_DIR_PATH
+from src import RAW_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH
 
 
 BACTERIA_GENOME_SUMMARY_CSV_FILE_PATH = os.path.join(
     RAW_DATA_DIR_PATH, 'genomes', 'bacteria.csv')
 REF_N_REP_BACTERIA_GENOME_SUMMARY_CSV_FILE_PATH = os.path.join(
     RAW_DATA_DIR_PATH, 'genomes', 'reference_or_representative_bacteria.csv')
+REF_OR_REP_BACTERIA_CONTIGS_WITH_CDS_FILE_PATH = os.path.join(
+    PROCESSED_DATA_DIR_PATH,
+    'genomes/reference_or_representative_bacteria_contigs_'
+    'with_conserved_domains.{annotation}.pickle'
+)
+REF_OR_REP_BACTERIA_CONTIG_CDS_SEQS_FILE_PATH = os.path.join(
+    PROCESSED_DATA_DIR_PATH,
+    'genomes/reference_or_representative_bacteria_contig_'
+    'sequences.{annotation}.pickle'
+)
+
 _LOGGER = logging.getLogger(__name__)
 resource.setrlimit(
     resource.RLIMIT_NOFILE,
     (4096, resource.getrlimit(resource.RLIMIT_NOFILE)[1]),
 )
 
-# Default token for contig sequences
-DEFAULT_CODING_REGION_SEP_TOKEN: str = '<SEP>'
-DEFAULT_CONTIG_BEGIN_TOKEN: str = '<BOCTG>'
-DEFAULT_CONTIG_END_TOKEN: str = '<EOCTG>'
+# special makers for domain sequences
+CODING_REGION_SEP_MARKER: str = '<sep>'
+CONTIG_BEGIN_MARKER: str = '<bos>'
+CONTIG_END_MARKER: str = '<eos>'
+UNKNOWN_MARKER: str = '<unk>'
+PADDING_MARKER: str = '<pad>'
+
+SPECIAL_MARKERS: Set[str] = {
+    CODING_REGION_SEP_MARKER,
+    CONTIG_BEGIN_MARKER,
+    CONTIG_END_MARKER,
+    UNKNOWN_MARKER,
+    PADDING_MARKER,
+}
+SPECIAL_MARKER_TOKENIZER: Dict[str, int] = {
+    CODING_REGION_SEP_MARKER:       1,
+    CONTIG_BEGIN_MARKER:            2,
+    CONTIG_END_MARKER:              3,
+    UNKNOWN_MARKER:                 4,
+    PADDING_MARKER:                 0,
+}
 
 
 class Annotation(Enum):
@@ -299,22 +330,18 @@ def _get_contigs_with_conserved_domains(
     return _contig_conserved_domains
 
 
-def __convert_single_contig_with_conserved_domains_to_sequence(
-        contig_with_conserved_domain: ContigWithConservedDomains,
-        coding_region_sep_token: str = DEFAULT_CODING_REGION_SEP_TOKEN,
-        contig_begin_token: Optional[str] = DEFAULT_CONTIG_BEGIN_TOKEN,
-        contig_end_token: Optional[str] = DEFAULT_CONTIG_END_TOKEN,
+def __convert_single_contig_with_cds_to_sequence(
+        contig_with_cds: ContigWithConservedDomains,
         include_superfamily: bool = True,
 ) -> Tuple[str, List[str]]:
-    # contig_with_conserved_domain = contigs_with_cds[0]
 
     _id: str = \
-        f'{contig_with_conserved_domain.genome_id}/' \
-        f'{contig_with_conserved_domain.contig_accession}'
-    _annotation: Annotation = contig_with_conserved_domain.annotation
+        f'{contig_with_cds.genome_id}/' \
+        f'{contig_with_cds.contig_accession}'
+    _annotation: Annotation = contig_with_cds.annotation
 
     _feature_df: pd.DataFrame = \
-        contig_with_conserved_domain.contig_feature_df
+        contig_with_cds.contig_feature_df
     _feature_df: pd.DataFrame = _feature_df[
         _feature_df['feature_type'] == 'CDS'
     ]
@@ -328,14 +355,15 @@ def __convert_single_contig_with_conserved_domains_to_sequence(
     _feature_df.columns = ['seq_id']
 
     _conserved_domain_df: pd.DataFrame = \
-        contig_with_conserved_domain.contig_conserved_domain_df
+        contig_with_cds.contig_conserved_domain_df
 
     _hit_types = {'Specific', 'Superfamily'} \
         if include_superfamily else {{'Specific'}}
     _conserved_domain_df: pd.DataFrame = _conserved_domain_df[
         _conserved_domain_df['hit_type'].isin(_hit_types)
     ]
-    _conserved_domain_df: pd.DataFrame = _conserved_domain_df[[
+    _conserved_domain_df: pd.DataFrame = \
+        _conserved_domain_df[[
         'seq_id', 'accession', 'hit_type', 'pssm_id',
         'start', 'end', 'e_value', 'bitscore',
     ]]
@@ -362,8 +390,7 @@ def __convert_single_contig_with_conserved_domains_to_sequence(
         _conserved_domain_df['seq_id'].apply(__get_seq_id)
 
     _cds_seq_ids = _feature_df['seq_id'].values
-    _ret_seq: List[str] = \
-        [contig_begin_token] if contig_begin_token is not None else []
+    _ret_seq: List[str] = [CONTIG_BEGIN_MARKER]
     for __cds_seq_id in _cds_seq_ids:
         __cds_conserved_domain_df = _conserved_domain_df[
             _conserved_domain_df['seq_id'] == __cds_seq_id
@@ -399,66 +426,198 @@ def __convert_single_contig_with_conserved_domains_to_sequence(
             by=['start', 'bitscore'],
             inplace=True,
         )
-        _ret_seq.append(coding_region_sep_token)
+        _ret_seq.append(CODING_REGION_SEP_MARKER)
         _ret_seq.extend(__cds_proc_conserved_domain_df['accession'].to_list())
 
-    if contig_end_token is not None:
-        _ret_seq.append(contig_end_token)
-
+    _ret_seq.append(CONTIG_END_MARKER)
     return _id, _ret_seq
 
 
-def _convert_contigs_with_conserved_domains_to_sequences(
-        contigs_with_conserved_domains: List[ContigWithConservedDomains],
-        coding_region_sep_token: str = DEFAULT_CODING_REGION_SEP_TOKEN,
-        contig_begin_token: Optional[str] = DEFAULT_CONTIG_BEGIN_TOKEN,
-        contig_end_token: Optional[str] = DEFAULT_CONTIG_END_TOKEN,
+def _convert_contigs_with_cds_to_sequences(
+        contigs_with_cds: List[ContigWithConservedDomains],
         include_superfamily: bool = True,
 ) -> Dict[str, List[str]]:
-    __arg_list_for_single_contig: List[Tuple[
-        ContigWithConservedDomains,
-        str,
-        Optional[str],
-        Optional[str],
-        bool,
-    ]] = []
-    for __contig_conserved_domains in contigs_with_conserved_domains:
+    __arg_list_for_single_contig: List[
+        Tuple[ContigWithConservedDomains, bool]
+    ] = []
+    print('Preparing the arguments for contig conversion ...')
+    for __contig_with_cds in tqdm(contigs_with_cds):
         __arg_list_for_single_contig.append((
-            __contig_conserved_domains,
-            coding_region_sep_token,
-            contig_begin_token,
-            contig_end_token,
+            __contig_with_cds,
             include_superfamily,
         ))
     print('Converting contigs into sequences of conserved domains ...')
     with Pool(cpu_count()) as _pool:
-        _contig_seq: List[Tuple[str, List[str]]] = \
+        _contig_cds_seq: List[Tuple[str, List[str]]] = \
             _pool.starmap(
-                __convert_single_contig_with_conserved_domains_to_sequence,
+                __convert_single_contig_with_cds_to_sequence,
                 tqdm(__arg_list_for_single_contig),
             )
-    return {__c[0]: __c[1] for __c in _contig_seq}
+    return {__c[0]: __c[1] for __c in _contig_cds_seq}
 
 
 class GenomeDomainDataset(Dataset):
     """Dataset class for (conserved) domains on genomes.
     """
+    __slots__ = [
+        # arguments
+        'annot',                        # Annotation
+        'num_vocab',                    # int
+        'sized_seq_len',                # int
+        'max_num_paddings',             # int
+        # public attr
+        'contig_cds_seqs',              # Dict[str, List[str]]
+        'vocabulary',                   # Set[str]
+        'tokenizer',                    # Dict[str, int]
+        'tokenized_seqs',               # Dict[str, torch.LongTensor]
+        # private attr
+        '_len'                          # int
+        '_seq_ids'                      # Sequence[str]
+        '_accumulated_num_sized_seqs'   # Sequence[int]
+    ]
+
     def __init__(
             self,
-            vocab: Dict[str, int],
-            seq_len: int,
+            annot: Annotation,
+            num_vocab: int,
+            sized_seq_len: int,
             max_num_paddings: int,
     ):
-        pass
+        self.annot: Annotation
+        self.sized_seq_len: int = sized_seq_len
+        self.max_num_paddings: int = max_num_paddings
+        self._check_arg_sanity()
+
+        self.contig_cds_seqs: Dict[str, List[str]] = \
+            self._get_contig_cds_seqs(annot)
+        self.vocabulary: Set[str] = self._get_vocabulary(num_vocab)
+        self.tokenizer: Dict[str, int] = self._get_tokenizer()
+        self.tokenized_seqs: Dict[str, torch.LongTensor] = \
+            self._get_tokenized_seqs()
+
+        self._prepare_indexing()
+
+    def _check_arg_sanity(self):
+        if self.max_num_paddings > self.sized_seq_len:
+            _warning_msg = \
+                f'The maximum number of padding is greater than the ' \
+                f'window size of the sequences, which could yield ' \
+                f'sequences fully made of paddings.'
+            _LOGGER.warning(_warning_msg)
+
+    @staticmethod
+    def _get_contig_cds_seqs(
+            annot: Annotation,
+    ) -> Dict[str, List[str]]:
+        contig_cds_seq_file_path = \
+            REF_OR_REP_BACTERIA_CONTIG_CDS_SEQS_FILE_PATH.format(
+                annotation=annot.value
+            )
+        if os.path.exists(contig_cds_seq_file_path):
+            with open(contig_cds_seq_file_path, 'rb') as __fh:
+                contig_cds_seqs: Dict[str, List[str]] = pickle.load(__fh)
+        else:
+            contigs_with_cds_file_path: str = \
+                REF_OR_REP_BACTERIA_CONTIGS_WITH_CDS_FILE_PATH.format(
+                    annotation=annot.value)
+            with open(contigs_with_cds_file_path, 'rb') as __fh:
+                contigs_with_cds: List[ContigWithConservedDomains] = \
+                    pickle.load(__fh)
+            contig_cds_seqs = _convert_contigs_with_cds_to_sequences(
+                contigs_with_cds=contigs_with_cds,
+            )
+            with open(contig_cds_seq_file_path, 'wb') as __fh:
+                pickle.dump(
+                    contig_cds_seqs,
+                    __fh, protocol=pickle.HIGHEST_PROTOCOL,
+                )
+        return contig_cds_seqs
+
+    def _get_vocabulary(self, num_vocab: int):
+        if hasattr(self, 'vocabulary'):
+            return self.vocabulary
+        assert num_vocab > len(SPECIAL_MARKERS)
+        _vocab_counter = Counter()
+        for __seq in self.contig_cds_seqs.values():
+            _vocab_counter.update(__seq)
+        _vocab: Set[str] = SPECIAL_MARKERS.copy()
+        for __v, _ in _vocab_counter.most_common():
+            _vocab.add(__v)
+            if len(_vocab) == num_vocab:
+                break
+        return _vocab
+
+    def _get_tokenizer(self) -> Dict[str, int]:
+        if hasattr(self, 'tokenizer'):
+            return self.tokenizer
+        _token: Dict[str, int] = SPECIAL_MARKER_TOKENIZER
+        for __v in self.vocabulary:
+            if __v not in _token:
+                _token[__v] = len(_token)
+        return _token
+
+    def _get_tokenized_seqs(self) -> Dict[str, torch.LongTensor]:
+        """get the tokenized domain sequences with padding
+        """
+        if hasattr(self, 'tokenized_cds_seqs'):
+            return self.tokenized_seqs
+        print(
+            f'Tokenizing {len(self.contig_cds_seqs)} contig sequences '
+            f'of domains with {len(self.vocabulary)} tokens ...'
+        )
+        _unk_token: int = SPECIAL_MARKER_TOKENIZER[UNKNOWN_MARKER]
+        _pad_token: int = SPECIAL_MARKER_TOKENIZER[PADDING_MARKER]
+        _paddings: List[int] = [_pad_token] * self.max_num_paddings
+        _tk_seqs: Dict[str, torch.LongTensor] = {}
+        for __seq_id, __seq in tqdm(self.contig_cds_seqs.items()):
+            __tk_seq: torch.LongTensor = torch.LongTensor([
+                self.tokenizer.get(__cd, _unk_token)
+                for __cd in __seq
+            ] + _paddings)
+            _tk_seqs[__seq_id] = __tk_seq
+        return _tk_seqs
+
+    def _prepare_indexing(self):
+        # sized sequences = padded sequences of given window size
+        _seq_ids: List[str] = []
+        _total_num_sized_seqs: int = 0
+        _accumulated_num_sized_seqs: List[int] = []
+
+        for __seq_id, __seq in self.tokenized_seqs.items():
+            _seq_ids.append(__seq_id)
+            _num_seqs = len(__seq) - self.sized_seq_len + 1
+            _total_num_sized_seqs += _num_seqs
+            _accumulated_num_sized_seqs.append(_total_num_sized_seqs)
+
+        self._len = _total_num_sized_seqs
+        self._seq_ids = _seq_ids
+        self._accumulated_num_sized_seqs = _accumulated_num_sized_seqs
 
     def __len__(self) -> int:
-        pass
+        if not hasattr(self, '_len'):
+            self._prepare_indexing()
+        return self._len
 
     def __getitem__(
             self,
             index: int,
     ) -> torch.LongTensor:
-        # TODO: target for the sequence of genome domains (e.g. protein family)
-        pass
+        # index = index of the data set
+        # seq index = index of all contig sequences of domains
+        _seq_index: int = \
+            bisect(self._accumulated_num_sized_seqs, index)
+        _seq_id: str = self._seq_ids[_seq_index]
+
+        _sized_tk_seq_start_pos = index if _seq_index == 0 else \
+            (index - self._accumulated_num_sized_seqs[_seq_index - 1])
+        _sized_tk_seq_end_pos = _sized_tk_seq_start_pos + self.sized_seq_len
+
+        _seq: torch.LongTensor = self.tokenized_seqs[_seq_id]
+        _sized_tk_seq: torch.LongTensor = \
+            _seq[_sized_tk_seq_start_pos: _sized_tk_seq_end_pos]
+        return _sized_tk_seq
+
+
+dset = GenomeDomainDataset(Annotation.PATRIC, 50, 10, 2)
 
 # class GenomeDomainIterDataset(IterableDataset, GenomeDataset)
