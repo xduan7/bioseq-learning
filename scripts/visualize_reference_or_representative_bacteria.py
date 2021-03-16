@@ -23,7 +23,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
-import plotly.graph_objects as go
 
 from tqdm import tqdm
 from typing import List, Optional, Tuple
@@ -36,7 +35,7 @@ from src.datasets.genome_domain_dataset import (
 )
 
 
-ANNOTATION = Annotation.PATRIC
+ANNOTATION = Annotation.RefSeq
 COLORS = plt.cm.Pastel1.colors
 
 REF_OR_REP_BACTERIA_CONTIGS_WITH_CDS_FILE_PATH = \

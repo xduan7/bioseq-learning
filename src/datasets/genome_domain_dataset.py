@@ -37,13 +37,21 @@ import pandas as pd
 from tqdm import tqdm
 from torch.utils.data import Dataset
 
-from src import RAW_DATA_DIR_PATH, PROCESSED_DATA_DIR_PATH
+from src import (
+    RAW_DATA_DIR_PATH,
+    INTERIM_DATA_DIR_PATH,
+    PROCESSED_DATA_DIR_PATH,
+)
 
 
 BACTERIA_GENOME_SUMMARY_CSV_FILE_PATH = os.path.join(
     RAW_DATA_DIR_PATH, 'genomes', 'bacteria.csv')
 REF_N_REP_BACTERIA_GENOME_SUMMARY_CSV_FILE_PATH = os.path.join(
     RAW_DATA_DIR_PATH, 'genomes', 'reference_or_representative_bacteria.csv')
+REF_OR_REP_GNOME_PARENT_DIR_PATH = os.path.join(
+    INTERIM_DATA_DIR_PATH,
+    'genomes/reference_or_representative_bacteria',
+)
 REF_OR_REP_BACTERIA_CONTIGS_WITH_CDS_FILE_PATH = os.path.join(
     PROCESSED_DATA_DIR_PATH,
     'genomes/reference_or_representative_bacteria_contigs_'
@@ -60,6 +68,10 @@ resource.setrlimit(
     resource.RLIMIT_NOFILE,
     (4096, resource.getrlimit(resource.RLIMIT_NOFILE)[1]),
 )
+
+# max allowed overlap for conserved domains
+MAX_CD_OVERLAP: float = 0.5
+HALF_MAX_CD_OVERLAP: float = MAX_CD_OVERLAP / 2
 
 # special makers for domain sequences
 CONTIG_BEGIN_MARKER: str = '<bos>'
@@ -155,7 +167,7 @@ def __get_organism_from_genome_name(genome_name: str) -> Organism:
     return Organism.OTHERS
 
 
-def _get_contigs_with_conserved_domains(
+def _convert_contigs_to_contigs_with_conserved_domains(
         annotation: Annotation,
         genome_parent_dir_path: str,
         genome_summary_csv_file_path: Optional[str] = None,
@@ -163,21 +175,6 @@ def _get_contigs_with_conserved_domains(
     """Get all the contigs inside a parent directory path into a list of
     ContigWithConservedDomains, which is essentially a data class
     with all the information on features and conserved domain annotations.
-
-    Usage:
-    contigs = _get_contigs_with_conserved_domains(
-        annotation=Annotation.PATRIC,
-        genome_parent_dir_path=
-            '/home/xduan7/projects/bioseq-learning/data'
-            '/interim/genomes/reference_or_representative_bacteria',
-        genome_summary_csv_file_path=
-            '/home/xduan7/projects/bioseq-learning'
-            '/data/raw/genomes/reference_or_representative_bacteria.csv',
-    )
-    import pickle
-    with open('reference_or_representative_bacteria_contigs_'
-              'with_conserved_domains.PATRIC.pickle', 'wb') as _fh:
-        pickle.dump(contigs, _fh)
 
     :param annotation:
     :type annotation:
@@ -330,9 +327,32 @@ def _get_contigs_with_conserved_domains(
     return _contig_conserved_domains
 
 
+def _get_contigs_with_conserved_domains(
+        annotation: Annotation,
+        genome_parent_dir_path: str,
+        genome_summary_csv_file_path: Optional[str] = None,
+) -> List[ContigWithConservedDomains]:
+
+    contigs_with_cds_file_path: str = \
+        REF_OR_REP_BACTERIA_CONTIGS_WITH_CDS_FILE_PATH.format(annotation=annotation.value)
+    if os.path.exists(contigs_with_cds_file_path):
+        with open(contigs_with_cds_file_path, 'rb') as _fh:
+            return pickle.load(_fh)
+    else:
+        _contigs = _convert_contigs_to_contigs_with_conserved_domains(
+            annotation=annotation,
+            genome_parent_dir_path=genome_parent_dir_path,
+            genome_summary_csv_file_path=genome_summary_csv_file_path,
+            # genome_parent_dir_path=REF_OR_REP_GNOME_PARENT_DIR_PATH,
+            # genome_summary_csv_file_path=REF_N_REP_BACTERIA_GENOME_SUMMARY_CSV_FILE_PATH,
+        )
+        with open(contigs_with_cds_file_path, 'wb') as _fh:
+            pickle.dump(_contigs, _fh)
+        return _contigs
+
+
 def __convert_single_contig_to_domain_sequence(
         contig_with_cds: ContigWithConservedDomains,
-        include_superfamily: bool = True,
 ) -> Tuple[str, List[str]]:
 
     _id: str = \
@@ -357,8 +377,7 @@ def __convert_single_contig_to_domain_sequence(
     _conserved_domain_df: pd.DataFrame = \
         contig_with_cds.contig_conserved_domain_df
 
-    _hit_types = {'Specific', 'Superfamily'} \
-        if include_superfamily else {{'Specific'}}
+    _hit_types = {'Specific', 'Non-specific', 'Superfamily'}
     _conserved_domain_df: pd.DataFrame = _conserved_domain_df[
         _conserved_domain_df['hit_type'].isin(_hit_types)
     ]
@@ -414,10 +433,14 @@ def __convert_single_contig_to_domain_sequence(
                     __curr_conserved_domain,
                     ignore_index=True,
                 )
+            # drop the hits with more than MAX_CD_OVERLAP
+            __overlap = int((__curr_end - __curr_start) * HALF_MAX_CD_OVERLAP)
+            __curr_start_w_overlap = __curr_start + __overlap
+            __curr_end_w_overlap = __curr_end - __overlap
             __cds_conserved_domain_df.drop(
                 __cds_conserved_domain_df[(
-                    (__cds_conserved_domain_df.start < __curr_end) &
-                    (__cds_conserved_domain_df.end > __curr_start)
+                    (__cds_conserved_domain_df.start < __curr_end_w_overlap) &
+                    (__cds_conserved_domain_df.end > __curr_start_w_overlap)
                 )].index,
                 inplace=True,
             )
@@ -427,7 +450,6 @@ def __convert_single_contig_to_domain_sequence(
             by=['start', 'bitscore'],
             inplace=True,
         )
-
         __cds_product = _feature_df.loc[__cds_seq_id, 'product']
         __cds_plfam_id = _feature_df.loc[__cds_seq_id, 'plfam_id']
         __cds_pgfam_id = _feature_df.loc[__cds_seq_id, 'pgfam_id']
@@ -440,17 +462,11 @@ def __convert_single_contig_to_domain_sequence(
 
 def _convert_contigs_to_domain_sequences(
         contigs_with_cds: List[ContigWithConservedDomains],
-        include_superfamily: bool = True,
 ) -> Dict[str, List[str]]:
-    __arg_list_for_single_contig: List[
-        Tuple[ContigWithConservedDomains, bool]
-    ] = []
+    __arg_list_for_single_contig: List[Tuple[ContigWithConservedDomains]] = []
     print('Preparing the arguments for contig conversion ...')
     for __contig_with_cds in tqdm(contigs_with_cds):
-        __arg_list_for_single_contig.append((
-            __contig_with_cds,
-            include_superfamily,
-        ))
+        __arg_list_for_single_contig.append((__contig_with_cds, ))
     print('Converting contigs into sequences of conserved domains ...')
     with Pool(cpu_count()) as _pool:
         _contig_cds_seq: List[Tuple[str, List[str]]] = \
@@ -531,12 +547,12 @@ class GenomeDomainDataset(Dataset):
             with open(contig_cds_seq_file_path, 'rb') as __fh:
                 contig_cds_seqs: Dict[str, List[str]] = pickle.load(__fh)
         else:
-            contigs_with_cds_file_path: str = \
-                REF_OR_REP_BACTERIA_CONTIGS_WITH_CDS_FILE_PATH.format(
-                    annotation=self.annot.value)
-            with open(contigs_with_cds_file_path, 'rb') as __fh:
-                contigs_with_cds: List[ContigWithConservedDomains] = \
-                    pickle.load(__fh)
+            contigs_with_cds: List[ContigWithConservedDomains] = \
+                _get_contigs_with_conserved_domains(
+                    self.annot,
+                    REF_OR_REP_GNOME_PARENT_DIR_PATH,
+                    REF_N_REP_BACTERIA_GENOME_SUMMARY_CSV_FILE_PATH,
+                )
             contig_cds_seqs = _convert_contigs_to_domain_sequences(
                 contigs_with_cds=contigs_with_cds,
             )
@@ -585,7 +601,7 @@ class GenomeDomainDataset(Dataset):
                 # __d has the format of '<cds>/product/plfam_id/pgfam_id'
                 # TODO: should we treat hypothetical proteins as if
                 #  they are unknown?
-                __d.split('/')[1] for __d in __seq
+                __d.split('/')[-1] for __d in __seq
                 if __d.startswith(f'{GENE_BEGIN_MARKER}/')
             ])
         print(f'total number of gene targets: {len(_vocab_counter)}')
@@ -609,8 +625,8 @@ class GenomeDomainDataset(Dataset):
     def _get_tokenized_domain_seqs(self) -> Dict[str, torch.LongTensor]:
         """get the tokenized domain sequences with padding
         """
-        if hasattr(self, 'tokenized_cds_seqs'):
-            return self.tokenized_cds_seqs
+        if hasattr(self, 'tokenized_domain_seqs'):
+            return self.tokenized_domain_seqs
         print(
             f'Tokenizing {len(self.domain_seqs)} contig sequences '
             f'of domains with {len(self.domain_vocab)} tokens ...'
@@ -703,10 +719,19 @@ class GenomeDomainDataset(Dataset):
 
 dset = GenomeDomainDataset(
     annot=Annotation.PATRIC,
-    sized_seq_len=10,
-    max_num_paddings=5,
-    num_domain_vocab=50,
-    num_gene_target_vocab=50,
+    sized_seq_len=1000,
+    max_num_paddings=500,
+    num_domain_vocab=2000,
+    num_gene_target_vocab=2000,
 )
 
 # class GenomeDomainIterDataset(IterableDataset, GenomeDataset)
+# _tokenized_gene_begin_marker: int = \
+#     SPECIAL_MARKER_TOKENIZER[GENE_BEGIN_MARKER]
+# _num_genes, _num_domains = 0, 0
+# for _, __tokenized_domain_seq in \
+#         tqdm(dset.tokenized_domain_seqs.items()):
+#     __num_genes = sum(__tokenized_domain_seq == _tokenized_gene_begin_marker)
+#     __num_domains = len(__tokenized_domain_seq) - 2 - __num_genes - dset.max_num_paddings
+#     _num_genes += __num_genes
+#     _num_domains += __num_domains
